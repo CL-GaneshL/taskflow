@@ -183,7 +183,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`homestead`@`%` FUNCTION `getTitle`(project_id INT, skill_id INT) RETURNS text CHARSET latin1
+CREATE FUNCTION `getTitle`(project_id INT, skill_id INT) RETURNS text CHARSET latin1
     READS SQL DATA
     DETERMINISTIC
 BEGIN
