@@ -15,7 +15,7 @@
 
         <div class="col-md-10 col-md-offset-1">
 
-            <div ng-controller="projectsTasksCtrl">
+            <div ng-controller="tasksTasksCtrl">
 
                 <form class="form-horizontal padding-bottom-20" role="form">
 
@@ -83,94 +83,90 @@
                 <!-- ================================================== -->
                 <!-- - calendar coverage                                -->
                 <!-- ================================================== --> 
-                <div class="row col-md-12 padding-top-15">
+                <div class="row col-md-12 padding-top-15 padding-bottom-30">
 
-                    <div class="btn-group col-md-5 padding-left-0 padding-bottom-30">
+                    <div class="btn-group col-md-4 padding-left-0">
 
-                        <label 
-                            class="btn btn-primary text-extra-small" 
+                        <button
+                            class="btn btn-primary" 
                             ng-model="calendarView" 
                             uib-btn-radio="'year'">
                             Year
-                        </label>                        
+                        </button>                       
 
-                        <label 
-                            class="btn btn-primary text-extra-small" 
+                        <button 
+                            class="btn btn-primary" 
                             ng-model="calendarView"
                             uib-btn-radio="'month'">
                             Month
-                        </label>
+                        </button>
 
-                        <label
-                            class="btn btn-primary text-extra-small"
+                        <button
+                            class="btn btn-primary"
                             ng-model="calendarView"
                             uib-btn-radio="'week'">
                             Week
-                        </label>                        
+                        </button>                     
 
-                        <label
-                            class="btn btn-primary text-extra-small"
+                        <button
+                            class="btn btn-primary"
                             ng-model="calendarView" 
                             uib-btn-radio="'day'">
                             Day
-                        </label>
+                        </button>
 
                     </div>
 
                     <!-- ================================================== -->
                     <!-- - navigation buttons                               -->
                     <!-- ================================================== --> 
-                    <div class="btn-group col-md-4 padding-left-0">
+                    <div class="btn-group col-md-3 padding-left-0">
 
-                        <div class="">
+                        <button
+                            class="btn btn-primary"
+                            mwl-date-modifier
+                            date="calendarDay"
+                            decrement="calendarView">
+                            <i class="ti-angle-left"></i>
 
-                            <button
-                                class="btn btn-primary"
-                                mwl-date-modifier
-                                date="calendarDay"
-                                decrement="calendarView">
-                                <i class="ti-angle-left"></i>
+                        </button>
 
-                            </button>
+                        <button
+                            class="btn btn-default padding-left-5 padding-right-5"
+                            mwl-date-modifier
+                            date="calendarDay"
+                            set-to-today>
+                            Today
+                        </button>
 
-                            <button
-                                class="btn btn-default"
-                                mwl-date-modifier
-                                date="calendarDay"
-                                set-to-today>
-                                Today
-                            </button>
-
-                            <button
-                                class="btn btn-primary"
-                                mwl-date-modifier
-                                date="calendarDay"
-                                increment="calendarView">
-                                <i class="ti-angle-right"></i>
-                            </button>
-
-                        </div>
+                        <button
+                            class="btn btn-primary"
+                            mwl-date-modifier
+                            date="calendarDay"
+                            increment="calendarView">
+                            <i class="ti-angle-right"></i>
+                        </button>
 
                     </div>
-
-                    <!-- ================================================== -->
-                    <!-- - Add new events                                   -->
-                    <!-- ================================================== --> 
 
                     <!-- -- --------------------------------------------------- --> 
                     <!-- -- - editable only by Project Manager                  -->
                     <!-- -- --------------------------------------------------- --> 
                     @if ( $authUser->hasRole('ADMIN_ROLE') || $authUser->hasRole('PROJECT_MANAGER_ROLE') )
 
-                    <button class="btn btn-primary btn-o btn-wide padding-left-5 pull-right " 
-                            ng-click="createTask()" >
-                        <s>Create Holiday</s>
-                    </button>
+                    <!-- ================================================== -->
+                    <!-- - create new task button                           -->
+                    <!-- ================================================== --> 
+<!--                    <div class="col-md-5 padding-0">
 
-                    <button class="btn btn-primary btn-o btn-wide pull-right" 
-                            ng-click="createHoliday()" >
-                        <s>Create Task</s>
-                    </button>
+                        <div class="pull-right">
+                            <button class="btn btn-primary btn-o" 
+                                    ng-click="createTask()" >
+                                Create Task
+                            </button>
+                        </div>
+
+                    </div>-->
 
                     @endif
                     <!-- -- --------------------------------------------------- --> 

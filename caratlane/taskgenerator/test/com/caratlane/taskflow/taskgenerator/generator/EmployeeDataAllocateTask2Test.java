@@ -11,7 +11,7 @@ import com.caratlane.taskflow.taskgenerator.generator.dao.TaskAllocation;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.IN_THREE_DAYS;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.IN_TWO_DAYS;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.TOMORROW;
-import com.caratlane.taskflow.taskgenerator.generator.rules.TaskAllocationDistribution;
+import com.caratlane.taskflow.taskgenerator.generator.rules.TaskAllocator;
 import helpers.TestTaskGeneratorException;
 import static helpers.TestDBConstants.DURATION_SKILL_5_3RenC;
 import static helpers.TestDBConstants.EMPLOYEE_CL0004;
@@ -42,6 +42,8 @@ import org.junit.Test;
  */
 public class EmployeeDataAllocateTask2Test {
 
+    final static boolean test = true;
+    
     private static EmployeeData employeeData = null;
     private static ProjectData projectData = null;
 
@@ -52,7 +54,6 @@ public class EmployeeDataAllocateTask2Test {
     public static void setUpClass() {
 
         // company's non working days
-        final boolean test = true;
         final NonWorkingDays nwdsInstance = NonWorkingDays.getInstance();
         nwdsInstance.addNwd(test, NWD_1);       // tomorrow
 
@@ -61,7 +62,7 @@ public class EmployeeDataAllocateTask2Test {
         employeeData.addSkill(ID_SKILL_5_3RenC);     // id = 5
 
         final Employees employeesInstance = Employees.getInstance();
-        employeesInstance.addEmployeeData(employeeData);
+        employeesInstance.addEmployeeData(test, employeeData);
 
         // set up non working days for that employee
         // non non working days, no holidays
@@ -73,7 +74,6 @@ public class EmployeeDataAllocateTask2Test {
         projectData = null;
         employeeData = null;
 
-        final boolean test = true;
         final NonWorkingDays nwdsInstance = NonWorkingDays.getInstance();
         nwdsInstance.clearNwd(test);
 
@@ -85,7 +85,6 @@ public class EmployeeDataAllocateTask2Test {
     public void setUp() throws TestTaskGeneratorException {
 
         // clean up existing tasks from previous tests.
-        final boolean test = true;
         employeeData.clearTaskAllocations(test);
     }
 
@@ -120,7 +119,7 @@ public class EmployeeDataAllocateTask2Test {
         final Integer skill_id = ID_SKILL_5_3RenC; // id = 5
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_1;    // nb probucts = 2
 
-        TaskAllocationDistribution.allocateTask(projectData, skill_id, nb_products);
+        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
@@ -167,7 +166,7 @@ public class EmployeeDataAllocateTask2Test {
         final Integer skill_id = ID_SKILL_5_3RenC; // id = 5
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_2;    // nb probucts = 4
 
-        TaskAllocationDistribution.allocateTask(projectData, skill_id, nb_products);
+        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
@@ -214,7 +213,7 @@ public class EmployeeDataAllocateTask2Test {
         final Integer skill_id = ID_SKILL_5_3RenC; // id = 5
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_3;    // nb probucts = 6
 
-        TaskAllocationDistribution.allocateTask(projectData, skill_id, nb_products);
+        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
@@ -273,7 +272,7 @@ public class EmployeeDataAllocateTask2Test {
         final Integer skill_id = ID_SKILL_5_3RenC; // id = 5
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_4;    // nb probucts = 8
 
-        TaskAllocationDistribution.allocateTask(projectData, skill_id, nb_products);
+        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
@@ -332,7 +331,7 @@ public class EmployeeDataAllocateTask2Test {
         final Integer skill_id = ID_SKILL_5_3RenC; // id = 5
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_5;    // nb probucts = 10
 
-        TaskAllocationDistribution.allocateTask(projectData, skill_id, nb_products);
+        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();

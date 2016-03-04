@@ -21,6 +21,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 8.0,
                         'employementType' => "FTE",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 1
                     ],
@@ -35,6 +36,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 8.0,
                         'employementType' => "FTE",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 1,
                         'isProjectManager' => 0
                     ],
@@ -49,6 +51,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 8.0,
                         'employementType' => "FTE",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 1,
                         'isProjectManager' => 0
                     ],
@@ -63,6 +66,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 8.0,
                         'employementType' => "FTE",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -77,6 +81,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 8.0,
                         'employementType' => "FTE",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -91,6 +96,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 8.0,
                         'employementType' => "FTE",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -105,6 +111,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 8.0,
                         'employementType' => "FTE",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ], [
@@ -118,6 +125,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 8.0,
                         'employementType' => "FTE",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -132,6 +140,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 8.0,
                         'employementType' => "FTE",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ], [
@@ -145,6 +154,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 8.0,
                         'employementType' => "FTE",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -162,6 +172,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 1,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -176,6 +187,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -190,6 +202,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 1,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -204,6 +217,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -218,6 +232,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 1,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -232,6 +247,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -246,6 +262,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 1,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -260,6 +277,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -274,6 +292,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 1,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -288,6 +307,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -302,6 +322,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 1,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -316,6 +337,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -330,6 +352,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 1,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -344,6 +367,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -358,6 +382,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 1,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -372,6 +397,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ], [
@@ -385,6 +411,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 1,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ],
@@ -399,6 +426,7 @@ class EmployeesTableSeeder extends Seeder {
                         'phone' => null,
                         'productivity' => 4.0,
                         'employementType' => "Intern",
+                        // 'morning_shift' => 0,
                         'isTeamLeader' => 0,
                         'isProjectManager' => 0
                     ]

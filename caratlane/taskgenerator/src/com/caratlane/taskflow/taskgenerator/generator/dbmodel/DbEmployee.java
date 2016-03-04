@@ -13,11 +13,11 @@ import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.EMPLOYEE_ID_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.EMPLOYEE_PRODUCTIVITY_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.EMPLOYEE_TABLE_NAME;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.FIND_ALL_EMPLOYEES_QUERY;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.FIND_ALL_EMPLOYEES_SUFFIX;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.FIND_EMPLOYEE_QUERY;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.FIND_EMPLOYEE_SUFFIX;
 import com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.EmployementType;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_ALL_EMPLOYEES_QUERY;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_ALL_EMPLOYEES_SUFFIX;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_EMPLOYEE_QUERY;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_EMPLOYEE_SUFFIX;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -86,40 +86,59 @@ public class DbEmployee implements Serializable {
     private EmployementType employement_type;
 
     /**
+     * morning shift
+     */
+//    @NotNull
+//    @Min(value = 0)
+//    @Max(value = 1)
+//    @Column(name = EMPLOYEE_MORNING_SHIFT_COL_NAME, insertable = true, updatable = false)
+//    private Byte morning_shift;
+    /**
      * Default constructor.
      */
     public DbEmployee() {
     }
 
+    /**
+     *
+     * @param employeeId
+     * @param productivity
+     * @param employement_type
+     * @param morning_shift
+     */
     public DbEmployee(
             String employeeId,
             Double productivity,
             EmployementType employement_type
+    //            Byte morning_shift
     ) {
         this.employeeId = employeeId;
         this.productivity = productivity;
         this.employement_type = employement_type;
+//        this.morning_shift = morning_shift;
     }
 
     /**
-     * For testing purpose. The this.id = id line would make an attempt to
-     * persist the entity to crash.
+     * For testing purpose.
      *
      * @param id
      * @param employeeId
      * @param productivity
      * @param employement_type
+     * @param morning_shift
      */
     public DbEmployee(
             Integer id,
             String employeeId,
             Double productivity,
             EmployementType employement_type
+    //            Byte morning_shift
     ) {
         this.id = id;
         this.employeeId = employeeId;
         this.productivity = productivity;
         this.employement_type = employement_type;
+//        this.morning_shift = morning_shift;
     }
 
     public Integer getId() {
@@ -138,13 +157,16 @@ public class DbEmployee implements Serializable {
         return employeeId;
     }
 
+//    public Byte getMorning_shift() {
+//        return morning_shift;
+//    }
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 71 * hash + Objects.hashCode(this.id);
-        hash = 71 * hash + Objects.hashCode(this.employeeId);
-        hash = 71 * hash + Objects.hashCode(this.productivity);
-        hash = 71 * hash + Objects.hashCode(this.employement_type);
+        int hash = 3;
+        hash = 97 * hash + Objects.hashCode(this.id);
+        hash = 97 * hash + Objects.hashCode(this.employeeId);
+        hash = 97 * hash + Objects.hashCode(this.productivity);
+        hash = 97 * hash + Objects.hashCode(this.employement_type);
         return hash;
     }
 

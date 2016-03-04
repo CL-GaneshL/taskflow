@@ -45,6 +45,22 @@
 
                             </div>
 
+                            <div class="alert alert-block alert-warning fade in">
+
+                                <h4 class="alert-heading margin-bottom-10">
+                                    <i class="ti-alert"></i> Warning!
+                                </h4>
+
+                                <p class="margin-bottom-10">
+                                    Before starting the Task Allocation process, make sure 
+                                    that employees have updated the status (completion number
+                                    of products ...) of the Task they are currently working on.
+                                </p>
+
+<!--                                <s>    <a href="#" class="btn btn-warning">Check</a></s>-->
+
+                            </div>
+
                         </fieldset>
                     </form> 
 
@@ -84,11 +100,11 @@
                                                data-ng-click="resetTasks()" />
 
                                     </div>
-                                    
+
                                     <div class="row col-md-7 text-muted text-small">
                                         <p><%reset_message%></p>
                                     </div>
-                                    
+
                                 </div>
 
                         </fieldset>

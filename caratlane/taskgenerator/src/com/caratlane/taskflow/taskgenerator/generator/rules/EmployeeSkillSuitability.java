@@ -18,8 +18,15 @@ import java.util.stream.Stream;
  */
 public class EmployeeSkillSuitability {
 
+    /**
+     *
+     * @param skill
+     * @param from
+     * @return
+     */
     public static EmployeeData findMostSuitableEmployeeWithSkill(
-            final Integer skill
+            final Integer skill,
+            final LocalDateTime from
     ) {
 
         EmployeeData employeeData = null;
@@ -34,16 +41,18 @@ public class EmployeeSkillSuitability {
                 });
 
         // sort employees by their earliest availability
-        final Stream<EmployeeData> sortedEmployees
+        final Optional<EmployeeData> first
                 = skilledEmployees.sorted((EmployeeData ed1, EmployeeData ed2) -> {
 
-                    final LocalDateTime start_date1 = ed1.getEarliestAvailability();
-                    final LocalDateTime start_date2 = ed2.getEarliestAvailability();
+                    final LocalDateTime start_date1
+                    = EmployeeAvailability.getNextAvailability(ed1, from);
+
+                    final LocalDateTime start_date2
+                    = EmployeeAvailability.getNextAvailability(ed2, from);
 
                     return start_date1.compareTo(start_date2);
-                });
-
-        final Optional<EmployeeData> first = sortedEmployees.findFirst();
+                })
+                .findFirst();
 
         if (first.isPresent()) {
             employeeData = first.get();

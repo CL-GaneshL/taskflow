@@ -14,13 +14,6 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
 
                         var CONTROLLER_NAME = 'nonWorkingDaysCtrl';
 
-                        // caratlane 1 shift starting time : 6am
-                        var CARATLANE_START_ACTIVITY_TIME = 6;
-                        // caratlane 2nd shift ending time : 10pm
-                        var CARATLANE_END_ACTIVITY_TIME = 22;
-                        // caratlane mid shif time : 2pm
-                        var CARATLANE_MID_SHIFT_TIME = 14;
-
                         var weekend_class = 'off-site-work';
                         var non_working_class = 'to-do';
 
@@ -69,21 +62,9 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                                                 break;
                                         }
 
-                                        var startsAt = getStartsAt(
-                                                formatMySQL2JSDate(nwd[index].date),
-                                                formatMySQL2Boolean(nwd[index].morning_shift),
-                                                formatMySQL2Boolean(nwd[index].afternoon_shift)
-                                                );
-
-                                        var endsAt = getEndsAt(
-                                                formatMySQL2JSDate(nwd[index].date),
-                                                formatMySQL2Boolean(nwd[index].morning_shift),
-                                                formatMySQL2Boolean(nwd[index].afternoon_shift)
-                                                );
-
                                         var date = nwd[index].date;
-                                        var morning_shift = formatMySQL2Boolean(nwd[index].morning_shift);
-                                        var afternoon_shift = formatMySQL2Boolean(nwd[index].afternoon_shift);
+                                        var startsAt = formatMySQL2JSDate(nwd[index].date);
+                                        var endsAt = formatMySQL2JSDate(nwd[index].date);
 
                                         addEvent(
                                                 {
@@ -94,9 +75,7 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                                                     'endsAt': endsAt,
                                                     'draggable': false,
                                                     'resizable': true,
-                                                    'date': date,
-                                                    'morning_shift': morning_shift,
-                                                    'afternoon_shift': afternoon_shift
+                                                    'date': date
                                                 }
                                         );
                                     }
@@ -116,6 +95,16 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                         // - when user click on the event's edit icon
                         // ==================================================
                         $scope.editNonWorkingDay = function (calendarEvent) {
+
+                            var type = null;
+                            switch (calendarEvent.type) {
+                                case weekend_class:
+                                    type = 'WEEKEND';
+                                    break;
+                                case non_working_class:
+                                    type = 'NON-WORKING';
+                                    break;
+                            }
 
                             // --------------------------------------------------------
                             // - initialization of the date and time pickers
@@ -138,10 +127,8 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                             var toEditEvent = {
                                 'id': calendarEvent.id,
                                 'title': calendarEvent.title,
-                                'type': 'NON-WORKING',
+                                'type': type,
                                 'date': calendarEvent.date,
-                                'morning_shift': calendarEvent.morning_shift,
-                                'afternoon_shift': calendarEvent.afternoon_shift,
                                 'startsAt': calendarEvent.startsAt,
                                 'endsAt': calendarEvent.endsAt,
                                 'min_date': min_date,
@@ -175,10 +162,10 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                                             'id': $scope.event.id,
                                             'title': $scope.event.title,
                                             'type': $scope.event.type,
-                                            'date': formatJS2MySQLDate(new Date($scope.event.date)),
-                                            'morning_shift': formatBoolean2MySQL($scope.event.morning_shift),
-                                            'afternoon_shift': formatBoolean2MySQL($scope.event.afternoon_shift)
+                                            'date': formatJS2MySQLDate(new Date($scope.event.date))
                                         };
+
+                                        $log.debug(CONTROLLER_NAME + " : toUpdateNonWorkingDay = " + JSON.stringify(toUpdateNonWorkingDay));
 
                                         if ($scope.validNonWorkingDayEvent(toUpdateNonWorkingDay) === false) {
                                             $uibModalInstance.dismiss('cancel');
@@ -212,28 +199,15 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                                                             break;
                                                     }
 
-                                                    var startsAt = getStartsAt(
-                                                            formatMySQL2JSDate(non_working_day.date),
-                                                            formatMySQL2Boolean(non_working_day.morning_shift),
-                                                            formatMySQL2Boolean(non_working_day.afternoon_shift)
-                                                            );
-
-                                                    var endsAt = getEndsAt(
-                                                            formatMySQL2JSDate(non_working_day.date),
-                                                            formatMySQL2Boolean(non_working_day.morning_shift),
-                                                            formatMySQL2Boolean(non_working_day.afternoon_shift)
-                                                            );
-
                                                     var date = non_working_day.date;
-                                                    var morning_shift = formatMySQL2Boolean(non_working_day.morning_shift);
-                                                    var afternoon_shift = formatMySQL2Boolean(non_working_day.afternoon_shift);
-
+                                                    var startsAt = formatMySQL2JSDate(non_working_day.date);
+                                                    var endsAt = formatMySQL2JSDate(non_working_day.date);
 
                                                     // remove first from the calendar
                                                     removeEvent(id);
 
                                                     // replace with the update one
-                                                    addEvent({
+                                                    var event = {
                                                         'id': id,
                                                         'title': title,
                                                         'type': type,
@@ -241,13 +215,13 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                                                         'endsAt': endsAt,
                                                         'draggable': false,
                                                         'resizable': true,
-                                                        'date': date,
-                                                        'morning_shift': morning_shift,
-                                                        'afternoon_shift': afternoon_shift
-                                                    });
+                                                        'date': date
+                                                    };
 
-                                                    var name = non_working_day.name;
-                                                    var message = 'Non-Working Day : ' + name + ', was successfuly updated!';
+                                                    addEvent(event);
+
+                                                    var title = non_working_day.title;
+                                                    var message = 'Non-Working Day : ' + title + ', was successfuly updated!';
                                                     modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
                                                 },
                                                 function (response) {
@@ -293,20 +267,6 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                                             return false;
                                         }
 
-                                        // -------------------------------------------------
-                                        // - morning and afternoon shifts
-                                        // -------------------------------------------------
-                                        if (event.morning_shift === false & event.afternoon_shift) {
-                                            var message = "A morning and/or an afternoon shift must be selected.";
-                                            modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
-                                            return false;
-                                        }
-
-                                        // -------------------------------------------------
-                                        // - start and end dates for weekends 
-                                        // -------------------------------------------------
-                                        // TODO
-
                                         return true;
                                     };
                                 }
@@ -332,9 +292,7 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                                 'id': calendarEvent.id,
                                 'title': calendarEvent.title,
                                 'type': type,
-                                'date': calendarEvent.date,
-                                'morning_shift': calendarEvent.morning_shift,
-                                'afternoon_shift': calendarEvent.afternoon_shift
+                                'date': calendarEvent.date
                             };
 
                             // --------------------------------------------------------
@@ -445,8 +403,6 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                                 'title': null,
                                 'type': non_working_class,
                                 'date': tomorrow,
-                                'morning_shift': false,
-                                'afternoon_shift': false,
                                 'startsAt': startsAt,
                                 'endsAt': endsAt,
                                 'min_date': min_date,
@@ -486,9 +442,7 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                                             'id': $scope.event.id,
                                             'title': $scope.event.title,
                                             'type': type,
-                                            'date': formatJS2MySQLDate(new Date($scope.event.date)),
-                                            'morning_shift': formatBoolean2MySQL($scope.event.morning_shift),
-                                            'afternoon_shift': formatBoolean2MySQL($scope.event.afternoon_shift)
+                                            'date': formatJS2MySQLDate(new Date($scope.event.date))
                                         };
 
                                         if ($scope.validNonWorkingDayEvent(newNonWorkingDay) === false) {
@@ -527,21 +481,9 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                                                             break;
                                                     }
 
-                                                    var startsAt = getStartsAt(
-                                                            formatMySQL2JSDate(non_working_day.date),
-                                                            formatMySQL2Boolean(non_working_day.morning_shift),
-                                                            formatMySQL2Boolean(non_working_day.afternoon_shift)
-                                                            );
-
-                                                    var endsAt = getEndsAt(
-                                                            formatMySQL2JSDate(non_working_day.date),
-                                                            formatMySQL2Boolean(non_working_day.morning_shift),
-                                                            formatMySQL2Boolean(non_working_day.afternoon_shift)
-                                                            );
-
                                                     var date = non_working_day.date;
-                                                    var morning_shift = formatMySQL2Boolean(non_working_day.morning_shift);
-                                                    var afternoon_shift = formatMySQL2Boolean(non_working_day.afternoon_shift);
+                                                    var startsAt = formatMySQL2JSDate(non_working_day.date);
+                                                    var endsAt = formatMySQL2JSDate(non_working_day.date);
 
                                                     // replace with the update one
                                                     addEvent({
@@ -552,9 +494,7 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                                                         'endsAt': endsAt,
                                                         'draggable': false,
                                                         'resizable': true,
-                                                        'date': date,
-                                                        'morning_shift': morning_shift,
-                                                        'afternoon_shift': afternoon_shift
+                                                        'date': date
                                                     });
 
                                                     var title = non_working_day.title;
@@ -603,20 +543,6 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                                             return false;
                                         }
 
-                                        // -------------------------------------------------
-                                        // - morning and afternoon shifts
-                                        // -------------------------------------------------
-                                        if (event.morning_shift === false & event.afternoon_shift) {
-                                            var message = "A morning and/or an afternoon shift must be selected.";
-                                            modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
-                                            return false;
-                                        }
-
-                                        // -------------------------------------------------
-                                        // - start and end dates for weekends 
-                                        // -------------------------------------------------
-                                        // TODO
-
                                         return true;
                                     };
                                 }
@@ -630,30 +556,6 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                             $event.stopPropagation();
                             event[field] = !event[field];
                         };
-
-                        // ==================================================
-                        // - get a boolean value from mysql
-                        // ==================================================
-                        function formatMySQL2Boolean(val) {
-                            if (val === 0) {
-                                return false;
-                            }
-                            else {
-                                return true;
-                            }
-                        }
-
-                        // ==================================================
-                        // - format a boolean value for mysql
-                        // ==================================================
-                        function formatBoolean2MySQL(val) {
-                            if (val === false) {
-                                return 0;
-                            }
-                            else {
-                                return 1;
-                            }
-                        }
 
                         // ==================================================
                         // - get a JS date from a MySQL datatime
@@ -686,49 +588,6 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                             var secs = js_date.getSeconds();
 
                             return year + '-' + month + '-' + day + ' ' + hours + ':' + mins + ':' + secs;
-                        }
-
-                        // ==================================================
-                        // - get the endsAt time for the calendar
-                        // - this assumes that 
-                        // -    - morning_shift or afternoon_shift is true
-                        // -    - both are true
-                        // ==================================================
-                        function getStartsAt(date, morning_shift, afternoon_shift) {
-
-                            var startDate = new Date(date);
-
-                            if (afternoon_shift === true) {
-                                startDate.setHours(CARATLANE_MID_SHIFT_TIME, 0, 0, 0);
-                            }
-
-                            if (morning_shift === true) {
-                                startDate.setHours(CARATLANE_START_ACTIVITY_TIME, 0, 0, 0);
-                            }
-
-                            return startDate;
-                        }
-
-                        // ==================================================
-                        // - get the endsAt time for the calendar
-                        // - this assumes that 
-                        // -    - morning_shift or afternoon_shift is true
-                        // -    - both are true
-                        // ==================================================
-                        function getEndsAt(date, morning_shift, afternoon_shift) {
-
-                            //default value
-                            var endDate = new Date(date);
-
-                            if (morning_shift === true) {
-                                endDate.setHours(CARATLANE_MID_SHIFT_TIME, 0, 0, 0);
-                            }
-
-                            if (afternoon_shift === true) {
-                                endDate.setHours(CARATLANE_END_ACTIVITY_TIME, 0, 0, 0);
-                            }
-
-                            return endDate;
                         }
 
                         // ==================================================

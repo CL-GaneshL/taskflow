@@ -19,15 +19,14 @@
         <form class="form-horizontal padding-bottom-20" role="form">
 
             <fieldset>
-                
-                <!-- ================================================== -->
-                <!-- - title                                            -->
-                <!-- ================================================== -->
-                
+
                 <legend>
                     Non-Working Day :
                 </legend>
 
+                <!-- ================================================== -->
+                <!-- - title                                            -->
+                <!-- ================================================== -->
                 <div class="form-group padding-top-5 padding-left-10">
 
                     <label class="row col-md-12">
@@ -38,9 +37,9 @@
 
                         <input type="text" 
                                ng-model="event.title" 
-                               placeholder="Enter a title" 
+                               placeholder="Enter a title..." 
                                class="form-control underline text-large" 
-                                ng-trim="true"
+                               ng-trim="true"
                                required />
 
                     </div>
@@ -65,7 +64,7 @@
                                 Non-Working Day
                             </label>
                         </div>
- 
+
                         <div class="radio clip-radio radio-success col-md-5 text-left padding-left-15">
                             <input type="radio"
                                    ng-model="event.type"
@@ -110,40 +109,6 @@
                                    />
                             <i class="ti-calendar"></i>
                         </span>
-
-                    </div>
-
-                </div>
-
-                <div class="form-group padding-top-5 padding-left-10">
-
-                    <div class="row col-md-12">
-
-                        <div class="radio clip-radio radio-primary col-md-5 text-left padding-left-15" 
-                             ng-init="event.morning_shift">
-
-                            <input type="radio"
-                                   ng-model="event.morning_shift"
-                                   id="morning_shift"
-                                   value="true" />
-
-                            <label for="morning_shift">
-                                Morning Shift
-                            </label>
-                        </div>
-
-                        <div class="radio clip-radio radio-primary col-md-5 text-left padding-left-15"
-                             ng-init="event.afternoon_shift">
-
-                            <input type="radio"
-                                   ng-model="event.afternoon_shift"
-                                   id="afternoon_shift"
-                                   value="true" />
-                            
-                             <label for="afternoon_shift">
-                                Afternoon Shift
-                            </label>
-                        </div>
 
                     </div>
 

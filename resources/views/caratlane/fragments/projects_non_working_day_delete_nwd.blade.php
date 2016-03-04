@@ -113,46 +113,6 @@
 
                 </div>
 
-                <div class="form-group padding-top-5 padding-left-10">
-
-                    <div class="row col-md-12">
-
-                        <div class="radio clip-radio radio-primary col-md-5 text-left padding-left-15" 
-                             ng-init="event.morning_shift">
-
-                            <input type="radio"
-                                   ng-model="event.morning_shift"
-                                   id="morning_shift"
-                                   value="true"
-                                   ng-checked="event.morning_shift === true"
-                                   ng-readonly="true"
-                                   disabled="" />
-
-                            <label for="morning_shift">
-                                Morning Shift
-                            </label>
-                        </div>
-
-                        <div class="radio clip-radio radio-primary col-md-5 text-left padding-left-15"
-                             ng-init="event.afternoon_shift">
-
-                            <input type="radio"
-                                   ng-model="event.afternoon_shift"
-                                   id="afternoon_shift"
-                                   value="true"
-                                   ng-checked="event.afternoon_shift === true"
-                                   ng-readonly="true"
-                                   disabled="" />
-
-                            <label for="afternoon_shift">
-                                Afternoon Shift
-                            </label>
-                        </div>
-
-                    </div>
-
-                </div>
-
             </fieldset>
 
 

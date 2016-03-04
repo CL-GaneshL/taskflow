@@ -116,8 +116,6 @@ class NonWorkingDaysController extends Controller {
         $nwd->title = trim($request->title) !== '' ? $request->title : null;
         $nwd->type = trim($request->type) !== '' ? $request->type : null;
         $nwd->date = trim($request->date) !== '' ? $request->date : null;
-        $nwd->morning_shift = trim($request->morning_shift) !== '' ? $request->morning_shift : null;
-        $nwd->afternoon_shift = trim($request->afternoon_shift) !== '' ? $request->afternoon_shift : null;
 
         // ---------------------------------------------------
         // \Log::debug('update : $nwd = ' . print_r($nwd, true));

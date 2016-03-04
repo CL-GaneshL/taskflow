@@ -10,7 +10,9 @@ import com.caratlane.taskflow.taskgenerator.db.DBManager;
 import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorException;
 import com.caratlane.taskflow.taskgenerator.generator.Employees;
 import com.caratlane.taskflow.taskgenerator.generator.NonWorkingDays;
+import com.caratlane.taskflow.taskgenerator.generator.Projects;
 import com.caratlane.taskflow.taskgenerator.generator.Skills;
+import com.caratlane.taskflow.taskgenerator.generator.Tasks;
 import static helpers.TestDBConstants.SKILL_3_3DMS;
 import static helpers.TestDBConstants.SKILL_5_3RenC;
 import static helpers.TestDBConstants.TEST_DB_DATABASE;
@@ -40,6 +42,8 @@ public class TestDBManager {
      */
     public static void initialize() throws DBException, TestTaskGeneratorException, TaskGeneratorException {
 
+        final boolean test_mode = true;
+
         DBManager.initialize(
                 TEST_DB_HOST,
                 TEST_DB_PORT,
@@ -48,20 +52,33 @@ public class TestDBManager {
                 TEST_DB_PASSWORD
         );
 
-        // initialize Skills for testing purpose
-        final boolean test = true;
-        Skills.initialize(test);
+        // ---------------------------------------------
+        // non working days to come 
+        // ---------------------------------------------
+        NonWorkingDays.initialize(test_mode);
 
-        // create a list of available skills in the db
+        // ---------------------------------------------
+        // skills
+        // ---------------------------------------------
+        Skills.initialize(test_mode);
         final Skills skills = Skills.getInstance();
-        skills.addSkill(test, SKILL_3_3DMS);      // id = 3
-        skills.addSkill(test, SKILL_5_3RenC);     // id = 5
+        skills.addSkill(test_mode, SKILL_3_3DMS);      // id = 3
+        skills.addSkill(test_mode, SKILL_5_3RenC);     // id = 5
 
-        // initialize NonWorkingDay for testing purpose
-        NonWorkingDays.initialize(test);
+        // ---------------------------------------------
+        // all open projects
+        // ---------------------------------------------
+        Projects.initialize(test_mode);
 
-        // initialize Employees for testing purposes
-        Employees.initialize(test);
+        // ---------------------------------------------
+        // all employees
+        // ---------------------------------------------
+        Employees.initialize(test_mode);
+
+        // ---------------------------------------------
+        // All tasks from all open projects
+        // ---------------------------------------------
+        Tasks.initialize(test_mode);
     }
 
     /**

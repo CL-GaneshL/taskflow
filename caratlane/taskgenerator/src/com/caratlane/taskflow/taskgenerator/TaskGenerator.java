@@ -9,15 +9,16 @@ import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.ACTION;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Level;
-import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.CHARSET;
-import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.COLLATION;
 import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.DATABASE;
-import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.DRIVER;
+import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.DEFAULT_MODE;
+import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.GENERATE_ACTION;
 import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.HOST;
 import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.LOGPATH;
 import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.MODE;
+import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.NULL_LOGPATH;
 import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.PASSWORD;
 import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.PORT;
+import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.RESET_ACTION;
 import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.USERNAME;
 import com.caratlane.taskflow.taskgenerator.db.DBManager;
 import com.caratlane.taskflow.taskgenerator.db.DBException;
@@ -37,17 +38,17 @@ public class TaskGenerator {
      */
     public static void main(String[] args) {
 
-        String driver = null;
+//        String driver = null;
         String host = null;
         String port = null;
         String database = null;
         String username = null;
         String password = null;
-        String charset = null;
-        String collation = null;
-        String logpath = null;
-        String mode = null;
-        String action = null;
+//        String charset = null;
+//        String collation = null;
+        String logpath = NULL_LOGPATH;
+        String mode = DEFAULT_MODE;
+        String action = DEFAULT_MODE;
 
         final Generator generator;
 
@@ -70,9 +71,9 @@ public class TaskGenerator {
 
                 switch (flag) {
 
-                    case DRIVER:
-                        driver = value;
-                        break;
+//                    case DRIVER:
+//                        driver = value;
+//                        break;
                     case HOST:
                         host = value;
                         break;
@@ -88,12 +89,12 @@ public class TaskGenerator {
                     case PASSWORD:
                         password = value;
                         break;
-                    case CHARSET:
-                        charset = value;
-                        break;
-                    case COLLATION:
-                        collation = value;
-                        break;
+//                    case CHARSET:
+//                        charset = value;
+//                        break;
+//                    case COLLATION:
+//                        collation = value;
+//                        break;
                     case LOGPATH:
                         logpath = value;
                         break;
@@ -117,32 +118,31 @@ public class TaskGenerator {
 //                final String msg = "Driver not defined.";
 //                throw new CommandLineException(msg);
 //            }
-//
-//            if (host == null) {
-//                final String msg = "Host not defined.";
-//                throw new CommandLineException(msg);
-//            }
-//
-//            if (port == null) {
-//                final String msg = "Port not defined.";
-//                throw new CommandLineException(msg);
-//            }
-//
-//            if (database == null) {
-//                final String msg = "Database not defined.";
-//                throw new CommandLineException(msg);
-//            }
-//
-//            if (username == null) {
-//                final String msg = "Username not defined.";
-//                throw new CommandLineException(msg);
-//            }
-//
-//            if (password == null) {
-//                final String msg = "Password not defined.";
-//                throw new CommandLineException(msg);
-//            }
-//
+            if (host == null) {
+                final String msg = "Host not defined.";
+                throw new CommandLineException(msg);
+            }
+
+            if (port == null) {
+                final String msg = "Port not defined.";
+                throw new CommandLineException(msg);
+            }
+
+            if (database == null) {
+                final String msg = "Database not defined.";
+                throw new CommandLineException(msg);
+            }
+
+            if (username == null) {
+                final String msg = "Username not defined.";
+                throw new CommandLineException(msg);
+            }
+
+            if (password == null) {
+                final String msg = "Password not defined.";
+                throw new CommandLineException(msg);
+            }
+
 //            if (charset == null) {
 //                final String msg = "Charset not defined.";
 //                throw new CommandLineException(msg);
@@ -152,27 +152,17 @@ public class TaskGenerator {
 //                final String msg = "Collation not defined.";
 //                throw new CommandLineException(msg);
 //            }
-//
-//            if (logpath == null) {
-//                final String msg = "Logpath not defined.";
-//                throw new CommandLineException(msg);
-//            }
-//
-//            if (mode == null) {
-//                final String msg = "Mode not defined.";
-//                throw new CommandLineException(msg);
-//            }
             // --------------------------------------------------------------
             // - log the parameters 
             // --------------------------------------------------------------
-            System.out.println("TaskGenerator : Command Line : driver => " + driver);
+//            System.out.println("TaskGenerator : Command Line : driver => " + driver);
             System.out.println("TaskGenerator : Command Line : host => " + host);
             System.out.println("TaskGenerator : Command Line : port => " + port);
             System.out.println("TaskGenerator : Command Line : database => " + database);
             System.out.println("TaskGenerator : Command Line : username => " + username);
             System.out.println("TaskGenerator : Command Line : password => " + password);
-            System.out.println("TaskGenerator : Command Line : charset => " + charset);
-            System.out.println("TaskGenerator : Command Line : collation => " + collation);
+//            System.out.println("TaskGenerator : Command Line : charset => " + charset);
+//            System.out.println("TaskGenerator : Command Line : collation => " + collation);
             System.out.println("TaskGenerator : Command Line : logpath => " + logpath);
             System.out.println("TaskGenerator : Command Line : mode => " + mode);
             System.out.println("TaskGenerator : Command Line : action => " + action);
@@ -206,7 +196,7 @@ public class TaskGenerator {
 
             switch (action) {
 
-                case "reset":
+                case RESET_ACTION:
                     // ==============================================================
                     // - reset database
                     // ==============================================================
@@ -214,7 +204,7 @@ public class TaskGenerator {
                     generator.reset();
                     break;
 
-                case "generate":
+                case GENERATE_ACTION:
                     // ==============================================================
                     // - task generation
                     // ==============================================================

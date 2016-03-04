@@ -5,7 +5,6 @@
  */
 package com.caratlane.taskflow.taskgenerator.generator.dbmodel;
 
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.FIND_EMPLOYEE_TASK_ALLOCATIONS_SUFFIX;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_ALLOCATION_COMPLETED_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_ALLOCATION_COMPLETION_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_ALLOCATION_DURATION_COL_NAME;
@@ -16,7 +15,12 @@ import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_ALLOCATION_START_DATE_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_ALLOCATION_TABLE_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_ALLOCATION_TASK_ID_COL_NAME;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_FIND_EMPLOYEE_TASK_ALLOCATIONS_QUERY;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.DELETE_TASK_ALLOCATIONS_QUERY;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.DELETE_TASK_ALLOCATIONS_SUFFIX;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_EMPLOYEE_TASK_ALLOCATIONS_SUFFIX;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_TASK_EMPLOYEE_TASK_ALLOCATIONS_SUFFIX;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_EMPLOYEE_TASK_ALLOCATIONS_QUERY;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_TASK_EMPLOYEE_TASK_ALLOCATIONS_QUERY;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -41,8 +45,16 @@ import javax.validation.constraints.NotNull;
 @Table(name = TASK_ALLOCATION_TABLE_NAME)
 @NamedQueries({
     @NamedQuery(
+            name = TASK_ALLOCATION_ENTITY_NAME + FIND_TASK_EMPLOYEE_TASK_ALLOCATIONS_SUFFIX,
+            query = FIND_TASK_EMPLOYEE_TASK_ALLOCATIONS_QUERY
+    ),
+    @NamedQuery(
             name = TASK_ALLOCATION_ENTITY_NAME + FIND_EMPLOYEE_TASK_ALLOCATIONS_SUFFIX,
-            query = TASK_FIND_EMPLOYEE_TASK_ALLOCATIONS_QUERY
+            query = FIND_EMPLOYEE_TASK_ALLOCATIONS_QUERY
+    ),
+    @NamedQuery(
+            name = TASK_ALLOCATION_ENTITY_NAME + DELETE_TASK_ALLOCATIONS_SUFFIX,
+            query = DELETE_TASK_ALLOCATIONS_QUERY
     )
 })
 @SuppressWarnings("ValidAttributes")

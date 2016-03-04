@@ -8,11 +8,12 @@ class NonWorkingDaysTableSeeder extends Seeder {
 
     public function run() {
 
-        $columns = "INSERT INTO non_working_days ( title, type, date, morning_shift, afternoon_shift ) ";
+        $columns = "INSERT INTO non_working_days ( title, type, date ) ";
 
         $TEN_YEARS = 10 * 365;
+        $THREE_MONTHS = 3 * 31;
 
-        for ($nbdays = -100; $nbdays <= $TEN_YEARS; $nbdays++) {
+        for ($nbdays = (-1 * $THREE_MONTHS); $nbdays <= $TEN_YEARS; $nbdays++) {
 
             // midnight that day
             $time = mktime(0, 0, 0) + ( $nbdays * 24 * 60 * 60);
@@ -22,23 +23,21 @@ class NonWorkingDaysTableSeeder extends Seeder {
             // ========================================================
             // get weekend days
             $weekday = date('w', $time);
-            $isSaturday = $weekday === '6';
+//            $isSaturday = $weekday === '6';
             $isSunday = $weekday === '0';
 
-            if ($isSaturday) {
-
-                // saturday weekend starts a 12pm
-                $type = "'WEEKEND'";
-                $time = mktime(14, 0, 0) + ( $nbdays * 24 * 60 * 60); // noon that day
-                $date = date('Y-m-d', $time);
-                $morning_shift = 0;
-                $afternoon_shift = 1;
-                $title = "'" . (date('D, j M Y', $time)) . " - Saturday afternoon shift." . "'";
-                $values = "VALUES (" . $title . ", " . $type . ", '" . $date . "', " . $morning_shift . ", " . $afternoon_shift . ");";
-
-                $sql = $columns . $values;
-                DB::unprepared($sql);
-            }
+//            if ($isSaturday) {
+//
+//                // saturday weekend starts a 12pm
+//                $type = "'WEEKEND'";
+//                $time = mktime(14, 0, 0) + ( $nbdays * 24 * 60 * 60); // noon that day
+//                $date = date('Y-m-d', $time);
+//                $title = "'" . (date('D, j M Y', $time)) . " - Saturday afternoon." . "'";
+//                $values = "VALUES (" . $title . ", " . $type . ", '" . $date . "');";
+//
+//                $sql = $columns . $values;
+//                DB::unprepared($sql);
+//            }
 
             if ($isSunday) {
 
@@ -46,10 +45,8 @@ class NonWorkingDaysTableSeeder extends Seeder {
                 $type = "'WEEKEND'";
                 $time = mktime(0, 0, 0) + ( $nbdays * 24 * 60 * 60);  // midnight that day
                 $date = date('Y-m-d', $time);
-                $morning_shift = 1;
-                $afternoon_shift = 1;
                 $title = "'" . (date('D, j M Y', $time)) . " - Sunday." . "'";
-                $values = "VALUES (" . $title . ", " . $type . ", '" . $date . "', " . $morning_shift . ", " . $afternoon_shift . ");";
+                $values = "VALUES (" . $title . ", " . $type . ", '" . $date . "');";
 
                 $sql = $columns . $values;
                 DB::unprepared($sql);
@@ -70,10 +67,8 @@ class NonWorkingDaysTableSeeder extends Seeder {
                 $type = "'NON-WORKING'";
                 $time = mktime(0, 0, 0) + ( $nbdays * 24 * 60 * 60);  // midnight that day
                 $date = date('Y-m-d', $time);
-                $morning_shift = 1;
-                $afternoon_shift = 1;
                 $title = "'Republic Day.'";
-                $values = "VALUES (" . $title . ", " . $type . ", '" . $date . "', " . $morning_shift . ", " . $afternoon_shift . ");";
+                $values = "VALUES (" . $title . ", " . $type . ", '" . $date . "');";
 
                 $sql = $columns . $values;
                 DB::unprepared($sql);
@@ -87,10 +82,8 @@ class NonWorkingDaysTableSeeder extends Seeder {
                 $type = "'NON-WORKING'";
                 $time = ( $nbdays * 24 * 60 * 60) + mktime(0, 0, 0);  // midnight that day
                 $date = date('Y-m-d', $time);
-                $morning_shift = 1;
-                $afternoon_shift = 1;
                 $title = "'Independance Day.'";
-                $values = "VALUES (" . $title . ", " . $type . ", '" . $date . "', " . $morning_shift . ", " . $afternoon_shift . ");";
+                $values = "VALUES (" . $title . ", " . $type . ", '" . $date . "');";
 
                 $sql = $columns . $values;
                 DB::unprepared($sql);
@@ -104,10 +97,8 @@ class NonWorkingDaysTableSeeder extends Seeder {
                 $type = "'NON-WORKING'";
                 $time = ( $nbdays * 24 * 60 * 60) + mktime(0, 0, 0);  // midnight that day
                 $date = date('Y-m-d', $time);
-                $morning_shift = 1;
-                $afternoon_shift = 1;
                 $title = "'Mahatma Ghandi\'s Birthday.'";
-                $values = "VALUES (" . $title . ", " . $type . ", '" . $date . "', " . $morning_shift . ", " . $afternoon_shift . ");";
+                $values = "VALUES (" . $title . ", " . $type . ", '" . $date . "');";
 
                 $sql = $columns . $values;
                 DB::unprepared($sql);

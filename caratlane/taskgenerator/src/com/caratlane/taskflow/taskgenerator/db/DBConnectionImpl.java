@@ -39,7 +39,7 @@ class DBConnectionImpl implements DBConnection {
         public static final String CONNECTIONIMPL_EXCEP_CANNOT_OPEN_CONNECTION
                 = "Cannot open connection, database = [{0}] : [{1}].";
         public static final String CONNECTIONIMPL_EXCEP_FAILED_QUERY_DATABASE
-                = "Failed to query database, database = [{0}], query = [{1}] : [{2}].";
+                = "Failed to query database, query = [{0}] : [{1}].";
         public static final String CONNECTIONIMPL_EXCEP_FAILED_GET_LAST_ID
                 = "Failed to get last id, database = [{0}] : [{2}].";
 
@@ -270,7 +270,7 @@ class DBConnectionImpl implements DBConnection {
 
 //            LOG.error(FAILED_QUERY, this, name);
 //            DBException.logErrorStackTrace(LOG, excep);
-            throw new DBException(CONNECTIONIMPL_EXCEP_FAILED_QUERY_DATABASE, this.db, name, excep.getMessage());
+            throw new DBException(CONNECTIONIMPL_EXCEP_FAILED_QUERY_DATABASE, name, excep.getMessage());
         }
 
 //        LOG.debug(SUCCESSFUL_QUERY, this, name);
@@ -313,7 +313,7 @@ class DBConnectionImpl implements DBConnection {
 
 //            LOG.error(FAILED_SINGLE_RESULT_QUERY, this, name);
 //            DBException.logErrorStackTrace(LOG, excep);
-            throw new DBException(CONNECTIONIMPL_EXCEP_FAILED_QUERY_DATABASE, this.db, name, excep.getMessage());
+            throw new DBException(CONNECTIONIMPL_EXCEP_FAILED_QUERY_DATABASE, name, excep.getMessage());
         }
 
 //        LOG.debug(SUCCESSFUL_SINGLE_RESULT_QUERY, this, name);

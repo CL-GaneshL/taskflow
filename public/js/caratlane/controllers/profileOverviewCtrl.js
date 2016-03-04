@@ -45,11 +45,10 @@ app.controller(
                                 var recentTasks = response.profile.recentTasks;
 
                                 // --------------------------------------------------------
-                                // $log.debug(CONTROLLER_NAME + " : response = " + JSON.stringify(response));
+                                // $log.debug(CONTROLLER_NAME + " : profile recentTasks = " + JSON.stringify(recentTasks));
                                 // --------------------------------------------------------
 
                                 var index = 0;
-//                                var tasks = profileSrvc.getRecentTasks();
                                 for (index = 0; index < RECENT_TASKS_NB_MAX && index < recentTasks.length; index++) {
                                     $scope.taskAllocations.push(
                                             {
@@ -89,32 +88,32 @@ app.controller(
                             function (response) {
 
                                 $scope.profile = response.employee;
+                                var recentTasks = response.recentTasks;
 
                                 // --------------------------------------------------------
-                                // $log.debug(CONTROLLER_NAME + " : recentTasks = " + JSON.stringify(response.recentTasks));
+                                // $log.debug(CONTROLLER_NAME + " : employee recentTasks = " + JSON.stringify(response.recentTasks));
                                 // --------------------------------------------------------
 
                                 var index = 0;
-                                var tasks = response.recentTasks;
-                                for (index = 0; index < RECENT_TASKS_NB_MAX && index < tasks.length; index++) {
+                                for (index = 0; index < RECENT_TASKS_NB_MAX && index < recentTasks.length; index++) {
                                     $scope.taskAllocations.push(
                                             {
-                                                'id': tasks[index].id,
-                                                'start_date': tasks[index].start_date,
-                                                'title': tasks[index].title,
-                                                'duration': tasks[index].duration,
-                                                'completion': tasks[index].completion,
-                                                'completed': tasks[index].completed,
-                                                'employee_id': tasks[index].employee_id,
-                                                'open': tasks[index].open,
-                                                'task_id': tasks[index].task_id,
-                                                'nb_products_completed': tasks[index].nb_products_completed,
-                                                'project_nb_products': tasks[index].project_nb_products,
+                                                'id': recentTasks[index].id,
+                                                'start_date': recentTasks[index].start_date,
+                                                'title': recentTasks[index].title,
+                                                'duration': recentTasks[index].duration,
+                                                'completion': recentTasks[index].completion,
+                                                'completed': recentTasks[index].completed,
+                                                'employee_id': recentTasks[index].employee_id,
+                                                'open': recentTasks[index].open,
+                                                'task_id': recentTasks[index].task_id,
+                                                'nb_products_completed': recentTasks[index].nb_products_completed,
+                                                'project_nb_products': recentTasks[index].project_nb_products,
                                                 'timeline': tasksSrvc.getTimeline(
-                                                        tasks[index].start_date,
-                                                        tasks[index].completion,
-                                                        tasks[index].duration,
-                                                        tasks[index].completed
+                                                        recentTasks[index].start_date,
+                                                        recentTasks[index].completion,
+                                                        recentTasks[index].duration,
+                                                        recentTasks[index].completed
                                                         )
                                             }
                                     );
@@ -141,25 +140,28 @@ app.controller(
                     // $log.debug(CONTROLLER_NAME + " : taskId = " + taskId);
                     // $log.debug(CONTROLLER_NAME + " : allocationToUpdate = " + JSON.stringify(allocationToUpdate));
                     // --------------------------------------------------------
+                    
+                    var project_nb_products = allocationToUpdate.project_nb_products;
+                    var durationInMins = allocationToUpdate.duration;
 
                     var id = allocationToUpdate.id;
                     var title = allocationToUpdate.title;
-                    var duration = tasksSrvc.formatDuration(allocationToUpdate.duration);
+                    var duration = tasksSrvc.formatDuration(durationInMins);
                     var duration_in_mins = allocationToUpdate.duration;
                     var completion = tasksSrvc.formatCompletion(allocationToUpdate.completion);
                     var completed = allocationToUpdate.completed;
                     var employee_id = allocationToUpdate.employee_id;
                     var task_id = allocationToUpdate.task_id;
                     var start_date = allocationToUpdate.start_date;
-                    var completion_choices = tasksSrvc.getCompletionChoices();
                     var nb_products_completed = allocationToUpdate.nb_products_completed;
-                    var nb_products_choices = tasksSrvc.getNbProductsChoices(allocationToUpdate.project_nb_products);
+                    var completion_choices = tasksSrvc.getCompletionChoices(durationInMins);
+                    var nb_products_choices = tasksSrvc.getNbProductsChoices(project_nb_products);
 
                     // ==================================================
                     // - edit event modal
                     // ==================================================
                     $uibModal.open({
-                        templateUrl: 'taskflow/fragments/profile_task_edit',
+                        templateUrl: 'taskflow/fragments/modal_task_update',
                         controller: function ($scope, $uibModalInstance) {
                             $scope.$modalInstance = $uibModalInstance;
                             $scope.id = id;
@@ -171,8 +173,8 @@ app.controller(
                             $scope.start_date = start_date;
                             $scope.completion = completion;
                             $scope.completed = completed;
-                            $scope.completion_choices = completion_choices;
                             $scope.nb_products_completed = nb_products_completed;
+                            $scope.completion_choices = completion_choices;
                             $scope.nb_products_choices = nb_products_choices;
 
                             $scope.cancel = function () {
@@ -195,9 +197,9 @@ app.controller(
                                 var title = $scope.title;
 
                                 var allocationToUpdate = {
-                                    id: $scope.id,
-                                    employee_id: $scope.employee_id,
+                                    id: $scope.id,                                 
                                     task_id: $scope.task_id,
+                                       employee_id: $scope.employee_id,
                                     start_date: $scope.start_date,
                                     completion: tasksSrvc.formatCompletion2Mins($scope.completion),
                                     nb_products_completed: $scope.nb_products_completed,

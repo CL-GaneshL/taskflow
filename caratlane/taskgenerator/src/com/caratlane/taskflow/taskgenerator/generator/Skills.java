@@ -45,7 +45,7 @@ public class Skills {
      */
     public static void initialize() throws TaskGeneratorException {
 
-        skills = SkillsDbExtractor.getOpenSkills();
+        skills = SkillsDbExtractor.getAllSkills();
     }
 
     /**

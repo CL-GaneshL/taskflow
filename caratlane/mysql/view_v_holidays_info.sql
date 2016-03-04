@@ -14,11 +14,7 @@ VIEW `v_holidays_info` AS
             WHERE
                 (`employees`.`id` = `holidays`.`employee_id`)) AS `employee_full_name`,
         `holidays`.`start_date` AS `start_date`,
-        `holidays`.`start_morning_shift` AS `start_morning_shift`,
-        `holidays`.`start_afternoon_shift` AS `start_afternoon_shift`,
-        `holidays`.`end_date` AS `end_date`,
-        `holidays`.`end_morning_shift` AS `end_morning_shift`,
-        `holidays`.`end_afternoon_shift` AS `end_afternoon_shift`
+        `holidays`.`end_date` AS `end_date`
     FROM
         (`holidays`
         JOIN `employees`)

@@ -102,7 +102,6 @@ class EmployeesTasksController extends Controller {
             // project still open
             // ---------------------------------------------------
             $allocation = TaskAllocation::find($allocation_id);
-
             $allocation->task_id = trim($request->task_id) !== '' ? $request->task_id : null;
             $allocation->employee_id = trim($request->employee_id) !== '' ? $request->employee_id : null;
             $allocation->start_date = trim($request->start_date) !== '' ? $request->start_date : null;
@@ -114,7 +113,9 @@ class EmployeesTasksController extends Controller {
             // ---------------------------------------------------
             \Log::debug('$allocation = ' . $allocation);
             // ---------------------------------------------------
-
+            // ---------------------------------------------------
+            // save the allocation 
+            // ---------------------------------------------------
             $allocation->save();
 
             $task_allocations = \DB::table('v_tasks_info')
@@ -125,7 +126,7 @@ class EmployeesTasksController extends Controller {
             $updatedTask = $task_allocations[0];
 
             // ---------------------------------------------------
-            \Log::debug('update : $updatedTask = ' . print_r($updatedTask, true));
+            // and send a response to the client
             // ---------------------------------------------------
 
             return response()->json([
@@ -135,9 +136,6 @@ class EmployeesTasksController extends Controller {
         } else {
             // ---------------------------------------------------
             // project has been closed
-            // ---------------------------------------------------
-            // ---------------------------------------------------
-            \Log::debug('update task = trying to update a task that belongs to a closed project !');
             // ---------------------------------------------------
 
             return response()->json([
@@ -153,7 +151,7 @@ class EmployeesTasksController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-        //
+        
     }
 
     /**

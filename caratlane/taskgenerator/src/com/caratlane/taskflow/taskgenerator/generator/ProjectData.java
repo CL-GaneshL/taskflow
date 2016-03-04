@@ -47,17 +47,6 @@ public class ProjectData {
         this.tasks.add(task);
     }
 
-    public Task getLastTask() {
-
-        Task last = null;
-        try {
-            last = this.tasks.getLast();
-        } catch (Throwable ignore) {
-        }
-
-        return last;
-    }
-
     public LinkedList<Task> getTasks() {
         return tasks;
     }

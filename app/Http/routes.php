@@ -109,14 +109,14 @@ Route::group(['prefix' => CARATLANE_APIS_V1_PATH], function() {
     Route::resource('projects', 'ProjectsController', ['only' => ['index', 'store', 'show', 'update', 'destroy']]);
     Route::resource('nonworkingdays', 'NonWorkingDaysController', ['only' => ['index', 'store', 'update', 'destroy']]);
     Route::resource('holidays', 'HolidaysController', ['only' => ['show', 'store', 'update', 'destroy']]);
-    Route::resource('tasks', 'TasksController', ['only' => ['show', 'store', 'update', 'destroy']]);
     Route::resource('projects-tasks', 'ProjectsTasksController', ['only' => ['index']]);
+    Route::resource('task-allocations', 'TaskAllocationsController', ['only' => ['store', 'destroy']]);
 
     // -------------------------------------------------------------------------------
     // - allocation routes
     // -------------------------------------------------------------------------------
-    Route::get('allocate', 'TaskAllocationController@allocate');
-    Route::post('reset', 'TaskAllocationController@reset');
+    Route::get('allocate', 'AllocateController@allocate');
+    Route::post('reset', 'AllocateController@reset');
 });
 
 /*

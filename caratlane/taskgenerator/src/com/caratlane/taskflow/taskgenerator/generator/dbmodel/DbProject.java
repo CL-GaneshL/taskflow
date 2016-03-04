@@ -5,11 +5,7 @@
  */
 package com.caratlane.taskflow.taskgenerator.generator.dbmodel;
 
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.FIND_OPEN_PROJECTS_SUFFIX;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.FIND_PROJECT_SUFFIX;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_ENTITY_NAME;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_FIND_OPEN_QUERY;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_FIND_QUERY;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_ID_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_NB_PRODUCTS_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_OPEN_COL_NAME;
@@ -17,6 +13,10 @@ import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_START_DATE_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_TABLE_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_TEMPLATE_ID_COL_NAME;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_OPEN_PROJECTS_SUFFIX;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_PROJECT_SUFFIX;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.PROJECT_FIND_OPEN_QUERY;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.PROJECT_FIND_QUERY;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;

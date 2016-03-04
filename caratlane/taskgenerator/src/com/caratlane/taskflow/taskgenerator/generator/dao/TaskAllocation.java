@@ -19,6 +19,7 @@ import java.util.Objects;
 public class TaskAllocation {
 
     private final DbTaskAllocation dbTaskAllocation;
+    private boolean created = true;
 
     public TaskAllocation(
             final Integer employee_id,
@@ -37,6 +38,22 @@ public class TaskAllocation {
                 (byte) 0, // completed,
                 duration
         );
+    }
+
+    public static TaskAllocation createNewTaskAllocation(
+            final Integer employee_id,
+            final LocalDateTime start_date,
+            final Integer duration) {
+
+        final TaskAllocation taskAllocation = new TaskAllocation(
+                employee_id,
+                start_date,
+                duration
+        );
+
+        taskAllocation.created = true;
+
+        return taskAllocation;
     }
 
     public TaskAllocation(DbTaskAllocation dbTaskAllocation) {
@@ -76,8 +93,8 @@ public class TaskAllocation {
         return dbTaskAllocation.getNb_products_completed();
     }
 
-    public Byte getCompleted() {
-        return dbTaskAllocation.getCompleted();
+    public Boolean isCompleted() {
+        return this.dbTaskAllocation.getCompleted() == 1;
     }
 
     public Integer getDuration() {

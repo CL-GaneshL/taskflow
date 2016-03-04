@@ -10,13 +10,12 @@ import com.caratlane.taskflow.taskgenerator.generator.dao.EmployeeNonWorkingDay;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Holiday;
 import com.caratlane.taskflow.taskgenerator.generator.dao.NonWorkingDay;
 import com.caratlane.taskflow.taskgenerator.generator.dao.TaskAllocation;
-import com.caratlane.taskflow.taskgenerator.generator.rules.EmployeeShiftAvailability;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -25,19 +24,15 @@ import java.util.function.Consumer;
  */
 public class EmployeeData {
 
-    final private static LocalTime MIDNIGHT = LocalTime.MIDNIGHT;
-
     private final Employee employee;
     private final LinkedList<Integer> skills;
     private final LinkedList<EmployeeNonWorkingDay> employeeNonWorkingDays;
-//    private final LinkedList<Task> taskInfos;
     final private LinkedList<TaskAllocation> taskAllocations;
 
     public EmployeeData(Employee employee) {
         this.employee = employee;
         this.skills = new LinkedList<>();
         this.employeeNonWorkingDays = new LinkedList<>();
-//        this.taskInfos = new LinkedList<>();
         this.taskAllocations = new LinkedList<>();
     }
 
@@ -66,10 +61,6 @@ public class EmployeeData {
         return employeeNonWorkingDays;
     }
 
-//    public void setTaskInfos(List<Task> tasks) {
-//        this.taskInfos.clear();
-//        this.taskInfos.addAll(tasks);
-//    }
     public void addSkill(Integer skill) {
         this.skills.add(skill);
     }
@@ -91,35 +82,31 @@ public class EmployeeData {
     }
 
     /**
-     * For test purposes only.
-     *
-     * @param test
-     */
-    public void clearTaskAllocations(boolean test) {
-        this.taskAllocations.clear();
-    }
-
-    /**
-     *
-     * @return
-     */
-    public LocalDateTime getEarliestAvailability() {
-        return EmployeeShiftAvailability.getNextAvailability(this);
-    }
-
-    /**
      *
      * @return
      */
     public TaskAllocation getLastTaskAllocation() {
 
-        TaskAllocation last = null;
-        try {
-            last = this.taskAllocations.getLast();
-        } catch (Exception ignore) {
+        TaskAllocation lastAllocation = null;
+
+        // sort employees by their earliest availability
+        final Optional<TaskAllocation> last
+                = this.taskAllocations.stream()
+                .sorted((TaskAllocation ed1, TaskAllocation ed2) -> {
+
+                    final LocalDateTime start_date1 = ed1.getStartDate();
+                    final LocalDateTime start_date2 = ed2.getStartDate();
+
+                    // reverse the list, so the first in the list is the last in time
+                    return start_date2.compareTo(start_date1);
+                })
+                .findFirst();
+
+        if (last.isPresent()) {
+            lastAllocation = last.get();
         }
 
-        return last;
+        return lastAllocation;
     }
 
     /**
@@ -167,6 +154,15 @@ public class EmployeeData {
         });
 
         return castedHolidays;
+    }
+
+    /**
+     * For test purposes only.
+     *
+     * @param test
+     */
+    public void clearTaskAllocations(boolean test) {
+        this.taskAllocations.clear();
     }
 
     @Override

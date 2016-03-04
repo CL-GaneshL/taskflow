@@ -22,23 +22,21 @@ public class Holiday {
      */
     private final DbHoliday dbHolidays;
 
+    /**
+     *
+     * @param employee_id
+     * @param start_date
+     * @param end_date
+     */
     public Holiday(
             Integer employee_id,
             Date start_date,
-            Byte start_morning_shift,
-            Byte start_afternoon_shift,
-            Date end_date,
-            Byte end_morning_shift,
-            Byte end_afternoon_shift
+            Date end_date
     ) {
         this.dbHolidays = new DbHoliday(
                 employee_id,
                 start_date,
-                start_morning_shift,
-                start_afternoon_shift,
-                end_date,
-                end_morning_shift,
-                end_afternoon_shift
+                end_date
         );
     }
 
@@ -62,14 +60,6 @@ public class Holiday {
         return start_date;
     }
 
-    public Byte getStartMorningShift() {
-        return dbHolidays.getStart_morning_shift();
-    }
-
-    public Byte getStartAfternoonShift() {
-        return dbHolidays.getStart_afternoon_shift();
-    }
-
     public LocalDateTime getEndDate() {
 
         final Date date = dbHolidays.getEnd_date();
@@ -77,14 +67,6 @@ public class Holiday {
                 = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
         return end_date;
-    }
-
-    public Byte getEndMorningShift() {
-        return dbHolidays.getEnd_morning_shift();
-    }
-
-    public Byte getEndAfternoonShift() {
-        return dbHolidays.getEnd_afternoon_shift();
     }
 
     @Override

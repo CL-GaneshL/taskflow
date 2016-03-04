@@ -55,11 +55,6 @@ VIEW `v_tasks_info` AS
         `task_allocations`.`completion` AS `completion`,
 
         -- ----------------------------------------------
-        -- whether or not the task is completed
-        -- ----------------------------------------------
-        `tasks`.`completed` AS `task_completed`,
-
-        -- ----------------------------------------------
         -- whether or not the allocation is completed
         -- ----------------------------------------------
         `task_allocations`.`completed` AS `completed`,

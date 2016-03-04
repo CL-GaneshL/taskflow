@@ -25,7 +25,6 @@ return array(
     'CreateTaskAllocationsTable' => $baseDir . '/database/migrations/2016_01_29_161938_create_task_allocations_table.php',
     'CreateTasksInfoView' => $baseDir . '/database/migrations/2016_02_01_125049_create_tasks_info_view.php',
     'CreateTasksTable' => $baseDir . '/database/migrations/2016_01_29_155636_create_tasks_table.php',
-    'CreateTasksView' => $baseDir . '/database/migrations/2016_02_01_125032_create_tasks_view.php',
     'CreateTeamsHaveEmployeesTable' => $baseDir . '/database/migrations/2015_12_22_103914_create_teams_have_employees_table.php',
     'CreateTeamsTable' => $baseDir . '/database/migrations/2015_12_14_155221_create_teams_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2015_12_25_100000_create_users_table.php',

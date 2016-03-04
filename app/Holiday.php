@@ -14,11 +14,7 @@ class Holiday extends Model {
         'title',
         'employee_id',
         'start_date',
-        'start_morning_shift',
-        'start_afternoon_shift',
-        'end_date',
-        'end_morning_shift',
-        'end_afternoon_shift'
+        'end_date'
     ];
     // ----------------------------------
     // - remove timestamps
@@ -32,37 +28,20 @@ class Holiday extends Model {
         return $this->fillable->id;
     }
 
-   function getTitle() {
+    function getTitle() {
         return $this->fillable->title;
     }
-
 
     function getEmployeeId() {
         return $this->fillable->employee_id;
     }
-    
-     function getStartDate() {
+
+    function getStartDate() {
         return $this->fillable->start_date;
     }
 
-    function getStartMorningShift() {
-        return $this->fillable->start_morning_shift;
-    }
-
-    function getStartAfternoonShift() {
-        return $this->fillable->start_afternoon_shift;
-    }
-    
-      function getEndDate() {
+    function getEndDate() {
         return $this->fillable->end_date;
     }
 
-    function getEndMorningShift() {
-        return $this->fillable->end_morning_shift;
-    }
-
-    function getEndAfternoonShift() {
-        return $this->fillable->end_afternoon_shift;
-    }
-    
 }

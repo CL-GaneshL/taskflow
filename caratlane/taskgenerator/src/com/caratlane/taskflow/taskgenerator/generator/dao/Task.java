@@ -18,6 +18,8 @@ public class Task {
     private final DbTask dbTask;
     private final Integer totalDuration;
     final private LinkedList<TaskAllocation> taskAllocations = new LinkedList<>();
+    private boolean created = false;
+    private boolean modified = false;
 
     /**
      * Constructor.
@@ -39,9 +41,27 @@ public class Task {
 
         this.dbTask = new DbTask(
                 skill_id,
-                project_id,
-                (byte) 0 // completed
+                project_id
         );
+    }
+
+    public static Task newTask(
+            Integer skill_id,
+            Integer project_id,
+            Integer totalDuration) {
+
+        final Task t = new Task(skill_id, project_id, totalDuration);
+        t.created = true;
+
+        return t;
+    }
+
+    public boolean isCreated() {
+        return created;
+    }
+
+    public boolean isModified() {
+        return modified;
     }
 
     public Integer getId() {
@@ -56,10 +76,6 @@ public class Task {
         return this.dbTask.getProject_id();
     }
 
-    public Boolean getCompleted() {
-        return this.dbTask.getCompleted() == 1;
-    }
-
     public Integer getTotalDuration() {
         return totalDuration;
     }
@@ -70,6 +86,14 @@ public class Task {
 
     public void addTaskAllocation(final TaskAllocation taskAllocation) {
         this.taskAllocations.add(taskAllocation);
+    }
+
+    public static void addNewAllocation(
+            final Task task,
+            final TaskAllocation taskAllocation
+    ) {
+        task.taskAllocations.add(taskAllocation);
+        task.modified = true;
     }
 
     public DbTask getDbTask() {

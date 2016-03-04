@@ -20,15 +20,6 @@ class CreateNonWorkingDaysTable extends Migration {
             $table->string('title');
             $table->enum('type', array('WEEKEND', 'NON-WORKING'));
             $table->date('date');
-            $table->boolean('morning_shift');
-            $table->boolean('afternoon_shift');
-
-            // -----------------------------------------------------
-            // - unique indexes
-            // - prevent from 2 identical shifts of the same type to be created  
-            // -----------------------------------------------------
-            $table->unique(array('type', 'date', 'morning_shift'));
-            $table->unique(array('type', 'date', 'afternoon_shift'));
         });
     }
 

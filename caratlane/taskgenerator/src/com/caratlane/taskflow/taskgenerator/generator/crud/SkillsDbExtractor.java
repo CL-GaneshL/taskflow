@@ -10,9 +10,9 @@ import com.caratlane.taskflow.taskgenerator.db.DBException;
 import com.caratlane.taskflow.taskgenerator.db.DBManager;
 import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorException;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Skill;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.FIND_OPEN_SKILLS_SUFFIX;
 import com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbSkill;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.getQueryName;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_SKILLS_SUFFIX;
 import com.caratlane.taskflow.taskgenerator.logging.LogManager;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,11 +28,11 @@ public class SkillsDbExtractor {
 
     private static final Byte OPEN_SKILL = 1;
 
-    public static List<Skill> getOpenSkills() throws TaskGeneratorException {
+    public static List<Skill> getAllSkills() throws TaskGeneratorException {
 
         final List<Skill> skills = new LinkedList<>();
 
-        final String queryName = getQueryName(DbSkill.class, FIND_OPEN_SKILLS_SUFFIX);
+        final String queryName = getQueryName(DbSkill.class, FIND_SKILLS_SUFFIX);
         final List<DbSkill> dbSkills;
         DBConnection con = null;
 

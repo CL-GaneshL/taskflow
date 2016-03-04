@@ -105,8 +105,7 @@ class TasksTableSeeder extends Seeder {
                             ->insertGetId(
                             array(
                                 'skill_id' => $skill_id,
-                                'project_id' => $project_id,
-                                'completed' => 1
+                                'project_id' => $project_id
                             )
                     );
 
@@ -141,8 +140,7 @@ class TasksTableSeeder extends Seeder {
                             ->insertGetId(
                             array(
                                 'skill_id' => $skill_id,
-                                'project_id' => $project_id,
-                                'completed' => 1
+                                'project_id' => $project_id
                             )
                     );
 
@@ -178,8 +176,7 @@ class TasksTableSeeder extends Seeder {
                             ->insertGetId(
                             array(
                                 'skill_id' => $skill_id,
-                                'project_id' => $project_id,
-                                'completed' => 0
+                                'project_id' => $project_id
                             )
                     );
 
@@ -214,8 +211,7 @@ class TasksTableSeeder extends Seeder {
                             ->insertGetId(
                             array(
                                 'skill_id' => $skill_id,
-                                'project_id' => $project_id,
-                                'completed' => 0
+                                'project_id' => $project_id
                             )
                     );
 
@@ -251,8 +247,7 @@ class TasksTableSeeder extends Seeder {
                             ->insertGetId(
                             array(
                                 'skill_id' => $skill_id,
-                                'project_id' => $project_id,
-                                'completed' => 0
+                                'project_id' => $project_id
                             )
                     );
 
@@ -286,8 +281,7 @@ class TasksTableSeeder extends Seeder {
                             ->insertGetId(
                             array(
                                 'skill_id' => $skill_id,
-                                'project_id' => $project_id,
-                                'completed' => 0
+                                'project_id' => $project_id
                             )
                     );
 

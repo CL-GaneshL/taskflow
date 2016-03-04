@@ -7,6 +7,10 @@ package com.caratlane.taskflow.taskgenerator.generator.dao;
 
 import com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbNonWorkingDays;
 import com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.NWDType;
+import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.NWDType.NON_WORKING;
+import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.NWDType.WEEKEND;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.NWD_NON_WORKING;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.NWD_WEEKEND;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -30,17 +34,22 @@ public class NonWorkingDay implements EmployeeNonWorkingDay {
     public NonWorkingDay(
             String title,
             NWDType type,
-            Date date,
-            Byte morning_shift,
-            Byte afternoon_shift
+            Date date
     ) {
+        String strType = null;
+        switch (type) {
+            case WEEKEND:
+                strType = NWD_WEEKEND;
+                break;
+            case NON_WORKING:
+                strType = NWD_NON_WORKING;
+                break;
+        }
 
         this.dbNonWorkingDays = new DbNonWorkingDays(
                 title,
-                type,
-                date,
-                morning_shift,
-                afternoon_shift
+                strType,
+                date
         );
     }
 
@@ -53,7 +62,21 @@ public class NonWorkingDay implements EmployeeNonWorkingDay {
     }
 
     public NWDType getType() {
-        return dbNonWorkingDays.getType();
+
+        NWDType ret = null;
+
+        final String type = dbNonWorkingDays.getType();
+
+        switch (type) {
+            case NWD_WEEKEND:
+                ret = WEEKEND;
+                break;
+            case NWD_NON_WORKING:
+                ret = NON_WORKING;
+                break;
+        }
+
+        return ret;
     }
 
     @Override
@@ -64,14 +87,6 @@ public class NonWorkingDay implements EmployeeNonWorkingDay {
                 = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
         return start_date;
-    }
-
-    public Boolean getMorningShift() {
-        return dbNonWorkingDays.getMorning_shift() == (byte) 1;
-    }
-
-    public Boolean getAfternoonShift() {
-        return dbNonWorkingDays.getAfternoon_shift() == (byte) 1;
     }
 
     @Override

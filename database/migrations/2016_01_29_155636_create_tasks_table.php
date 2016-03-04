@@ -19,8 +19,6 @@ class CreateTasksTable extends Migration {
 
             $table->integer('skill_id')->unsigned();
             $table->integer('project_id')->unsigned();
-            // when the entire task is completed
-            $table->boolean('completed')->default(0);
 
             // ------------------------------------------
             // - foreign keys

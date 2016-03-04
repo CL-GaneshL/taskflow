@@ -38,7 +38,7 @@
                     <!-- - timetable table                                  -->
                     <!-- ================================================== -->   
                     <uib-tab heading="Tasks">
-                        <div ng-include="'taskflow/fragments/profile_calendar'"></div>
+                        <div ng-include="'taskflow/fragments/profile_tasks'"></div>
                     </uib-tab>
 
                     <!-- ================================================== -->
@@ -53,6 +53,13 @@
                     <!-- ================================================== -->   
                     <uib-tab heading="Skills">
                         <div ng-include="'taskflow/fragments/profile_skills'"></div>
+                    </uib-tab>
+
+                    <!-- ================================================== -->
+                    <!-- - holidays tab                                       -->
+                    <!-- ================================================== -->   
+                    <uib-tab heading="Holidays">
+                        <div ng-include="'taskflow/fragments/profile_holidays'"></div>
                     </uib-tab>
 
                 </uib-tabset>

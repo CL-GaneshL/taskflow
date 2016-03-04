@@ -5,13 +5,13 @@
  */
 package com.caratlane.taskflow.taskgenerator.generator.dbmodel;
 
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.FIND_PROJECT_SKILLS_SUFFIX;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_SKILL_DURATION_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_SKILL_ENTITY_NAME;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_SKILL_FIND_QUERY;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_SKILL_ID_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_SKILL_PROJECT_ID_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_SKILL_TABLE_NAME;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_PROJECT_SKILLS_SUFFIX;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.PROJECT_SKILL_FIND_QUERY;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;

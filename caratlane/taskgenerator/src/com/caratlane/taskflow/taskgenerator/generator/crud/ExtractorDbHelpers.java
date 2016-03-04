@@ -34,7 +34,7 @@ public class ExtractorDbHelpers {
 
     public static enum NWDType {
 
-        WEEKEND, NON_WORKING_DAY
+        WEEKEND, NON_WORKING
     }
 
     public static enum EmployementType {

@@ -5,14 +5,13 @@
  */
 package com.caratlane.taskflow.taskgenerator.generator.dbmodel;
 
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.FIND_PROJECT_TASKS_SUFFIX;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_COMPLETED_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_ENTITY_NAME;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_FIND_PROJECT_TASKS_QUERY;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_ID_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_PROJECT_ID_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_SKILL_ID_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_TABLE_NAME;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_PROJECT_TASKS_SUFFIX;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_PROJECT_TASKS_QUERY;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -23,7 +22,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -36,7 +34,7 @@ import javax.validation.constraints.NotNull;
 @NamedQueries({
     @NamedQuery(
             name = TASK_ENTITY_NAME + FIND_PROJECT_TASKS_SUFFIX,
-            query = TASK_FIND_PROJECT_TASKS_QUERY
+            query = FIND_PROJECT_TASKS_QUERY
     )
 })
 @SuppressWarnings("ValidAttributes")
@@ -69,15 +67,6 @@ public class DbTask implements Serializable {
     private Integer project_id;
 
     /**
-     * completed
-     */
-    @NotNull
-    @Min(value = 0)
-    @Max(value = 1)
-    @Column(name = TASK_COMPLETED_COL_NAME, insertable = true, updatable = false)
-    private Byte completed;
-
-    /**
      * Default constructor.
      */
     public DbTask() {
@@ -85,12 +74,10 @@ public class DbTask implements Serializable {
 
     public DbTask(
             Integer skill_id,
-            Integer project_id,
-            Byte completed
+            Integer project_id
     ) {
         this.skill_id = skill_id;
         this.project_id = project_id;
-        this.completed = completed;
     }
 
     public Integer getId() {
@@ -105,17 +92,12 @@ public class DbTask implements Serializable {
         return project_id;
     }
 
-    public Byte getCompleted() {
-        return completed;
-    }
-
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 61 * hash + Objects.hashCode(this.id);
-        hash = 61 * hash + Objects.hashCode(this.skill_id);
-        hash = 61 * hash + Objects.hashCode(this.project_id);
-        hash = 61 * hash + Objects.hashCode(this.completed);
+        hash = 53 * hash + Objects.hashCode(this.id);
+        hash = 53 * hash + Objects.hashCode(this.skill_id);
+        hash = 53 * hash + Objects.hashCode(this.project_id);
         return hash;
     }
 
@@ -134,15 +116,7 @@ public class DbTask implements Serializable {
         if (!Objects.equals(this.skill_id, other.skill_id)) {
             return false;
         }
-        if (!Objects.equals(this.project_id, other.project_id)) {
-            return false;
-        }
-        return Objects.equals(this.completed, other.completed);
-    }
-
-    @Override
-    public String toString() {
-        return "DbTask{" + "id=" + id + ", skill_id=" + skill_id + ", project_id=" + project_id + ", completed=" + completed + '}';
+        return Objects.equals(this.project_id, other.project_id);
     }
 
 }

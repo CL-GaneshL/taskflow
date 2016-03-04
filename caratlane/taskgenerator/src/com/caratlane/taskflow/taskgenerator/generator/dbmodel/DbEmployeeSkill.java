@@ -9,8 +9,8 @@ import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.EMPLOYEE_SKILL_ENTITY_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.EMPLOYEE_SKILL_SKILL_ID_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.EMPLOYEE_SKILL_TABLE_NAME;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.FIND_EMPLOYEE_SKILLS_QUERY;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.FIND_EMPLOYEE_SKILLS_SUFFIX;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_EMPLOYEE_SKILLS_QUERY;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_EMPLOYEE_SKILLS_SUFFIX;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;

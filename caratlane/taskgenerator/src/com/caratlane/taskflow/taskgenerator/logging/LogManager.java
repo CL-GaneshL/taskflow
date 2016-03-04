@@ -5,6 +5,8 @@
  */
 package com.caratlane.taskflow.taskgenerator.logging;
 
+import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.DEBUG_MODE;
+import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.NULL_LOGPATH;
 import java.io.IOException;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
@@ -30,15 +32,13 @@ public class LogManager {
 
     public static void initialize(final String logpath, final String mode) throws IOException {
 
-        if (logpath != null) {
-
-            LogManager.handler = new FileHandler(logpath);
-
-        } else {
+        if (logpath.equals(NULL_LOGPATH)) {
             LogManager.handler = new ConsoleHandler();
+        } else {
+            LogManager.handler = new FileHandler(logpath);
         }
 
-        if (mode.equals("debug")) {
+        if (mode.equals(DEBUG_MODE)) {
             LogManager.handler.setLevel(Level.ALL);
         } else {
             LogManager.handler.setLevel(Level.INFO);

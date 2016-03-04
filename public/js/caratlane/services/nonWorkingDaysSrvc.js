@@ -51,9 +51,7 @@ app.factory("nonWorkingDaysSrvc", function ($log, $http) {
                     data: {
                         title: newNonWorkingDay.title,
                         type: newNonWorkingDay.type,
-                        date: newNonWorkingDay.date,
-                        morning_shift: newNonWorkingDay.morning_shift,
-                        afternoon_shift: newNonWorkingDay.afternoon_shift
+                        date: newNonWorkingDay.date
                     }
                 }
 
@@ -106,9 +104,7 @@ app.factory("nonWorkingDaysSrvc", function ($log, $http) {
                     data: {
                         title: toUpdateNonWorkingDay.title,
                         type: toUpdateNonWorkingDay.type,
-                        date: toUpdateNonWorkingDay.date,
-                        morning_shift: toUpdateNonWorkingDay.morning_shift,
-                        afternoon_shift: toUpdateNonWorkingDay.afternoon_shift
+                        date: toUpdateNonWorkingDay.date
                     }
                 }
 
@@ -126,6 +122,19 @@ app.factory("nonWorkingDaysSrvc", function ($log, $http) {
         });
     };
 
+    // ==================================================
+    // - 
+    // ==================================================
+    function getNwdStartsAt(start_date) {
+        return new Date(start_date);
+    }
+
+    // ==================================================
+    // - 
+    // ==================================================
+    function getNwdEndsAt(end_date) {
+        return new Date(end_date);
+    }
 
     // --------------------------------------------------------
     // - return functions
@@ -134,7 +143,9 @@ app.factory("nonWorkingDaysSrvc", function ($log, $http) {
         getNonWorkingDays: getNonWorkingDays,
         createNonWorkingDay: createNonWorkingDay,
         deleteNonWorkingDay: deleteNonWorkingDay,
-        updateNonWorkingDay: updateNonWorkingDay
+        updateNonWorkingDay: updateNonWorkingDay,
+        getNwdStartsAt: getNwdStartsAt,
+        getNwdEndsAt: getNwdEndsAt
     };
 
     // ==================================================

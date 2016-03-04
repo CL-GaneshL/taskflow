@@ -28,16 +28,8 @@
                     <!-- ================================================== -->
                     <!-- - edit tab                                         -->
                     <!-- ================================================== --> 
-                    <!--<uib-tab heading="Edit" active="editActive">-->
                     <uib-tab heading="Edit">
                         <div data-ng-include="'taskflow/fragments/profile_edit'"></div>
-                    </uib-tab>
-
-                    <!-- ================================================== -->
-                    <!-- - project tab                                      -->
-                    <!-- ================================================== --> 
-                    <uib-tab heading="Projects">
-                        <!--<div data-ng-include="'taskflow/fragments/profile_projects'"></div>-->
                     </uib-tab>
 
                     <!-- ================================================== -->
@@ -48,10 +40,10 @@
                     </uib-tab>
 
                     <!-- ================================================== -->
-                    <!-- - timetable table                                  -->
+                    <!-- - tasks table                                  -->
                     <!-- ================================================== -->   
                     <uib-tab heading="Timetable">
-                        <div data-ng-include="'taskflow/fragments/profile_calendar'"></div>
+                        <div data-ng-include="'taskflow/fragments/profile_tasks'"></div>
                     </uib-tab>
 
                 </uib-tabset>

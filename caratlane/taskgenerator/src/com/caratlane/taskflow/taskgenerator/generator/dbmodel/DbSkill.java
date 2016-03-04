@@ -5,13 +5,13 @@
  */
 package com.caratlane.taskflow.taskgenerator.generator.dbmodel;
 
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.FIND_OPEN_SKILLS_QUERY;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.FIND_OPEN_SKILLS_SUFFIX;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.SKILL_DURATION_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.SKILL_ENTITY_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.SKILL_ID_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.SKILL_OPEN_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.SKILL_TABLE_NAME;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_SKILLS_QUERY;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_SKILLS_SUFFIX;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -33,7 +33,7 @@ import javax.validation.constraints.NotNull;
 @Entity(name = SKILL_ENTITY_NAME)
 @Table(name = SKILL_TABLE_NAME)
 @NamedQueries({
-    @NamedQuery(name = SKILL_ENTITY_NAME + FIND_OPEN_SKILLS_SUFFIX, query = FIND_OPEN_SKILLS_QUERY),})
+    @NamedQuery(name = SKILL_ENTITY_NAME + FIND_SKILLS_SUFFIX, query = FIND_SKILLS_QUERY),})
 @SuppressWarnings("ValidAttributes")
 public class DbSkill implements Serializable {
 

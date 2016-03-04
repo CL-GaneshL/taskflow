@@ -70,7 +70,8 @@ app.constant('JS_REQUIRES', {
         'profileEditCtrl': ['../../js/caratlane/controllers/profileEditCtrl.js'],
         'profileSkillsCtrl': ['../../js/caratlane/controllers/profileSkillsCtrl.js'],
         'dashboardCtrl': '../../js/caratlane/controllers/dashboardCtrl.js',
-        'profileCalendarCtrl': '../../js/caratlane/controllers/profileCalendarCtrl.js',
+        'profileTasksCtrl': '../../js/caratlane/controllers/profileTasksCtrl.js',
+        'profileHolidaysCtrl': '../../js/caratlane/controllers/profileHolidaysCtrl.js',
         'skillsCtrl': '../../js/caratlane/controllers/skillsCtrl.js',
         'employeeProjectsCtrl': '../../js/caratlane/controllers/employeeProjectsCtrl.js',
         'projectsCtrl': '../../js/caratlane/controllers/projectsCtrl.js',
@@ -80,7 +81,7 @@ app.constant('JS_REQUIRES', {
         'employeesListCtrl': '../../js/caratlane/controllers/employeesListCtrl.js',
         'taskAllocationCtrl': '../../js/caratlane/controllers/taskAllocationCtrl.js',
         'nonWorkingDaysCtrl': '../../js/caratlane/controllers/nonWorkingDaysCtrl.js',
-        'projectsTasksCtrl': '../../js/caratlane/controllers/projectsTasksCtrl.js',
+        'tasksTasksCtrl': '../../js/caratlane/controllers/tasksTasksCtrl.js',
         // ----
         //*** Services
         'teamsSrvc': '../../js/caratlane/services/teamsSrvc.js',
@@ -359,15 +360,16 @@ app.config([
                             'employeesSrvc',
                             'skillsSrvc',
                             'holidaysSrvc',
+                            'nonWorkingDaysSrvc',
                             'tasksSrvc',
                             'modalSrvc',
                             'profileCtrl',
                             'profileEditCtrl',
                             'profileOverviewCtrl',
                             'profileSkillsCtrl',
-                            'profileCalendarCtrl',
+                            'profileTasksCtrl',
+                            'profileHolidaysCtrl',
                             'authenticationSrvc'
-
                             ),
                     title: 'My Profile',
                     ncyBreadcrumb: {
@@ -414,6 +416,7 @@ app.config([
                             'employeesSrvc',
                             'skillsSrvc',
                             'holidaysSrvc',
+                            'nonWorkingDaysSrvc',
                             'tasksSrvc',
                             'employeesCtrl',
                             'employeeProjectsCtrl',
@@ -421,7 +424,8 @@ app.config([
                             'profileEditCtrl',
                             'profileOverviewCtrl',
                             'profileSkillsCtrl',
-                            'profileCalendarCtrl',
+                            'profileTasksCtrl',
+                            'profileHolidaysCtrl',
                             'authenticationSrvc'
                             ),
                     title: 'Employee'
@@ -469,7 +473,7 @@ app.config([
                             'taskAllocationCtrl',
                             'nonWorkingDaysSrvc',
                             'nonWorkingDaysCtrl',
-                            'projectsTasksCtrl',
+                            'tasksTasksCtrl',
                             'holidaysSrvc',
                             'tasksSrvc',
                             'projectsTasksSrvc'
@@ -487,7 +491,7 @@ app.config([
                             'taskAllocationSrvc',
                             'taskAllocationCtrl',
                             'nonWorkingDaysSrvc',
-                            'projectsTasksCtrl',
+                            'tasksTasksCtrl',
                             'holidaysSrvc',
                             'tasksSrvc',
                             'projectsTasksSrvc'
@@ -510,7 +514,7 @@ app.config([
                             'taskAllocationCtrl',
                             'nonWorkingDaysSrvc',
                             'nonWorkingDaysCtrl',
-                            'projectsTasksCtrl',
+                            'tasksTasksCtrl',
                             'holidaysSrvc',
                             'tasksSrvc',
                             'projectsTasksSrvc'

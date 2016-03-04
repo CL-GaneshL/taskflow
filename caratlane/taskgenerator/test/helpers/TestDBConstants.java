@@ -11,7 +11,7 @@ import com.caratlane.taskflow.taskgenerator.generator.dao.NonWorkingDay;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Skill;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.EmployementType.FTE;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.EmployementType.Intern;
-import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.NWDType.NON_WORKING_DAY;
+import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.NWDType.NON_WORKING;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers._D_IN_TWO_DAYS;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers._D_TOMORROW;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Project;
@@ -160,11 +160,11 @@ public interface TestDBConstants {
 
     // tomorrow full day
     public static final NonWorkingDay NWD_1
-            = new NonWorkingDay("nwd 1", NON_WORKING_DAY, DATE_NWD_1, (byte) 0, (byte) 0);
+            = new NonWorkingDay("nwd 1", NON_WORKING, DATE_NWD_1);
 
     // in two days, full day
     public static final NonWorkingDay NWD_2
-            = new NonWorkingDay("nwd 2", NON_WORKING_DAY, DATE_NWD_2, (byte) 0, (byte) 0);
+            = new NonWorkingDay("nwd 2", NON_WORKING, DATE_NWD_2);
 
     // ------------------------------------------------------------
     // holidays
@@ -174,12 +174,7 @@ public interface TestDBConstants {
             = new Holiday(
                     1, // employee_id ,
                     _D_IN_TWO_DAYS, // start_date ,
-                    (byte) 0, // start_morning_shift ,
-                    (byte) 0, // start_afternoon_shift ,
-                    _D_IN_TWO_DAYS, // end_date ,
-                    (byte) 0, // end_morning_shift ,
-                    (byte) 0 // end_afternoon_shift
-
+                    _D_IN_TWO_DAYS // end_date ,
             );
 
        // ------------------------------------------------------------

@@ -82,11 +82,11 @@ return [
         // ---------------------------------------------------------
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', 'internalapps-mysql.caratlane.com'),
+            'host' => env('DB_HOST', 'mysql9.mylogin.ie'),
             'port' => env('DB_PORT', 3306),
-            'database' => env('DB_DATABASE', 'taskflowdb'),
-            'username' => env('DB_USERNAME', 'taskflow_user'),
-            'password' => env('DB_PASSWORD', '9AeSrjLH5hj'),
+            'database' => env('DB_DATABASE', 'RG343970_nuggetboxgol'),
+            'username' => env('DB_USERNAME', 'nuggetbox'),
+            'password' => env('DB_PASSWORD', 'nugg3tb0xdb@dm1n1407'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',

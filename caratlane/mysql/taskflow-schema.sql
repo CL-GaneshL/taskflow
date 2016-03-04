@@ -67,13 +67,9 @@ CREATE TABLE `holidays` (
   `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `employee_id` int(10) unsigned NOT NULL,
   `start_date` date NOT NULL,
-  `start_morning_shift` tinyint(1) NOT NULL,
-  `start_afternoon_shift` tinyint(1) NOT NULL,
   `end_date` date NOT NULL,
-  `end_morning_shift` tinyint(1) NOT NULL,
-  `end_afternoon_shift` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -88,12 +84,8 @@ CREATE TABLE `non_working_days` (
   `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `type` enum('WEEKEND','NON-WORKING') COLLATE utf8_unicode_ci NOT NULL,
   `date` date NOT NULL,
-  `morning_shift` tinyint(1) NOT NULL,
-  `afternoon_shift` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `non_working_days_type_date_morning_shift_unique` (`type`,`date`,`morning_shift`),
-  UNIQUE KEY `non_working_days_type_date_afternoon_shift_unique` (`type`,`date`,`afternoon_shift`)
-) ENGINE=InnoDB AUTO_INCREMENT=1103 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=567 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,7 +119,7 @@ CREATE TABLE `project_templates` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `project_templates_reference_unique` (`reference`),
   UNIQUE KEY `project_templates_designation_unique` (`designation`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -143,7 +135,7 @@ CREATE TABLE `project_templates_have_skills` (
   `skill_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `project_templates_have_skills_template_id_skill_id_unique` (`template_id`,`skill_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -163,7 +155,7 @@ CREATE TABLE `projects` (
   `open` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `projects_reference_unique` (`reference`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -249,7 +241,6 @@ CREATE TABLE `tasks` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `skill_id` int(10) unsigned NOT NULL,
   `project_id` int(10) unsigned NOT NULL,
-  `completed` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `tasks_skill_id_foreign` (`skill_id`),
   KEY `tasks_project_id_foreign` (`project_id`),
@@ -300,7 +291,7 @@ CREATE TABLE `users` (
   `employeeId` int(10) unsigned NOT NULL,
   `role_id` int(10) unsigned NOT NULL,
   `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `password` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '$2y$10$qocofQZUz4LkVEpyMmPoquYSqphEC63nTz84SET0Xha4uSBvzqJiq',
+  `password` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '$2y$10$cOFUgnMIq5UCD5qOrv1FmOn5Nf3MdncTBsqfJ8Inf3kNXopBdySki',
   `remember_token` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -324,11 +315,7 @@ SET character_set_client = utf8;
  1 AS `employee_id`,
  1 AS `employee_full_name`,
  1 AS `start_date`,
- 1 AS `start_morning_shift`,
- 1 AS `start_afternoon_shift`,
- 1 AS `end_date`,
- 1 AS `end_morning_shift`,
- 1 AS `end_afternoon_shift`*/;
+ 1 AS `end_date`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -377,22 +364,6 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
--- Temporary view structure for view `v_tasks`
---
-
-DROP TABLE IF EXISTS `v_tasks`;
-/*!50001 DROP VIEW IF EXISTS `v_tasks`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `v_tasks` AS SELECT 
- 1 AS `id`,
- 1 AS `skill_id`,
- 1 AS `project_id`,
- 1 AS `completed`,
- 1 AS `duration`*/;
-SET character_set_client = @saved_cs_client;
-
---
 -- Temporary view structure for view `v_tasks_info`
 --
 
@@ -410,7 +381,6 @@ SET character_set_client = utf8;
  1 AS `project_id`,
  1 AS `duration`,
  1 AS `completion`,
- 1 AS `task_completed`,
  1 AS `completed`,
  1 AS `nb_products_completed`,
  1 AS `project_nb_products`,
@@ -432,23 +402,25 @@ SET character_set_client = @saved_cs_client;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=CURRENT_USER FUNCTION `getTitle`(project_id INT, skill_id INT) RETURNS text CHARSET latin1
+CREATE DEFINER = CURRENT_USER FUNCTION `getTitle`(project_id INT, skill_id INT) RETURNS text CHARSET latin1
+    READS SQL DATA
+    DETERMINISTIC
 BEGIN
-	DECLARE ref TEXT;
-        DECLARE des TEXT;
-        DECLARE res TEXT;
+	DECLARE reference TEXT;
+        DECLARE designation TEXT;
+        DECLARE result TEXT;
     
-	SELECT `projects`.`reference` INTO ref
+	SELECT `projects`.`reference` INTO reference
 		FROM `projects` 
 		WHERE `projects`.`id` = project_id;
 
-	SELECT `skills`.`designation` INTO des
+	SELECT `skills`.`designation` INTO designation
 		FROM `skills` 
 		WHERE `skills`.`id` = skill_id;
 
-        SET res = CONCAT(ref, ' - ', des);
+        SET result = CONCAT(reference, ' - ', designation);
 
-RETURN (res);
+        RETURN (result);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -468,8 +440,8 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER SQL SECURITY DEFINER */
-/*!50001 VIEW `v_holidays_info` AS select `holidays`.`id` AS `id`,`holidays`.`title` AS `title`,`holidays`.`employee_id` AS `employee_id`,(select `employees`.`fullName` from `employees` where (`employees`.`id` = `holidays`.`employee_id`)) AS `employee_full_name`,`holidays`.`start_date` AS `start_date`,`holidays`.`start_morning_shift` AS `start_morning_shift`,`holidays`.`start_afternoon_shift` AS `start_afternoon_shift`,`holidays`.`end_date` AS `end_date`,`holidays`.`end_morning_shift` AS `end_morning_shift`,`holidays`.`end_afternoon_shift` AS `end_afternoon_shift` from (`holidays` join `employees`) where (`holidays`.`employee_id` = `employees`.`id`) */;
+/*!50013 DEFINER = CURRENT_USER SQL SECURITY DEFINER */
+/*!50001 VIEW `v_holidays_info` AS select `holidays`.`id` AS `id`,`holidays`.`title` AS `title`,`holidays`.`employee_id` AS `employee_id`,(select `employees`.`fullName` from `employees` where (`employees`.`id` = `holidays`.`employee_id`)) AS `employee_full_name`,`holidays`.`start_date` AS `start_date`,`holidays`.`end_date` AS `end_date` from (`holidays` join `employees`) where (`holidays`.`employee_id` = `employees`.`id`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -486,7 +458,7 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER SQL SECURITY DEFINER */
+/*!50013 DEFINER = CURRENT_USER SQL SECURITY DEFINER */
 /*!50001 VIEW `v_project_skills` AS select `skills`.`id` AS `id`,`projects`.`id` AS `project_id`,`skills`.`duration` AS `duration` from (((`projects` join `skills`) join `project_templates`) join `project_templates_have_skills`) where ((`projects`.`template_id` = `project_templates`.`id`) and (`project_templates`.`id` = `project_templates_have_skills`.`template_id`) and (`project_templates_have_skills`.`skill_id` = `skills`.`id`)) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -504,7 +476,7 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER SQL SECURITY DEFINER */
+/*!50013 DEFINER = CURRENT_USER SQL SECURITY DEFINER */
 /*!50001 VIEW `v_projects` AS select `projects`.`id` AS `id`,`projects`.`reference` AS `reference`,`projects`.`template_id` AS `template_id`,`projects`.`nb_products` AS `nb_products`,`projects`.`priority` AS `priority`,`projects`.`start_date` AS `start_date`,`projects`.`open` AS `open` from `projects` order by `projects`.`priority` desc,`projects`.`start_date` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -522,26 +494,8 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER SQL SECURITY DEFINER */
+/*!50013 DEFINER = CURRENT_USER SQL SECURITY DEFINER */
 /*!50001 VIEW `v_skill_employees` AS select `employees_have_skills`.`employeeId` AS `employee_id`,`skills`.`id` AS `skill_id` from (`skills` join `employees_have_skills`) where (`skills`.`id` = `employees_have_skills`.`skillId`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `v_tasks`
---
-
-/*!50001 DROP VIEW IF EXISTS `v_tasks`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_unicode_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER SQL SECURITY DEFINER */
-/*!50001 VIEW `v_tasks` AS select `tasks`.`id` AS `id`,`tasks`.`skill_id` AS `skill_id`,`tasks`.`project_id` AS `project_id`,`tasks`.`completed` AS `completed`,`skills`.`duration` AS `duration` from (`tasks` join `skills`) where (`tasks`.`skill_id` = `skills`.`id`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -558,8 +512,8 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER SQL SECURITY DEFINER */
-/*!50001 VIEW `v_tasks_info` AS select `task_allocations`.`id` AS `id`,`task_allocations`.`task_id` AS `task_id`,`getTitle`(`tasks`.`project_id`,`tasks`.`skill_id`) AS `title`,`task_allocations`.`employee_id` AS `employee_id`,(select `employees`.`fullName` from `employees` where (`employees`.`id` = `task_allocations`.`employee_id`)) AS `employee_full_name`,`tasks`.`skill_id` AS `skill_id`,`tasks`.`project_id` AS `project_id`,`task_allocations`.`duration` AS `duration`,`task_allocations`.`completion` AS `completion`,`tasks`.`completed` AS `task_completed`,`task_allocations`.`completed` AS `completed`,`task_allocations`.`nb_products_completed` AS `nb_products_completed`,(select `projects`.`nb_products` from `projects` where (`projects`.`id` = `tasks`.`project_id`)) AS `project_nb_products`,(select `skills`.`duration` from `skills` where (`skills`.`id` = `tasks`.`skill_id`)) AS `task_duration`,(select `projects`.`open` from `projects` where (`projects`.`id` = `tasks`.`project_id`)) AS `open`,`task_allocations`.`start_date` AS `start_date` from (`tasks` join `task_allocations`) where (`tasks`.`id` = `task_allocations`.`task_id`) */;
+/*!50013 DEFINER = CURRENT_USER SQL SECURITY DEFINER */
+/*!50001 VIEW `v_tasks_info` AS select `task_allocations`.`id` AS `id`,`task_allocations`.`task_id` AS `task_id`,`getTitle`(`tasks`.`project_id`,`tasks`.`skill_id`) AS `title`,`task_allocations`.`employee_id` AS `employee_id`,(select `employees`.`fullName` from `employees` where (`employees`.`id` = `task_allocations`.`employee_id`)) AS `employee_full_name`,`tasks`.`skill_id` AS `skill_id`,`tasks`.`project_id` AS `project_id`,`task_allocations`.`duration` AS `duration`,`task_allocations`.`completion` AS `completion`,`task_allocations`.`completed` AS `completed`,`task_allocations`.`nb_products_completed` AS `nb_products_completed`,(select `projects`.`nb_products` from `projects` where (`projects`.`id` = `tasks`.`project_id`)) AS `project_nb_products`,(select `skills`.`duration` from `skills` where (`skills`.`id` = `tasks`.`skill_id`)) AS `task_duration`,(select `projects`.`open` from `projects` where (`projects`.`id` = `tasks`.`project_id`)) AS `open`,`task_allocations`.`start_date` AS `start_date` from (`tasks` join `task_allocations`) where (`tasks`.`id` = `task_allocations`.`task_id`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -573,4 +527,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-02-24  4:29:43
+-- Dump completed on 2016-03-03 13:33:14

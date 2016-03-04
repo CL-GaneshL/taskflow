@@ -51,7 +51,19 @@ class HolidaysController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        //
+
+        // ---------------------------------------------------
+        // - create and store a new employee
+        // ---------------------------------------------------
+        $holiday = Holiday::create($request->all());
+
+        // ---------------------------------------------------
+        // - response
+        // ---------------------------------------------------
+        return response()->json([
+                    'message' => 'Holiday created succesfully',
+                    'data' => $holiday
+                        ], 200);
     }
 
     /**
@@ -91,11 +103,7 @@ class HolidaysController extends Controller {
         $holiday->title = trim($request->title) !== '' ? $request->title : null;
         $holiday->employee_id = trim($request->employee_id) !== '' ? $request->employee_id : null;
         $holiday->start_date = trim($request->start_date) !== '' ? $request->start_date : null;
-        $holiday->start_morning_shift = trim($request->start_morning_shift) !== '' ? $request->start_morning_shift : null;
-        $holiday->start_afternoon_shift = trim($request->start_afternoon_shift) !== '' ? $request->start_afternoon_shift : null;
         $holiday->end_date = trim($request->end_date) !== '' ? $request->end_date : null;
-        $holiday->end_morning_shift = trim($request->end_morning_shift) !== '' ? $request->end_morning_shift : null;
-        $holiday->end_afternoon_shift = trim($request->end_afternoon_shift) !== '' ? $request->end_afternoon_shift : null;
 
         // ---------------------------------------------------
         \Log::debug('update : $holiday = ' . print_r($holiday, true));

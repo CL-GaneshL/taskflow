@@ -19,15 +19,8 @@ class CreateHolidaysTable extends Migration {
 
             $table->string('title');
             $table->integer('employee_id')->unsigned();
-
             $table->date('start_date');
-            $table->boolean('start_morning_shift');
-            $table->boolean('start_afternoon_shift');
-
             $table->date('end_date');
-            $table->boolean('end_morning_shift');
-            $table->boolean('end_afternoon_shift');
-             
         });
     }
 

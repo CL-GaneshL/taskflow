@@ -4,15 +4,10 @@ app.factory("tasksSrvc", function ($log, $http) {
 
     var FACTORY_NAME = 'tasksSrvc';
 
-    var CARATLANE_START_ACTIVITY_TIME = 0;
-    var CARATLANE_MID_SHIFT_TIME = 4;
-    var CARATLANE_END_ACTIVITY_TIME = 8;
-
-
-    // --------------------------------------------------------
+    // ==================================================
     // - Create a task record in the db.
-    // --------------------------------------------------------
-    var createTask = function (newTask) {
+    // ==================================================
+    var createTaskAllocation = function (newTask) {
 
         // --------------------------------------------------------
         // $log.debug(FACTORY_NAME + " : newTask = " + JSON.stringify(newTask));
@@ -21,13 +16,14 @@ app.factory("tasksSrvc", function ($log, $http) {
         return $http(
                 {
                     method: "POST",
-                    url: '/taskflow/apis/v1/tasks/',
+                    url: '/taskflow/apis/v1/task-allocations/',
                     data: {
-                        name: newTask.name,
+                        task_id: newTask.task_id,
                         employee_id: newTask.employee_id,
-                        skill_id: newTask.skill_id,
-                        project_id: newTask.project_id,
-                        start: newTask.start,
+                        start_date: newTask.start_date,
+                        completion: newTask.completion,
+                        nb_products_completed: newTask.nb_products_completed,
+                        completed: newTask.completed,
                         duration: newTask.duration
                     }
                 }
@@ -46,66 +42,26 @@ app.factory("tasksSrvc", function ($log, $http) {
         });
     };
 
-    // --------------------------------------------------------
-    // - delete a teask record from the db.
-    // --------------------------------------------------------
-    var deleteTask = function (task_id) {
+    // ==================================================
+    // - delete a task allocation in the db
+    // ==================================================
+    var deleteTaskAllocation = function (allocation_id) {
 
         // --------------------------------------------------------
-        // $log.debug(FACTORY_NAME + " : task_id = " + JSON.stringify(task_id));
+        // $log.debug(FACTORY_NAME + " : allocation_id = " + JSON.stringify(allocation_id));
         // --------------------------------------------------------
 
         return $http(
                 {
                     method: "DELETE",
-                    url: '/taskflow/apis/v1/tasks/' + task_id
+                    url: '/taskflow/apis/v1/task-allocations/' + allocation_id
                 }
         );
     };
 
-    // --------------------------------------------------------
-    // - Update a holiday record in the db.
-    // --------------------------------------------------------
-    var updateTask = function (toUpdateTask) {
-
-        // --------------------------------------------------------
-        // $log.debug(FACTORY_NAME + " : toUpdateHoliday = " + JSON.stringify(toUpdateHoliday));
-        // --------------------------------------------------------
-
-        var task_id = toUpdateTask.id;
-
-        return $http(
-                {
-                    method: "PUT",
-                    url: '/taskflow/apis/v1/tasks/' + task_id,
-                    data: {
-                        id: toUpdateTask.id,
-                        name: toUpdateTask.name,
-                        employee_id: toUpdateTask.employee_id,
-                        skill_id: toUpdateTask.skill_id,
-                        project_id: toUpdateTask.project_id,
-                        start: toUpdateTask.start,
-                        duration: toUpdateTask.duration
-                    }
-                }
-
-        ).then(function (response) {
-
-            var task = response.data.data;
-
-            // --------------------------------------------------------
-            // $log.debug(FACTORY_NAME + " : response task = " + JSON.stringify(task));
-            // --------------------------------------------------------
-
-            return {
-                holiday: task
-            };
-        });
-    };
-
-    // --------------------------------------------------------
+    // ==================================================
     // - Update a task's allocation
-    // --------------------------------------------------------
+    // ==================================================
     var updateTaskAllocation = function (allocationToUpdate) {
 
         // --------------------------------------------------------
@@ -143,6 +99,24 @@ app.factory("tasksSrvc", function ($log, $http) {
     };
 
     // ==================================================
+    // - get a JS date from a MySQL datatime
+    // ==================================================
+    function formatMySQL2JSDate(mysql_date) {
+
+        var t, result = null;
+
+        if (typeof mysql_date === 'string')
+        {
+            t = mysql_date.split(/[- :]/);
+
+            //when t[3], t[4] and t[5] are missing they defaults to zero
+            result = new Date(t[0], t[1] - 1, t[2], t[3] || 0, t[4] || 0, t[5] || 0);
+        }
+
+        return result;
+    }
+
+    // ==================================================
     // - format completion from minutes to hh:mm
     // ==================================================
     var formatCompletion = function (completion) {
@@ -174,29 +148,12 @@ app.factory("tasksSrvc", function ($log, $http) {
         return formated;
     };
 
+
     // ==================================================
     // - 
     // ==================================================
 
     var getTimeline = function (start_date, completion, duration, completed) {
-
-        // ==================================================
-        // - get a JS date from a MySQL datatime
-        // ==================================================
-        function formatMySQL2JSDate(mysql_date) {
-
-            var t, result = null;
-
-            if (typeof mysql_date === 'string')
-            {
-                t = mysql_date.split(/[- :]/);
-
-                //when t[3], t[4] and t[5] are missing they defaults to zero
-                result = new Date(t[0], t[1] - 1, t[2], t[3] || 0, t[4] || 0, t[5] || 0);
-            }
-
-            return result;
-        }
 
         var _DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         var _MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -213,6 +170,14 @@ app.factory("tasksSrvc", function ($log, $http) {
 //        var date = dayStr + ', ' + monthStr + ' ' + day + ' ' + year + ' @ ' + hoursStr;
 
         var date = dayStr + ', ' + monthStr + ' ' + day + ' ' + year;
+
+        // --------------------------------------------------------
+        // $log.debug(FACTORY_NAME + " : response task = " + JSON.stringify(task));
+        // --------------------------------------------------------
+
+        // --------------------------------------------------------
+        // $log.debug(FACTORY_NAME + " : response task = " + JSON.stringify(task));
+        // --------------------------------------------------------
 
         var duration_hours = Math.floor(duration / 60);
         var duration_minutes = duration % 60;
@@ -272,20 +237,22 @@ app.factory("tasksSrvc", function ($log, $http) {
     // - list of possible completion choices
     // ==================================================
     var COMPLETION_CHOICES = [
+        '0 h 00 mins',
         '0 h 15 mins', '0 h 30 mins', '0 h 45 mins', '1 h 00 mins',
         '1 h 15 mins', '1 h 30 mins', '1 h 45 mins', '2 h 00 mins',
         '2 h 15 mins', '2 h 30 mins', '2 h 45 mins', '3 h 00 mins',
         '3 h 15 mins', '3 h 30 mins', '3 h 45 mins', '4 h 00 mins',
         '4 h 15 mins', '4 h 30 mins', '4 h 45 mins', '5 h 00 mins',
         '5 h 15 mins', '5 h 30 mins', '5 h 45 mins', '6 h 00 mins',
-        '6 h 15 mins', '6 h 30 mins', '6 h 45 mins'
+        '6 h 15 mins', '6 h 30 mins', '6 h 45 mins', '7 h 00 mins',
+        '7 h 15 mins', '7 h 30 mins', '7 h 45 mins', '8 h 00 mins'
     ];
 
-    function getCompletionChoices() {
+    function getCompletionChoices(durationInMins) {
 
-        var choices = [];
         var index = 0;
-        var maxIndex = COMPLETION_CHOICES.length;
+        var choices = [];
+        var maxIndex = Math.floor(durationInMins / 15);
 
         for (index = 0; index <= maxIndex; index++) {
             choices.push(COMPLETION_CHOICES[index]);
@@ -302,7 +269,7 @@ app.factory("tasksSrvc", function ($log, $http) {
         var choices = [];
         var index = 0;
 
-        for (index = 1; index <= max; index++) {
+        for (index = 0; index <= max; index++) {
             choices.push(index);
         }
 
@@ -329,130 +296,46 @@ app.factory("tasksSrvc", function ($log, $http) {
     // ==================================================
     // - 
     // ==================================================
-    function getTaskStartsAt(start, shift_hour) {
-
-//        // --------------------------------------------------------
-//        $log.debug(FACTORY_NAME + " : getTaskStartsAt = ");
-//        $log.debug(FACTORY_NAME + " : start = " + JSON.stringify(start));
-//        $log.debug(FACTORY_NAME + " : shift_hour = " + JSON.stringify(shift_hour));
-//        // --------------------------------------------------------
-
-        var startDate = new Date(start);
-        startDate.setHours(shift_hour);
-
-//        $log.debug(FACTORY_NAME + " : startDate = " + JSON.stringify(startDate));
-
-        return startDate;
+    function getTaskStartsAt(start_date) {
+        return formatMySQL2JSDate(start_date);
     }
 
     // ==================================================
     // - 
     // ==================================================
-    function getTaskEndsAt(start, shift_hour, duration) {
+    function getTaskEndsAt(end_date, duration) {
 
-//        $log.debug(FACTORY_NAME + " : getTaskEndsAt = ");
-//        $log.debug(FACTORY_NAME + " : start = " + JSON.stringify(start));
-//        $log.debug(FACTORY_NAME + " : duration = " + JSON.stringify(duration));
-
-        var endDate = new Date(start);
-
-        var duration_hours = Math.floor(duration / 60);
-        var duration_minutes = duration % 60;
-
-//        endDate.setHours(shift_hour+1 + duration_hours);
-        endDate.setMinutes((shift_hour + duration_hours) * 60 + duration_minutes);
-
-//        $log.debug(FACTORY_NAME + " : endDate = " + JSON.stringify(endDate));
-
-        return endDate;
-    }
-
-    // ==================================================
-    // - get the endsAt time for the calendar
-    // - this assumes that 
-    // -    - morning_shift or afternoon_shift is true
-    // -    - both are true
-    // ==================================================
-    function getNwdStartsAt(date, morning_shift, afternoon_shift) {
-
-        var startDate = new Date(date);
-
-        if (afternoon_shift === true) {
-            startDate.setHours(CARATLANE_MID_SHIFT_TIME, 0, 0, 0);
-        }
-
-        if (morning_shift === true) {
-            startDate.setHours(CARATLANE_START_ACTIVITY_TIME, 0, 0, 0);
-        }
-
-        return startDate;
-    }
-
-    // ==================================================
-    // - get the endsAt time for the calendar
-    // - this assumes that 
-    // -    - morning_shift or afternoon_shift is true
-    // -    - both are true
-    // ==================================================
-    function getNwdEndsAt(date, morning_shift, afternoon_shift) {
-
-        //default value
-        var endDate = new Date(date);
-
-        if (morning_shift === true) {
-            endDate.setHours(CARATLANE_MID_SHIFT_TIME, 0, 0, 0);
-        }
-
-        if (afternoon_shift === true) {
-            endDate.setHours(CARATLANE_END_ACTIVITY_TIME, 0, 0, 0);
-        }
-
+        var endDate = formatMySQL2JSDate(end_date);
+        endDate.setMinutes(duration);
         return endDate;
     }
 
     // ==================================================
     // - 
     // ==================================================
-    function getHolidaysEndsAt(end_date, end_morning_shift, end_afternoon_shift) {
-
-        //default value
-        var endDate = new Date(end_date);
-
-        if (end_morning_shift === false && end_afternoon_shift === false) {
-            // the holidays ended up at midnight the previous day
-            // start date = end dvar endDate = new Date(end_date);
-            var endDate = new Date(end_date);
-            endDate.setHours(CARATLANE_END_ACTIVITY_TIME, 0, 0, 0);
-
-        }
-        else {
-            if (end_morning_shift === true) {
-                endDate.setHours(CARATLANE_MID_SHIFT_TIME, 0, 0, 0);
-            }
-
-            if (end_afternoon_shift === true) {
-                endDate.setHours(CARATLANE_END_ACTIVITY_TIME, 0, 0, 0);
-            }
-        }
-
-        return endDate;
+    function getNwdStartsAt(start_date) {
+        return new Date(start_date);
     }
 
     // ==================================================
     // - 
     // ==================================================
-    function getHolidaysStartsAt(start_date, start_morning_shift, start_afternoon_shift) {
+    function getNwdEndsAt(end_date) {
+        return new Date(end_date);
+    }
 
-        var startDate = new Date(start_date);
+    // ==================================================
+    // - 
+    // ==================================================
+    function getHolidaysEndsAt(end_date) {
+        return new Date(end_date);
+    }
 
-        if (start_afternoon_shift === true) {
-            startDate.setHours(CARATLANE_MID_SHIFT_TIME, 0, 0, 0);
-        }
-
-        if (start_morning_shift === true) {
-            startDate.setHours(CARATLANE_START_ACTIVITY_TIME, 0, 0, 0);
-        }
-        return startDate;
+    // ==================================================
+    // - 
+    // ==================================================
+    function getHolidaysStartsAt(start_date) {
+        return new Date(start_date);
     }
 
 
@@ -460,9 +343,8 @@ app.factory("tasksSrvc", function ($log, $http) {
     // - return functions
     // --------------------------------------------------------
     return {
-        createTask: createTask,
-        deleteTask: deleteTask,
-        updateTask: updateTask,
+        createTaskAllocation: createTaskAllocation,
+        deleteTaskAllocation: deleteTaskAllocation,
         updateTaskAllocation: updateTaskAllocation,
         formatCompletion: formatCompletion,
         formatDuration: formatDuration,

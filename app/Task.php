@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model {
 
-    protected $fillable = ['id', 'skill_id', 'project_id', 'completed'];
+    protected $fillable = ['id', 'skill_id', 'project_id'];
     public $timestamps = false;
 
     function getId() {
@@ -19,10 +19,6 @@ class Task extends Model {
 
     function getProjectId() {
         return $this->fillable->allocation_id;
-    }
-
-    function getCompleted() {
-        return $this->fillable->completed;
     }
 
 }

@@ -42,9 +42,9 @@ class DatabaseSeeder extends Seeder {
         // ------------------------------------------------------
         // - projects
         // ------------------------------------------------------
-        $this->call(ProjectTemplatesTableSeeder::class);
-        $this->call(ProjectTemplatesHaveSkillsTableSeeder::class);
-        $this->call(ProjectsTableSeeder::class);
+//        $this->call(ProjectTemplatesTableSeeder::class);
+//        $this->call(ProjectTemplatesHaveSkillsTableSeeder::class);
+//        $this->call(ProjectsTableSeeder::class);
         
 //        $this->call(TasksTableSeeder::class);
         

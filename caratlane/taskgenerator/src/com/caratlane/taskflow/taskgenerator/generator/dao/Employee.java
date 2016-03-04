@@ -24,15 +24,24 @@ public class Employee {
         this.dbEmployee = dbEmployee;
     }
 
+    /**
+     *
+     * @param employeeId
+     * @param productivity
+     * @param employementType
+     * @param morning_shift
+     */
     public Employee(
             String employeeId,
             Double productivity,
             EmployementType employementType
+    //            Boolean morning_shift
     ) {
         this.dbEmployee = new DbEmployee(
                 employeeId,
                 productivity,
                 employementType
+        //                (byte) (morning_shift == false ? 0 : 1)
         );
     }
 
@@ -55,6 +64,7 @@ public class Employee {
                 employeeId,
                 productivity,
                 employementType
+        //                (byte) 0
         );
     }
 
@@ -74,6 +84,9 @@ public class Employee {
         return dbEmployee.getEmployement_type();
     }
 
+//    public Boolean getMorningShift() {
+//        return dbEmployee.getMorning_shift() == 1;
+//    }
     @Override
     public int hashCode() {
         int hash = 7;

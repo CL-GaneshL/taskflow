@@ -30,6 +30,7 @@ class CreateEmployeesTable extends Migration {
             $table->boolean('isProjectManager')->default(0);
             $table->boolean('isTeamLeader')->default(0);
             $table->enum('employementType', array('Intern', 'FTE'));
+//            $table->date('next_alternative_saturday')->nullable();
 
             // ------------------------------------------
             // - foreign keys
