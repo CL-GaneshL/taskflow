@@ -14,8 +14,8 @@ elif [ $LOCAL = $BASE ]; then
       NEWLOCAL=$(git rev-parse @)
       if [ $NEWLOCAL = $REMOTE ]; then
         echo "Pull successfull"
-        service nginx restart
         service php5-fpm restart
+        service nginx restart
       fi
 elif [ $REMOTE = $BASE ]; then
       echo "Need to push"
