@@ -271,16 +271,42 @@ app.controller(
                 // - find a task in the list of recent tasks
                 // ==================================================
                 function findTaskAllocation(id) {
+                
+                    // --------------------------------------------------------
+                    // - WD : temporary debugging traces
+                    $log.debug(CONTROLLER_NAME + " : ------ update task allocation ---------------------- ");                                     
+                    $log.debug(CONTROLLER_NAME + " : allocation = " + JSON.stringify(allocation));
+                    // --------------------------------------------------------
 
                     var allocation = null;
+                    
+                    // --------------------------------------------------------
+                    // - WD : temporary debugging traces
+                    $log.debug(CONTROLLER_NAME + " : id = " + JSON.stringify(id));
+                    // --------------------------------------------------------
+                    
 
                     var allocations = $scope.taskAllocations.filter(function (allocation) {
                         return allocation.id === id;
                     });
+                    
+                    // --------------------------------------------------------
+                    // - WD : temporary debugging traces
+                    $log.debug(CONTROLLER_NAME + " : allocations = " + JSON.stringify(allocations));
+                    // --------------------------------------------------------
+                    
 
                     if (allocations.length === 1) {
                         allocation = allocations[0];
                     }
+                    
+                    // --------------------------------------------------------
+                    // - WD : temporary debugging traces
+                    $log.debug(CONTROLLER_NAME + " : allocation = " + JSON.stringify(allocation));
+                    $log.debug(CONTROLLER_NAME + " : ---------------------------------------------------- ");                                     
+                     // --------------------------------------------------------
+
+                    
 
                     return allocation;
                 }

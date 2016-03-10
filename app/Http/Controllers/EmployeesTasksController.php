@@ -96,6 +96,16 @@ class EmployeesTasksController extends Controller {
 
         $allocation = $task_allocations[0];
         $open = $allocation->open;
+        
+        // ---------------------------------------------------
+        // - WD : temporary debugging traces
+        \Log::debug('------- update task allocation ---------------------- ');
+        \Log::debug('$open = ' . $open);
+        \Log::debug('task_allocations : ' . print_r($task_allocations, true));
+        \Log::debug('----------------------------------------------------- ' );
+        // ---------------------------------------------------
+        
+        
 
         if ($open === 1) {
             // ---------------------------------------------------
