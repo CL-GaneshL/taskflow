@@ -137,8 +137,8 @@ app.controller(
                     var allocationToUpdate = findTaskAllocation(taskId);
 
                     // --------------------------------------------------------                                     
-                    // $log.debug(CONTROLLER_NAME + " : taskId = " + taskId);
-                    // $log.debug(CONTROLLER_NAME + " : allocationToUpdate = " + JSON.stringify(allocationToUpdate));
+                    $log.debug(CONTROLLER_NAME + " : taskId = " + taskId);
+                    $log.debug(CONTROLLER_NAME + " : allocationToUpdate = " + JSON.stringify(allocationToUpdate));
                     // --------------------------------------------------------
                     
                     var project_nb_products = allocationToUpdate.project_nb_products;

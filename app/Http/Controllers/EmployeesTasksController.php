@@ -100,12 +100,12 @@ class EmployeesTasksController extends Controller {
         // ---------------------------------------------------
         // - WD : temporary debugging traces
         \Log::debug('------- update task allocation ---------------------- ');
-        \Log::debug('$open = ' . $open);
+        \Log::debug('type of $open = ' . gettype($open));
+      	\Log::debug('$open = ' . $open);
         \Log::debug('task_allocations : ' . print_r($task_allocations, true));
         \Log::debug('----------------------------------------------------- ' );
         // ---------------------------------------------------
-        
-        
+
 
         if ($open === 1) {
             // ---------------------------------------------------
