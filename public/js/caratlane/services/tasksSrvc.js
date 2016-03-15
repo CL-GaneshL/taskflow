@@ -234,8 +234,19 @@ app.factory("tasksSrvc", function ($log, $http) {
     }
 
     // ==================================================
-    // - list of possible completion choices
+    // - list of possible duration/completion choices
     // ==================================================
+
+    // duration and completion are discret values stepping by 15 mins
+    var DURATION_STEP_IN_MINS = 15;
+
+    // we allow a max task duration of 8 hours
+    var MAX_DURATION_IN_HOURS = 8;
+
+    // excess completion of 2 hours
+    var EXCESS_COMPLETION_IN_HOURS = 2;
+
+    // list of possible duration/completion times
     var COMPLETION_CHOICES = [
         '0 h 00 mins',
         '0 h 15 mins', '0 h 30 mins', '0 h 45 mins', '1 h 00 mins',
@@ -245,16 +256,43 @@ app.factory("tasksSrvc", function ($log, $http) {
         '4 h 15 mins', '4 h 30 mins', '4 h 45 mins', '5 h 00 mins',
         '5 h 15 mins', '5 h 30 mins', '5 h 45 mins', '6 h 00 mins',
         '6 h 15 mins', '6 h 30 mins', '6 h 45 mins', '7 h 00 mins',
-        '7 h 15 mins', '7 h 30 mins', '7 h 45 mins', '8 h 00 mins',
+        '7 h 15 mins', '7 h 30 mins', '7 h 45 mins', '8 h 00 mins', // <== MAX_DURATION_IN_HOURS
         '8 h 15 mins', '8 h 30 mins', '8 h 45 mins', '9 h 00 mins',
         '9 h 15 mins', '9 h 30 mins', '9 h 45 mins', '10 h 00 mins'
     ];
 
+    // ==================================================
+    // - list of possible completion choices
+    // - task duration is limitted to 8 hours
+    // - we allow completion to be the duration 
+    // - plus 2 hours
+    // ==================================================
     function getCompletionChoices(durationInMins) {
 
         var index = 0;
         var choices = [];
-        var maxIndex = Math.floor(durationInMins / 15);
+
+        var EXCESS_MINS = EXCESS_COMPLETION_IN_HOURS * 60;
+        var maxIndex = Math.floor((durationInMins + EXCESS_MINS) / DURATION_STEP_IN_MINS);
+
+        for (index = 0; index <= maxIndex; index++) {
+            choices.push(COMPLETION_CHOICES[index]);
+        }
+
+        return choices;
+    }
+
+    // ==================================================
+    // - list of possible duration choices
+    // - we limit the duration to 8 hours
+    // ==================================================
+    function getDurationChoices() {
+
+        var index = 0;
+        var choices = [];
+
+        var MAX_MINS = MAX_DURATION_IN_HOURS * 60;
+        var maxIndex = Math.floor(MAX_MINS / DURATION_STEP_IN_MINS);
 
         for (index = 0; index <= maxIndex; index++) {
             choices.push(COMPLETION_CHOICES[index]);
@@ -268,28 +306,11 @@ app.factory("tasksSrvc", function ($log, $http) {
     // ==================================================
     function getNbProductsChoices(max) {
 
-        var choices = [];
         var index = 0;
+        var choices = [];
 
         for (index = 0; index <= max; index++) {
             choices.push(index);
-        }
-
-        return choices;
-    }
-
-
-    // ==================================================
-    // - list of possible completion choices
-    // ==================================================
-    function getDurationChoices() {
-
-        var choices = [];
-        var index = 0;
-        var maxIndex = COMPLETION_CHOICES.length;
-
-        for (index = 0; index <= maxIndex; index++) {
-            choices.push(COMPLETION_CHOICES[index]);
         }
 
         return choices;
