@@ -27,6 +27,8 @@ import static helpers.TestDBConstants.PROJECT_JADAU_2;
 import static helpers.TestDBConstants.PROJECT_JADAU_3;
 import static helpers.TestDBConstants.PROJECT_JADAU_4;
 import static helpers.TestDBConstants.PROJECT_JADAU_5;
+import static helpers.TestDBConstants.SKILL_3_3DMS;
+import static helpers.TestDBConstants.SKILL_5_3RenC;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import org.junit.After;
@@ -43,7 +45,7 @@ import org.junit.Test;
 public class EmployeeDataAllocateTask2Test {
 
     final static boolean test = true;
-    
+
     private static EmployeeData employeeData = null;
     private static ProjectData projectData = null;
 
@@ -56,6 +58,10 @@ public class EmployeeDataAllocateTask2Test {
         // company's non working days
         final NonWorkingDays nwdsInstance = NonWorkingDays.getInstance();
         nwdsInstance.addNwd(test, NWD_1);       // tomorrow
+
+        final Skills skills = Skills.getInstance();
+        skills.addSkill(SKILL_3_3DMS);      // id = 3
+        skills.addSkill(SKILL_5_3RenC);     // id = 5
 
         // create one employee CL0004
         employeeData = new EmployeeData(EMPLOYEE_CL0004);
@@ -74,8 +80,11 @@ public class EmployeeDataAllocateTask2Test {
         projectData = null;
         employeeData = null;
 
+        final Skills skillsInstance = Skills.getInstance();
+        skillsInstance.clearSkills(test);
+
         final NonWorkingDays nwdsInstance = NonWorkingDays.getInstance();
-        nwdsInstance.clearNwd(test);
+        nwdsInstance.clearNwds(test);
 
         final Employees employeesInstance = Employees.getInstance();
         employeesInstance.clearEmployeeData(test);

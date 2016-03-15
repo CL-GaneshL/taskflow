@@ -245,7 +245,9 @@ app.factory("tasksSrvc", function ($log, $http) {
         '4 h 15 mins', '4 h 30 mins', '4 h 45 mins', '5 h 00 mins',
         '5 h 15 mins', '5 h 30 mins', '5 h 45 mins', '6 h 00 mins',
         '6 h 15 mins', '6 h 30 mins', '6 h 45 mins', '7 h 00 mins',
-        '7 h 15 mins', '7 h 30 mins', '7 h 45 mins', '8 h 00 mins'
+        '7 h 15 mins', '7 h 30 mins', '7 h 45 mins', '8 h 00 mins',
+        '8 h 15 mins', '8 h 30 mins', '8 h 45 mins', '9 h 00 mins',
+        '9 h 15 mins', '9 h 30 mins', '9 h 45 mins', '10 h 00 mins'
     ];
 
     function getCompletionChoices(durationInMins) {

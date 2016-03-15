@@ -1,0 +1,11 @@
+
+caratlane :
+
+schema :
+"C:\Program Files\MySQL\MySQL Workbench 6.3 CE\mysql.exe" --host=130.211.240.165 --user=taskflow_user --password=9AeSrjLH5hj --port=3306 --database=taskflowdb  < ./taskflow-schema.sql
+
+data :
+"C:\Program Files\MySQL\MySQL Workbench 6.3 CE\mysql.exe" --host=130.211.240.165 --user=taskflow_user --password=9AeSrjLH5hj --port=3306 --database=taskflowdb  < ./taskflow-data.sql
+
+
+

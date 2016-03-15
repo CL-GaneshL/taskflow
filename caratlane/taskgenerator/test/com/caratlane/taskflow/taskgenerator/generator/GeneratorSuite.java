@@ -26,7 +26,8 @@ import org.junit.runners.Suite;
             EmployeeDataAllocateTask4Test.class,
             EmployeeDataAllocateTask5Test.class,
             EmployeeDataAllocateTask6Test.class,
-            SerializeTasksTest.class
+            SerializeTasks1Test.class,
+            SerializeTasks2Test.class
         }
 )
 public class GeneratorSuite {

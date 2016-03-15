@@ -33,14 +33,14 @@ import java.util.logging.Level;
  */
 public class TaskAllocator {
 
-    final LocalDateTime from;
+    final LocalDateTime allocation_from;
 
     /**
      *
-     * @param from
+     * @param allocation_from
      */
-    public TaskAllocator(final LocalDateTime from) {
-        this.from = from;
+    public TaskAllocator(final LocalDateTime allocation_from) {
+        this.allocation_from = allocation_from;
     }
 
     /**
@@ -103,7 +103,7 @@ public class TaskAllocator {
 
         do {
             final EmployeeData employeeData
-                    = EmployeeSkillSuitability.findMostSuitableEmployeeWithSkill(skill_id, this.from);
+                    = EmployeeSkillSuitability.findMostSuitableEmployeeWithSkill(skill_id, this.allocation_from);
 
             final int allocated
                     = this.allocateNewTaskAllocation(task, employeeData, remainder);
@@ -148,7 +148,7 @@ public class TaskAllocator {
 
         do {
             final EmployeeData employeeData
-                    = EmployeeSkillSuitability.findMostSuitableEmployeeWithSkill(skill_id, this.from);
+                    = EmployeeSkillSuitability.findMostSuitableEmployeeWithSkill(skill_id, this.allocation_from);
 
             final int allocated
                     = this.allocateNewTaskAllocation(task, employeeData, remainder);
@@ -172,11 +172,10 @@ public class TaskAllocator {
     ) throws TaskGeneratorException {
 
         Integer allocated;
+        TaskAllocation taskAllocation;
 
         LocalDateTime av_start_date
-                = EmployeeAvailability.getNextAvailability(employeeData, this.from);
-
-        TaskAllocation taskAllocation;
+                = EmployeeAvailability.getNextAvailability(employeeData, this.allocation_from);
 
         // how many minutes available in that shift
         final LocalDateTime endShift = getDateAt8am(av_start_date);
@@ -200,7 +199,7 @@ public class TaskAllocator {
             addTaskAllocation(employeeData, task, taskAllocation);
 
             // the actual allocated time was the duration (before correction)
-            // that will be substract this.from the task's totalDuration,
+            // that will be substract this.allocation_from the task's totalDuration,
             // irrespectively of the employees' productivity.
             allocated = duration;
         } else {

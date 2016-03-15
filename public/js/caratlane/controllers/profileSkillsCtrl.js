@@ -13,7 +13,15 @@ app.controller(
             'employeesSrvc',
             'skillsSrvc',
             'modalSrvc',
-            function ($log, $scope, $uibModal, profileSrvc, pageSrvc, employeesSrvc, skillsSrvc, modalSrvc) {
+            function ($log,
+                    $scope,
+                    $uibModal,
+                    profileSrvc,
+                    pageSrvc,
+                    employeesSrvc,
+                    skillsSrvc,
+                    modalSrvc)
+            {
 
                 var CONTROLLER_NAME = 'profileSkillsCtrl';
 
@@ -63,7 +71,7 @@ app.controller(
                                     'id': skills[index].id,
                                     'reference': skills[index].reference,
                                     'designation': skills[index].designation,
-                                    'skillDuration': skills[index].skillDuration
+                                    'duration': skillsSrvc.formatDuration(skills[index].duration)
                                 }
                         );
                     }
@@ -91,7 +99,7 @@ app.controller(
                                                 'id': skills[index].id,
                                                 'reference': skills[index].reference,
                                                 'designation': skills[index].designation,
-                                                'skillDuration': skills[index].skillDuration
+                                                'duration': skillsSrvc.formatDuration(skills[index].duration)
                                             }
                                     );
                                 }
@@ -135,7 +143,7 @@ app.controller(
                                             'id': $scope.newSkillDesignation.id,
                                             'reference': $scope.newSkillDesignation.reference,
                                             'designation': $scope.newSkillDesignation.designation,
-                                            'skillDuration': $scope.newSkillDesignation.duration
+                                            'duration': skillsSrvc.formatDuration2Mins($scope.newSkillDesignation.duration)
                                         }
                                 );
 
@@ -144,7 +152,7 @@ app.controller(
 
                             },
                             function (response) {
-                                
+
                                 // --------------------------------------------------------
                                 // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
                                 // --------------------------------------------------------
@@ -178,12 +186,12 @@ app.controller(
                                 });
 
                                 var message = 'Skill successfully removed !';
-                               modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
+                                modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
 
                             },
                             function (response) {
-                                
-                                  // --------------------------------------------------------
+
+                                // --------------------------------------------------------
                                 // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
                                 // --------------------------------------------------------
 
@@ -198,8 +206,5 @@ app.controller(
                     );
 
                 };
-                // ==================================================
 
-            }
-        ]
-        );
+            }]);

@@ -72,14 +72,20 @@ public class Skills {
     }
 
     /**
+     *
+     * @param skill
+     */
+    public void addSkill(final Skill skill) {
+        skills.add(skill);
+    }
+
+    /**
      * For testing purpose only.
      *
      * @param test
-     * @param skill
-     * @para
      */
-    public void addSkill(boolean test, final Skill skill) {
-        skills.add(skill);
+    public void clearSkills(boolean test) {
+        skills.clear();
     }
 
 }

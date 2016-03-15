@@ -5,8 +5,8 @@
  */
 
 app.controller(
-        "skillsCtrl", ['$log', '$scope', '$http', '$uibModal','tasksSrvc', 'modalSrvc',
-            function ($log, $scope, $http, $uibModal,tasksSrvc, modalSrvc) {
+        "skillsCtrl", ['$log', '$scope', '$http', '$uibModal', 'tasksSrvc', 'modalSrvc',
+            function ($log, $scope, $http, $uibModal, tasksSrvc, modalSrvc) {
 
                 var CONTROLLER_NAME = 'skillsCtrl';
 
@@ -66,7 +66,7 @@ app.controller(
                             var message = 'Internal server error.';
                             modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
                         });
-                        
+
                 // ==================================================
                 // - add a row in the skills table
                 // ==================================================
@@ -308,6 +308,5 @@ app.controller(
 
                     return hours * 60 + mins;
                 };
-
                 // ==================================================
             }]);

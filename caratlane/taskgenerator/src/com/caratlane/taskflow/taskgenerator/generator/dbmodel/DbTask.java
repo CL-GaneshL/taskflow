@@ -119,4 +119,9 @@ public class DbTask implements Serializable {
         return Objects.equals(this.project_id, other.project_id);
     }
 
+    @Override
+    public String toString() {
+        return "DbTask{" + "id=" + id + ", skill_id=" + skill_id + ", project_id=" + project_id + '}';
+    }
+
 }

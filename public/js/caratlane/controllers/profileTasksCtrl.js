@@ -101,34 +101,32 @@ angular.module('profileTasks', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAn
                         $scope.editEvent = function (calendarEvent) {
 
                             // --------------------------------------------------------
-                            $log.debug(CONTROLLER_NAME + " : calendarEvent = " + JSON.stringify(calendarEvent));
+                            // $log.debug(CONTROLLER_NAME + " : calendarEvent = " + JSON.stringify(calendarEvent));
                             // --------------------------------------------------------
 
+                            var isTask = calendarEvent.type === task_type;
+                            var isHolidays = calendarEvent.type === holidays_type;
+                            var isNWD = calendarEvent.type === non_working_type || calendarEvent.type === weekend_type;
+
                             // cannot edit company's non working days.
-                            var type = calendarEvent.type;
-                            if (type === non_working_type || type === weekend_type) {
-                                var message = 'Cannot edit company\'s non working days from this page.';
+                            if (isNWD) {
+                                var message = 'Cannot edit company\'s Non Working Days from this page.';
                                 modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
                                 return;
                             }
 
-                            var isTask = calendarEvent.type === task_type;
-                            var isHolidays = calendarEvent.type === holidays_type;
-
+                            // cannot edit employee's holiday from this tab..
                             if (isHolidays) {
-                                if (isProjectManger) {
-                                    $scope.editHolidayEvent(calendarEvent);
-                                }
-                                else {
-                                    var message = 'You do not have the rights to edit Holidays events.';
-                                    modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
-                                    return;
-                                }
+                                var message = 'Cannot edit Employee\'s Holidays from this tab.';
+                                modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
+                                return;
                             }
-                            else if (isTask) {
 
+                            if (isTask) {
                                 $scope.updateTask(calendarEvent);
                             }
+
+                            return;
                         };
 
                         // ==================================================
@@ -243,205 +241,35 @@ angular.module('profileTasks', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAn
                             // $log.debug(CONTROLLER_NAME + " : calendarEvent = " + JSON.stringify(calendarEvent));
                             // --------------------------------------------------------
 
+                            var isTask = calendarEvent.type === task_type;
+                            var isHolidays = calendarEvent.type === holidays_type;
+                            var isNWD = calendarEvent.type === non_working_type || calendarEvent.type === weekend_type;
+
                             // cannot delete company's non working days.
-                            var type = calendarEvent.type;
-                            if (type === non_working_type || type === weekend_type) {
+                            if (isNWD) {
                                 var message = 'You cannot delete a Company\'s Non-Working Days from this page.';
                                 modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
                                 return;
                             }
 
-                            var isTask = calendarEvent.type === task_type;
-                            var isHolidays = calendarEvent.type === holidays_type;
-
+                            // cannot delete employee's holiday from this tab.
                             if (isHolidays) {
+                                var message = 'Cannot delete Employee\'s Holidays from this tab.';
+                                modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
+                                return;
+                            }
+
+                            if (isTask) {
+
                                 if (isProjectManger) {
-                                    $scope.deleteHolidayEvent(calendarEvent);
+                                    $scope.deleteTask(calendarEvent);
                                 }
                                 else {
-                                    var message = 'You do not have the rights to delete Holidays events.';
+                                    var message = 'You do not have the rights to delete Tasks.';
                                     modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
                                     return;
                                 }
                             }
-                            else if (isTask) {
-
-                                if (isProjectManger) {
-                                    $scope.deletateTask(calendarEvent);
-                                }
-                                else {
-                                    var message = 'You do not have the rights to delete Task events.';
-                                    modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
-                                    return;
-                                }
-                            }
-
-                        };
-
-                        // ==================================================
-                        // - 
-                        // ==================================================
-                        $scope.editHolidayEvent = function (calendarEvent) {
-
-                            // --------------------------------------------------------
-                            // - initialization of the date and time pickers
-                            // --------------------------------------------------------
-
-                            // tomorrow at 0am
-                            var tomorrow = new Date();
-                            tomorrow.setHours(24, 0, 0, 0); // next midnignt
-
-                            // the day after tomorrow at 0am
-                            var tmrwPlusOneDay = new Date();
-                            tmrwPlusOneDay.setHours(2 * 24, 0, 0, 0); // next midnignt
-
-                            // allowes date picker from min_date = now 
-                            // to max_date one year ahead
-                            var min_date = tomorrow;
-                            var max_date = new Date(tomorrow);
-                            max_date.setDate(max_date.getDate() + 365);
-
-                            var toEditEvent = {
-                                'id': calendarEvent.id,
-                                'title': calendarEvent.title,
-                                'startsAt': calendarEvent.startsAt,
-                                'endsAt': calendarEvent.endsAt,
-                                'original_id': calendarEvent.original_id,
-                                'employee_id': calendarEvent.employee_id,
-                                'start_date': calendarEvent.start_date,
-                                'end_date': calendarEvent.end_date,
-                                'min_date': min_date,
-                                'max_date': max_date,
-                                'data_hour_step': 1,
-                                'data_minute_step': 30
-                            };
-
-                            // ==================================================
-                            // - edit event modal
-                            // ==================================================
-                            $uibModal.open({
-                                templateUrl: 'taskflow/fragments/profile_calendar_edit_holiday',
-                                controller: function ($scope, $uibModalInstance) {
-                                    $scope.$modalInstance = $uibModalInstance;
-                                    $scope.event = toEditEvent;
-
-                                    $scope.cancel = function () {
-                                        $uibModalInstance.dismiss('cancel');
-                                    };
-
-                                    $scope.update = function () {
-
-                                        // are the new values valid ?
-                                        if ($scope.validHolidayEvent($scope.event) === false) {
-                                            // validHolidayEvent will open up modal for the user
-                                            // to read a message, so just close the update modal.
-                                            $uibModalInstance.dismiss('cancel');
-                                            return;
-                                        }
-
-                                        // --------------------------------------------------------
-                                        // $log.debug(CONTROLLER_NAME + " : $scope.event = " + JSON.stringify($scope.event));
-                                        // --------------------------------------------------------
-
-                                        var toUpdateHoliday = {
-                                            id: $scope.event.original_id,
-                                            title: $scope.event.title,
-                                            employee_id: $scope.event.employee_id,
-                                            start_date: formatJS2MySQLDate(new Date($scope.event.start_date)),
-                                            end_date: formatJS2MySQLDate(new Date($scope.event.end_date))
-                                        };
-
-                                        // --------------------------------------------------------
-                                        // $log.debug(CONTROLLER_NAME + " : toUpdateHoliday = " + JSON.stringify(toUpdateHoliday));
-                                        // --------------------------------------------------------
-
-                                        var holidayPromise = holidaysSrvc.updateHoliday(toUpdateHoliday);
-                                        holidayPromise.then(
-                                                function (response) {
-
-                                                    var updatedHoliday = response.holiday;
-
-                                                    // --------------------------------------------------------
-                                                    // $log.debug(CONTROLLER_NAME + " : updatedHoliday = " + JSON.stringify(updatedHoliday));
-                                                    // --------------------------------------------------------
-
-                                                    // remove the event from the calendar's list of events 
-                                                    holidays = holidays.filter(function (holiday) {
-                                                        return holiday.id !== updatedHoliday.id;
-                                                    });
-
-                                                    // replace by the new updated holiday event
-                                                    holidays.push(updatedHoliday);
-
-                                                    // and rebuild the list
-                                                    buildEventList(nwds, holidays, tasks);
-
-                                                    var title = updatedHoliday.title;
-                                                    var message = 'Holiday event : ' + title + ', was successfuly updated!';
-                                                    modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
-                                                },
-                                                function (response) {
-
-                                                    // --------------------------------------------------------
-                                                    // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
-                                                    // --------------------------------------------------------
-
-                                                    var status = response.status;
-                                                    var message = response.statusText;
-                                                    modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
-                                                }
-                                        );
-
-                                        $uibModalInstance.dismiss('cancel');
-                                    };
-
-
-                                    // ==================================================
-                                    // - valid a holiday event
-                                    // ================================================== 
-                                    $scope.validHolidayEvent = function (event) {
-
-                                        // -------------------------------------------------
-                                        // - the name must be defined properly
-                                        // -------------------------------------------------
-                                        var title = event.title;
-                                        if (title === null || title === undefined || title.length === 0) {
-                                            var message = "The field Title must be defined.";
-                                            modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
-                                            return false;
-                                        }
-
-                                        var startAt = event.startsAt;
-                                        var endAt = event.endsAt;
-                                        // -------------------------------------------------
-                                        // - the startAt date must be greater than today's date
-                                        // -------------------------------------------------
-                                        var today = new Date();
-                                        today.setHours(24, 0, 0, 0);
-                                        if (startAt.getTime() <= today.getTime()) {
-                                            var message = "Only Holiday event in the future can be edited.";
-                                            modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
-                                            return false;
-                                        }
-
-                                        // -------------------------------------------------
-                                        // - the endAt date must be greater than startAt date
-                                        // -------------------------------------------------
-                                        if (endAt.getTime() <= startAt.getTime()) {
-                                            var message = "The End Date occurs before the Start Date.";
-                                            modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
-                                            return false;
-                                        }
-
-                                        // -------------------------------------------------
-                                        // - start and end dates for weekends 
-                                        // -------------------------------------------------
-                                        // TODO
-
-                                        return true;
-                                    };
-                                }
-                            });
 
                         };
 
@@ -570,74 +398,7 @@ angular.module('profileTasks', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAn
                         // ==================================================
                         // - 
                         // ==================================================
-                        $scope.deleteHolidayEvent = function (calendarEvent) {
-
-                            var toDeleteEvent = {
-                                'id': calendarEvent.id,
-                                'title': calendarEvent.title,
-                                'startsAt': calendarEvent.startsAt,
-                                'endsAt': calendarEvent.endsAt,
-                                'original_id': calendarEvent.original_id,
-                                'employee_id': calendarEvent.employee_id,
-                                'start_date': calendarEvent.start_date,
-                                'end_date': calendarEvent.end_date
-                            };
-
-                            $uibModal.open({
-                                templateUrl: 'taskflow/fragments/profile_calendar_delete_holidays',
-                                placement: 'center',
-                                controller: function ($scope, $uibModalInstance) {
-                                    $scope.$modalInstance = $uibModalInstance;
-                                    $scope.event = toDeleteEvent;
-
-                                    $scope.cancel = function () {
-                                        $uibModalInstance.dismiss('cancel');
-                                    };
-
-                                    $scope.delete = function () {
-
-                                        var title = $scope.event.title;
-                                        var original_id = $scope.event.original_id;
-
-                                        // ==================================================
-                                        // - deleting a holiday event
-                                        // ==================================================
-                                        var nwdPromise = holidaysSrvc.deleteHoliday(original_id);
-                                        nwdPromise.then(
-                                                function (response) {
-
-                                                    // --------------------------------------------------------
-                                                    // $log.debug(CONTROLLER_NAME + " : response = " + JSON.stringify(response));
-                                                    // --------------------------------------------------------
-
-                                                    // remove the event from the calendar's list of events 
-                                                    holidays = holidays.filter(function (holiday) {
-                                                        return holiday.id !== original_id;
-                                                    });
-
-                                                    buildEventList(nwds, holidays, tasks);
-
-                                                    var message = 'Holiday event ' + title + ', was successfuly deleted!';
-                                                    modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
-                                                },
-                                                function (response) {
-
-                                                    var status = response.status;
-                                                    var message = response.statusText;
-                                                    modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
-                                                }
-                                        );
-
-                                        $uibModalInstance.close($scope.event, $scope.event);
-                                    };
-                                }
-                            });
-                        };
-
-                        // ==================================================
-                        // - 
-                        // ==================================================
-                        $scope.deletateTask = function (calendarEvent) {
+                        $scope.deleteTask = function (calendarEvent) {
 
                             var project_nb_products = calendarEvent.project_nb_products;
                             var durationInMins = calendarEvent.duration;
@@ -740,62 +501,6 @@ angular.module('profileTasks', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAn
                             }
 
                             return result;
-                        }
-
-                        // ==================================================
-                        // - format a JS date to a MySQL date
-                        // ==================================================
-                        function  formatJS2MySQLDate(js_date) {
-
-                            var year = js_date.getFullYear();
-                            var month = js_date.getMonth() + 1;
-                            var day = js_date.getDate();
-
-                            var monthStr = month;
-                            if (month < 10) {
-                                monthStr = '0' + monthStr;
-                            }
-
-                            var dayStr = day;
-                            if (day < 10) {
-                                dayStr = '0' + dayStr;
-                            }
-
-                            return year + '-' + monthStr + '-' + dayStr;
-                        }
-
-                        // ==================================================
-                        // - dump the calendar's event list
-                        // - for debugging purpose
-                        // ==================================================
-                        function dumpEventList(key) {
-
-                            // --------------------------------------------------------    
-                            $log.debug(CONTROLLER_NAME + " : === $scope.events ============================= ");
-
-                            angular.forEach($scope.events, function (event, nb) {
-
-                                switch (key) {
-                                    case 'holidays' :
-                                        if (event.type === holidays_type) {
-                                            $log.debug(CONTROLLER_NAME + " : ==== $scope.events[" + nb + "] = " + JSON.stringify(event));
-                                        }
-                                        break;
-                                    case 'task' :
-                                        if (event.type === task_type) {
-                                            $log.debug(CONTROLLER_NAME + " : === $scope.events[" + nb + "] = " + JSON.stringify(event));
-                                        }
-                                        break;
-                                    case 'non-working' :
-                                        if (event.type === non_working_type) {
-                                            $log.debug(CONTROLLER_NAME + " : === $scope.events[" + nb + "] = " + JSON.stringify(event));
-                                        }
-                                        break;
-                                }
-                            });
-
-                            $log.debug(CONTROLLER_NAME + " : =============================================== ");
-                            // --------------------------------------------------------  
                         }
 
                         // ==================================================

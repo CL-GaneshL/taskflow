@@ -84,7 +84,7 @@
                 <div class="form-group col-md-12">
 
                     <label class="col-md-4 control-label text-right padding-right-5">
-                        Start Date :
+                        Nb Products :
                     </label>
 
                     <div class="col-md-8">
@@ -102,7 +102,7 @@
                 <div class="form-group col-md-12">
 
                     <label class="col-md-4 control-label text-right padding-right-5">
-                        Start Date :
+                        Priority :
                     </label>
 
                     <div class="col-md-8">

@@ -96,8 +96,7 @@ public class TasksDbSerializer {
                     // we create the task and its allocations
                     final Integer task_id = persistTask(task);
                     persistTaskAllocations(task, task_id);
-                }
-                else if (isModified) {
+                } else if (isModified) {
                     // the task does already exist in the database.
                     // we only create the allocations. We also have to 
                     // delete previously existing allocations.                     
@@ -120,13 +119,13 @@ public class TasksDbSerializer {
     private static Integer persistTask(final Task task) throws DBException {
 
         final DbTask dbTask = task.getDbTask();
+        long task_id = transaction.persistGetId(dbTask);
+        final Integer int_task_id = toIntExact(task_id);
 
         // -------------------------------------------------
         LogManager.getLogger().log(Level.FINE, "===> {0}", dbTask);
         // -------------------------------------------------
 
-        long task_id = transaction.persistGetId(dbTask);
-        final Integer int_task_id = toIntExact(task_id);
         return int_task_id;
     }
 
@@ -149,12 +148,12 @@ public class TasksDbSerializer {
                     = allocation.getDbTaskAllocation();
 
             dbTaskAllocation.setTask_id(task_id);
+            transaction.persist(dbTaskAllocation);
 
             // -------------------------------------------------
             LogManager.getLogger().log(Level.FINE, "===> {0}", dbTaskAllocation);
             // -------------------------------------------------
 
-            transaction.persist(dbTaskAllocation);
         }
 
     }

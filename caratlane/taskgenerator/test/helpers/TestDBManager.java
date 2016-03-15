@@ -5,6 +5,7 @@
  */
 package helpers;
 
+import com.caratlane.taskflow.taskgenerator.db.DBDatabase;
 import com.caratlane.taskflow.taskgenerator.db.DBException;
 import com.caratlane.taskflow.taskgenerator.db.DBManager;
 import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorException;
@@ -61,9 +62,6 @@ public class TestDBManager {
         // skills
         // ---------------------------------------------
         Skills.initialize(test_mode);
-        final Skills skills = Skills.getInstance();
-        skills.addSkill(test_mode, SKILL_3_3DMS);      // id = 3
-        skills.addSkill(test_mode, SKILL_5_3RenC);     // id = 5
 
         // ---------------------------------------------
         // all open projects
@@ -87,6 +85,14 @@ public class TestDBManager {
     public static void shutdown() {
 
         DBManager.shutdown();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static DBDatabase getDatabaseInstance() {
+        return DBManager.getDatabaseInstance();
     }
 
 }

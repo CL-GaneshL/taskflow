@@ -96,61 +96,42 @@ class EmployeesTasksController extends Controller {
 
         $allocation = $task_allocations[0];
         $open = $allocation->open;
-        
+
         // ---------------------------------------------------
-        // - WD : temporary debugging traces
-        \Log::debug('------- update task allocation ---------------------- ');
-        \Log::debug('type of $open = ' . gettype($open));
-      	\Log::debug('$open = ' . $open);
-        \Log::debug('task_allocations : ' . print_r($task_allocations, true));
-        \Log::debug('----------------------------------------------------- ' );
+        // project still open
+        // ---------------------------------------------------
+        $allocation = TaskAllocation::find($allocation_id);
+        $allocation->task_id = trim($request->task_id) !== '' ? $request->task_id : null;
+        $allocation->employee_id = trim($request->employee_id) !== '' ? $request->employee_id : null;
+        $allocation->start_date = trim($request->start_date) !== '' ? $request->start_date : null;
+        $allocation->completion = trim($request->completion) !== '' ? $request->completion : null;
+        $allocation->nb_products_completed = trim($request->nb_products_completed) !== '' ? $request->nb_products_completed : null;
+        $allocation->completed = trim($request->completed) !== '' ? $request->completed : null;
+        $allocation->duration = trim($request->duration) !== '' ? $request->duration : null;
+
+        // ---------------------------------------------------
+        \Log::debug('$allocation = ' . $allocation);
+        // ---------------------------------------------------
+        // ---------------------------------------------------
+        // save the allocation 
+        // ---------------------------------------------------
+        $allocation->save();
+
+        $task_allocations = \DB::table('v_tasks_info')
+                ->select('v_tasks_info.*')
+                ->where('v_tasks_info.id', '=', $allocation_id)
+                ->get();
+
+        $updatedTask = $task_allocations[0];
+
+        // ---------------------------------------------------
+        // and send a response to the client
         // ---------------------------------------------------
 
-        if ($open === '1') {
-            // ---------------------------------------------------
-            // project still open
-            // ---------------------------------------------------
-            $allocation = TaskAllocation::find($allocation_id);
-            $allocation->task_id = trim($request->task_id) !== '' ? $request->task_id : null;
-            $allocation->employee_id = trim($request->employee_id) !== '' ? $request->employee_id : null;
-            $allocation->start_date = trim($request->start_date) !== '' ? $request->start_date : null;
-            $allocation->completion = trim($request->completion) !== '' ? $request->completion : null;
-            $allocation->nb_products_completed = trim($request->nb_products_completed) !== '' ? $request->nb_products_completed : null;
-            $allocation->completed = trim($request->completed) !== '' ? $request->completed : null;
-            $allocation->duration = trim($request->duration) !== '' ? $request->duration : null;
-
-            // ---------------------------------------------------
-            \Log::debug('$allocation = ' . $allocation);
-            // ---------------------------------------------------
-            // ---------------------------------------------------
-            // save the allocation 
-            // ---------------------------------------------------
-            $allocation->save();
-
-            $task_allocations = \DB::table('v_tasks_info')
-                    ->select('v_tasks_info.*')
-                    ->where('v_tasks_info.id', '=', $allocation_id)
-                    ->get();
-
-            $updatedTask = $task_allocations[0];
-
-            // ---------------------------------------------------
-            // and send a response to the client
-            // ---------------------------------------------------
-
-            return response()->json([
-                        'message' => 'Task updated succesfully',
-                        'data' => $updatedTask
-                            ], 200);
-        } else {
-            // ---------------------------------------------------
-            // project has been closed
-            // ---------------------------------------------------
-
-            return response()->json([
-                        'message' => 'Project closed, this task cannot be updated',
-                            ], 500);
-        }
+        return response()->json([
+                    'message' => 'Task updated succesfully',
+                    'data' => $updatedTask
+                        ], 200);
     }
 
     /**

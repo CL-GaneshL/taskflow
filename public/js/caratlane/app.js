@@ -80,8 +80,8 @@ app.constant('JS_REQUIRES', {
         'employeesCtrl': '../../js/caratlane/controllers/employeesCtrl.js',
         'employeesListCtrl': '../../js/caratlane/controllers/employeesListCtrl.js',
         'taskAllocationCtrl': '../../js/caratlane/controllers/taskAllocationCtrl.js',
-        'nonWorkingDaysCtrl': '../../js/caratlane/controllers/nonWorkingDaysCtrl.js',
-        'tasksTasksCtrl': '../../js/caratlane/controllers/tasksTasksCtrl.js',
+        'settingsNonWorkingDaysCtrl': '../../js/caratlane/controllers/settingsNonWorkingDaysCtrl.js',
+        'settingsTaskGeneratorCtrl': '../../js/caratlane/controllers/settingsTaskGeneratorCtrl.js',
         // ----
         //*** Services
         'teamsSrvc': '../../js/caratlane/services/teamsSrvc.js',
@@ -468,15 +468,7 @@ app.config([
                             'projectsSrvc',
                             'projectsCtrl',
                             'templatesSrvc',
-                            'templatesCtrl',
-                            'taskAllocationSrvc',
-                            'taskAllocationCtrl',
-                            'nonWorkingDaysSrvc',
-                            'nonWorkingDaysCtrl',
-                            'tasksTasksCtrl',
-                            'holidaysSrvc',
-                            'tasksSrvc',
-                            'projectsTasksSrvc'
+                            'templatesCtrl'
                             ),
                     title: 'Projects'
                 })
@@ -491,7 +483,6 @@ app.config([
                             'taskAllocationSrvc',
                             'taskAllocationCtrl',
                             'nonWorkingDaysSrvc',
-                            'tasksTasksCtrl',
                             'holidaysSrvc',
                             'tasksSrvc',
                             'projectsTasksSrvc'
@@ -506,18 +497,8 @@ app.config([
                     templateUrl: "taskflow/fragments/templates",
                     resolve: loadSequence(
                             'modalSrvc',
-                            'projectsSrvc',
-                            'projectsCtrl',
                             'templatesSrvc',
-                            'templatesCtrl',
-                            'taskAllocationSrvc',
-                            'taskAllocationCtrl',
-                            'nonWorkingDaysSrvc',
-                            'nonWorkingDaysCtrl',
-                            'tasksTasksCtrl',
-                            'holidaysSrvc',
-                            'tasksSrvc',
-                            'projectsTasksSrvc'
+                            'templatesCtrl'
                             ),
                     title: 'Templates'
                 })
@@ -531,7 +512,9 @@ app.config([
                     resolve: loadSequence(
                             'modalSrvc',
                             'nonWorkingDaysSrvc',
-                            'nonWorkingDaysCtrl'
+                            'taskAllocationSrvc',
+                            'settingsNonWorkingDaysCtrl',
+                            'settingsTaskGeneratorCtrl'
                             ),
                     title: 'Templates'
                 })

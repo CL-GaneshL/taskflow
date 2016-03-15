@@ -23,16 +23,33 @@ public class Skill {
         this.dbSkill = dbSkill;
     }
 
-    public Skill(Integer duration, Byte open) {
-        this.dbSkill = new DbSkill(duration, open);
+    public Skill(
+            final String reference,
+            final String designation,
+            final Integer duration,
+            final Byte open) {
+        this.dbSkill = new DbSkill(reference, designation, duration, open);
     }
 
-    public Skill(Integer id, Integer duration, Byte open) {
-        this.dbSkill = new DbSkill(id, duration, open);
+    public Skill(
+            final Integer id,
+            final String reference,
+            final String designation,
+            final Integer duration,
+            final Byte open) {
+        this.dbSkill = new DbSkill(id, reference, designation, duration, open);
     }
 
     public Integer getId() {
         return dbSkill.getId();
+    }
+
+    public String getReference() {
+        return dbSkill.getReference();
+    }
+
+    public String getDesignation() {
+        return dbSkill.getDesignation();
     }
 
     public Integer getDuration() {
@@ -41,6 +58,10 @@ public class Skill {
 
     public Byte getOpen() {
         return dbSkill.getOpen();
+    }
+
+    public DbSkill getDbSkill() {
+        return dbSkill;
     }
 
     @Override

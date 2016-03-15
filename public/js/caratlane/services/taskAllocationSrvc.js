@@ -1,8 +1,4 @@
 'use strict';
-/**
- * Allows communication beetween Login and profile modals.
- * 
- */
 
 app.factory("taskAllocationSrvc", function ($log, $http) {
 
@@ -16,12 +12,12 @@ app.factory("taskAllocationSrvc", function ($log, $http) {
         return $http(
                 {
                     method: "GET",
-                    url: '/taskflow/apis/v1/allocate'
+                    url: '/taskflow/apis/v1/allocate/'
                 }
         ).then(function (response) {
 
             return {
-                xxxxx: response.data.xxxxxx
+                status: response.data.status
             };
         });
     };
@@ -33,13 +29,61 @@ app.factory("taskAllocationSrvc", function ($log, $http) {
 
         return $http(
                 {
-                    method: "POST",
-                    url: '/taskflow/apis/v1/reset'
+                    method: "GET",
+                    url: '/taskflow/apis/v1/allocate/reset/'
                 }
         ).then(function (response) {
 
             return {
-                xxxxx: response.data.xxxxxx
+                status: response.data.status
+            };
+        });
+    };
+
+    // --------------------------------------------------------
+    // - 
+    // --------------------------------------------------------
+    var getTaskflowConfiguration = function () {
+
+        return $http(
+                {
+                    method: "GET",
+                    url: '/taskflow/apis/v1/allocate/taskflow-configuration/'
+                }
+        ).then(function (response) {
+
+            // --------------------------------------------------------
+            $log.debug(FACTORY_NAME + " : response = " + JSON.stringify(response));
+            // --------------------------------------------------------
+
+            var data = response.data.data;
+
+            return {
+                data: data
+            };
+        });
+    };
+
+    // --------------------------------------------------------
+    // - 
+    // --------------------------------------------------------
+    var getJavaConfiguration = function () {
+
+        return $http(
+                {
+                    method: "GET",
+                    url: '/taskflow/apis/v1/allocate/java-configuration/'
+                }
+        ).then(function (response) {
+
+            // --------------------------------------------------------
+            // $log.debug(FACTORY_NAME + " : response = " + JSON.stringify(response));
+            // --------------------------------------------------------
+
+            var data = response.data.data;
+
+            return {
+                data: data
             };
         });
     };
@@ -50,7 +94,9 @@ app.factory("taskAllocationSrvc", function ($log, $http) {
 
     return {
         allocate: allocate,
-        reset: reset
+        reset: reset,
+        getTaskflowConfiguration: getTaskflowConfiguration,
+        getJavaConfiguration: getJavaConfiguration
     };
     // ==================================================
 });

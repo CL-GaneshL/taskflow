@@ -25,10 +25,24 @@
             <uib-tabset class="tabbable">
 
                 <!-- ================================================== -->
-                <!-- - non working days tab                                         -->
+                <!-- - non working days tab                             -->
                 <!-- ================================================== --> 
                 <uib-tab heading="Non-Working Days" >
-                    <div ng-include="'taskflow/fragments/projects_non_working_days'"></div>
+                    <div ng-include="'taskflow/fragments/settings_non_working_days'"></div>
+                </uib-tab>
+
+                <!-- ================================================== -->
+                <!-- - task generator                                   -->
+                <!-- ================================================== --> 
+                <uib-tab heading="Task Generator" >
+                    <div ng-include="'taskflow/fragments/settings_task_generator'"></div>
+                </uib-tab>
+
+                <!-- ================================================== -->
+                <!-- - php info                                         -->
+                <!-- ================================================== --> 
+                <uib-tab heading="Php Info" >
+                    <div ng-include="'taskflow/fragments/settings_php_info'"></div>
                 </uib-tab>
 
             </uib-tabset>

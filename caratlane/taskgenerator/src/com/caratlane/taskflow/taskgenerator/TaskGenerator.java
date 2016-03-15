@@ -33,10 +33,15 @@ import com.caratlane.taskflow.taskgenerator.logging.LogManager;
  */
 public class TaskGenerator {
 
+    private static final Integer SUCCESS_EXIT_STATUS = 0;
+    private static final Integer ERROR_EXIT_STATUS = 1;
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+
+        Integer exitStatus = SUCCESS_EXIT_STATUS;
 
 //        String driver = null;
         String host = null;
@@ -220,6 +225,8 @@ public class TaskGenerator {
             // ==============================================================
             LogManager.getLogger().log(Level.SEVERE, null, ex);
 
+            exitStatus = ERROR_EXIT_STATUS;
+
         } finally {
             // ==============================================================
             // - terminate the app
@@ -232,6 +239,8 @@ public class TaskGenerator {
 
             LogManager.shutdown();
         }
+
+        System.exit(exitStatus);
     }
 
 }

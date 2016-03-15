@@ -73,6 +73,8 @@ public interface DbConstants {
     String SKILL_TABLE_NAME = "skills";
 
     String SKILL_ID_COL_NAME = "id";
+    String SKILL_REFERENCE_COL_NAME = "reference";
+    String SKILL_DESIGNATION_COL_NAME = "designation";
     String SKILL_DURATION_COL_NAME = "duration";
     String SKILL_OPEN_COL_NAME = "open";
 

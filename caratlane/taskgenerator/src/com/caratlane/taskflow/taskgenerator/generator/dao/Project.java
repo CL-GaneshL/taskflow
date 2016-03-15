@@ -33,6 +33,7 @@ public class Project {
     /**
      *
      * @param project_id
+     * @param reference
      * @param template_id
      * @param nb_products
      * @param priority
@@ -40,16 +41,46 @@ public class Project {
      * @param open
      */
     public Project(
-            Integer project_id,
-            Integer template_id,
-            Integer nb_products,
-            Integer priority,
-            Date start_date,
-            Byte open
+            final Integer project_id,
+            final String reference,
+            final Integer template_id,
+            final Integer nb_products,
+            final Integer priority,
+            final Date start_date,
+            final Byte open
     ) {
 
         this.dbProject = new DbProject(
                 project_id,
+                reference,
+                template_id,
+                nb_products,
+                priority,
+                start_date,
+                open
+        );
+    }
+
+    /**
+     *
+     * @param reference
+     * @param template_id
+     * @param nb_products
+     * @param priority
+     * @param start_date
+     * @param open
+     */
+    public Project(
+            final String reference,
+            final Integer template_id,
+            final Integer nb_products,
+            final Integer priority,
+            final Date start_date,
+            final Byte open
+    ) {
+
+        this.dbProject = new DbProject(
+                reference,
                 template_id,
                 nb_products,
                 priority,
@@ -64,6 +95,10 @@ public class Project {
      */
     public Integer getId() {
         return this.dbProject.getId();
+    }
+
+    public String getReference() {
+        return dbProject.getReference();
     }
 
     /**
@@ -104,11 +139,35 @@ public class Project {
     }
 
     /**
+     * For test purposes only.
+     *
+     * @param test
+     * @return
+     */
+    public Date getStartDate(boolean test) {
+        return this.dbProject.getStart_date();
+    }
+
+    public DbProject getDbProject() {
+        return dbProject;
+    }
+
+    /**
      *
      * @return
      */
     public Boolean getOpen() {
         return this.dbProject.getOpen() == 1;
+    }
+
+    /**
+     * For test purposes only.
+     *
+     * @param test
+     * @return
+     */
+    public Byte getOpen(boolean test) {
+        return this.dbProject.getOpen();
     }
 
     @Override

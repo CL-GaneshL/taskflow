@@ -10,6 +10,7 @@ import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_NB_PRODUCTS_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_OPEN_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_PRIORITY_COL_NAME;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_REFERENCE_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_START_DATE_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_TABLE_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.PROJECT_TEMPLATE_ID_COL_NAME;
@@ -52,7 +53,7 @@ public class DbProject implements Serializable {
      */
     @Id
     @Min(value = 1)
-    @Column(name = PROJECT_ID_COL_NAME, insertable = true, updatable = false)
+    @Column(name = PROJECT_ID_COL_NAME, insertable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -60,8 +61,15 @@ public class DbProject implements Serializable {
      * template id
      */
     @NotNull
+    @Column(name = PROJECT_REFERENCE_COL_NAME, insertable = true, updatable = true)
+    private String reference;
+
+    /**
+     * template id
+     */
+    @NotNull
     @Min(value = 1)
-    @Column(name = PROJECT_TEMPLATE_ID_COL_NAME, insertable = true, updatable = false)
+    @Column(name = PROJECT_TEMPLATE_ID_COL_NAME, insertable = true, updatable = true)
     private Integer template_id;
 
     /**
@@ -69,7 +77,7 @@ public class DbProject implements Serializable {
      */
     @NotNull
     @Min(value = 1)
-    @Column(name = PROJECT_NB_PRODUCTS_COL_NAME, insertable = true, updatable = false)
+    @Column(name = PROJECT_NB_PRODUCTS_COL_NAME, insertable = true, updatable = true)
     private Integer nb_products;
 
     /**
@@ -78,14 +86,14 @@ public class DbProject implements Serializable {
     @NotNull
     @Min(value = 1)
     @Max(value = 10)
-    @Column(name = PROJECT_PRIORITY_COL_NAME, insertable = true, updatable = false)
+    @Column(name = PROJECT_PRIORITY_COL_NAME, insertable = true, updatable = true)
     private Integer priority;
 
     /**
      * start date
      */
     @NotNull
-    @Column(name = PROJECT_START_DATE_COL_NAME, insertable = true, updatable = false)
+    @Column(name = PROJECT_START_DATE_COL_NAME, insertable = true, updatable = true)
     private Date start_date;
 
     /**
@@ -94,7 +102,7 @@ public class DbProject implements Serializable {
     @NotNull
     @Min(value = 0)
     @Max(value = 1)
-    @Column(name = PROJECT_OPEN_COL_NAME, insertable = true, updatable = false)
+    @Column(name = PROJECT_OPEN_COL_NAME, insertable = true, updatable = true)
     private Byte open;
 
     /**
@@ -105,7 +113,9 @@ public class DbProject implements Serializable {
 
     /**
      * For testing purposes only.
+     *
      * @param project_id
+     * @param reference
      * @param template_id
      * @param nb_products
      * @param priority
@@ -113,14 +123,42 @@ public class DbProject implements Serializable {
      * @param open
      */
     public DbProject(
-            Integer project_id,
-            Integer template_id,
-            Integer nb_products,
-            Integer priority,
-            Date start_date,
-            Byte open
+            final Integer project_id,
+            final String reference,
+            final Integer template_id,
+            final Integer nb_products,
+            final Integer priority,
+            final Date start_date,
+            final Byte open
     ) {
         this.id = project_id;
+        this.reference = reference;
+        this.template_id = template_id;
+        this.nb_products = nb_products;
+        this.priority = priority;
+        this.start_date = start_date;
+        this.open = open;
+    }
+
+    /**
+     * For testing purposes only.
+     *
+     * @param reference
+     * @param template_id
+     * @param nb_products
+     * @param priority
+     * @param start_date
+     * @param open
+     */
+    public DbProject(
+            final String reference,
+            final Integer template_id,
+            final Integer nb_products,
+            final Integer priority,
+            final Date start_date,
+            final Byte open
+    ) {
+        this.reference = reference;
         this.template_id = template_id;
         this.nb_products = nb_products;
         this.priority = priority;
@@ -134,6 +172,10 @@ public class DbProject implements Serializable {
      */
     public Integer getId() {
         return id;
+    }
+
+    public String getReference() {
+        return reference;
     }
 
     /**
@@ -178,13 +220,14 @@ public class DbProject implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 67 * hash + Objects.hashCode(this.id);
-        hash = 67 * hash + Objects.hashCode(this.template_id);
-        hash = 67 * hash + Objects.hashCode(this.nb_products);
-        hash = 67 * hash + Objects.hashCode(this.priority);
-        hash = 67 * hash + Objects.hashCode(this.start_date);
-        hash = 67 * hash + Objects.hashCode(this.open);
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.id);
+        hash = 29 * hash + Objects.hashCode(this.reference);
+        hash = 29 * hash + Objects.hashCode(this.template_id);
+        hash = 29 * hash + Objects.hashCode(this.nb_products);
+        hash = 29 * hash + Objects.hashCode(this.priority);
+        hash = 29 * hash + Objects.hashCode(this.start_date);
+        hash = 29 * hash + Objects.hashCode(this.open);
         return hash;
     }
 
@@ -200,6 +243,9 @@ public class DbProject implements Serializable {
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
+        if (!Objects.equals(this.reference, other.reference)) {
+            return false;
+        }
         if (!Objects.equals(this.template_id, other.template_id)) {
             return false;
         }
@@ -212,12 +258,15 @@ public class DbProject implements Serializable {
         if (!Objects.equals(this.start_date, other.start_date)) {
             return false;
         }
-        return Objects.equals(this.open, other.open);
+        if (!Objects.equals(this.open, other.open)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public String toString() {
-        return "DbProject{" + "id=" + id + ", template_id=" + template_id + ", nb_products=" + nb_products + ", priority=" + priority + ", start_date=" + start_date + ", open=" + open + '}';
+        return "DbProject{" + "id=" + id + ", reference=" + reference + ", template_id=" + template_id + ", nb_products=" + nb_products + ", priority=" + priority + ", start_date=" + start_date + ", open=" + open + '}';
     }
 
 }

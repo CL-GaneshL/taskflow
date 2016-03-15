@@ -76,7 +76,7 @@ public class NonWorkingDays {
      *
      * @param test
      */
-    public void clearNwd(boolean test) {
+    public void clearNwds(boolean test) {
         nwds.clear();
     }
 }
