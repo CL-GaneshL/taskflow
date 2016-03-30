@@ -13,6 +13,7 @@ app.controller(
             'projectsTasksSrvc',
             'taskAllocationSrvc',
             'modalSrvc',
+            'usSpinnerService',
             function (
                     $log,
                     $scope,
@@ -21,7 +22,8 @@ app.controller(
                     tasksSrvc,
                     projectsTasksSrvc,
                     taskAllocationSrvc,
-                    modalSrvc
+                    modalSrvc,
+                    usSpinnerService
                     ) {
 
                 var CONTROLLER_NAME = 'taskAllocationCtrl';
@@ -58,14 +60,25 @@ app.controller(
                 $scope.filter_project = null;
 
                 // ==================================================
-                // - 
+                // - spinner
+                // ==================================================
+                $scope.startSpin = function () {
+                    usSpinnerService.spin('taskSpinner');
+                };
+
+                $scope.stopSpin = function () {
+                    usSpinnerService.stop('taskSpinner');
+                };
+
+                // ==================================================
+                // - employee filter
                 // ==================================================
                 var getFilterEmployee = function () {
                     return $scope.filter_employee;
                 };
 
                 // ==================================================
-                // - 
+                // - project filter
                 // ==================================================
                 var getFilterProject = function () {
                     return $scope.filter_project;
@@ -74,6 +87,10 @@ app.controller(
                 // ==================================================
                 // - retrieve all tasks, non working days and holidays
                 // ==================================================
+
+                // start the spinner
+                $scope.startSpin();
+
                 var eventsPromise = projectsTasksSrvc.getProjectsEvents();
                 eventsPromise.then(
                         function (response) {
@@ -97,12 +114,18 @@ app.controller(
 
                             buildEventList(nwds, holidays, tasks, null, null);
 
+                            // end the spinner
+                            $scope.stopSpin();
+
                         },
                         function (response) {
 
                             // ==================================================
                             // - retrieving employee's profile data failed
                             // ==================================================
+
+                            // end the spinner
+                            $scope.stopSpin();
 
                             var status = response.status;
                             var message = response.statusText;
@@ -670,6 +693,9 @@ app.controller(
                 // ==================================================
                 $scope.allocateTasks = function () {
 
+                    // start the spinner
+                    $scope.startSpin();
+
                     // --------------------------------------------------------
                     $log.debug(CONTROLLER_NAME + " : allocate ..... ");
                     // --------------------------------------------------------
@@ -683,44 +709,49 @@ app.controller(
                                 $log.debug(CONTROLLER_NAME + " : allocate done ! ");
                                 // --------------------------------------------------------
 
+                                // ==================================================
+                                // - retrieve all tasks, non working days and holidays
+                                // ==================================================
+                                var eventsPromise = projectsTasksSrvc.getProjectsEvents();
+                                eventsPromise.then(
+                                        function (response) {
 
-                // ==================================================
-                // - retrieve all tasks, non working days and holidays
-                // ==================================================
-                var eventsPromise = projectsTasksSrvc.getProjectsEvents();
-                eventsPromise.then(
-                        function (response) {
+                                            nwds = response.non_working_days;
+                                            holidays = response.holidays;
+                                            tasks = response.tasks;
 
-                            nwds = response.non_working_days;
-                            holidays = response.holidays;
-                            tasks = response.tasks;
+                                            var all_employees = [{'id': 0, 'fullName': 'All Employees'}];
+                                            $scope.employees = all_employees.concat(response.employees);
+                                            $scope.filter_employee = {'id': 0, 'fullName': 'All Employees'};
 
-                            var all_employees = [{'id': 0, 'fullName': 'All Employees'}];
-                            $scope.employees = all_employees.concat(response.employees);
-                            $scope.filter_employee = {'id': 0, 'fullName': 'All Employees'};
+                                            var all_projects = [{'id': 0, 'reference': 'All Projects'}];
+                                            $scope.projects = all_projects.concat(response.projects);
+                                            $scope.filter_project = {'id': 0, 'reference': 'All Projects'};
 
-                            var all_projects = [{'id': 0, 'reference': 'All Projects'}];
-                            $scope.projects = all_projects.concat(response.projects);
-                            $scope.filter_project = {'id': 0, 'reference': 'All Projects'};
+                                            // --------------------------------------------------------
+                                            // $log.debug(CONTROLLER_NAME + " : $scope.projects = " + JSON.stringify($scope.projects));
+                                            // $log.debug(CONTROLLER_NAME + " : tasks = " + JSON.stringify(tasks));
+                                            // --------------------------------------------------------
 
-                            // --------------------------------------------------------
-                            // $log.debug(CONTROLLER_NAME + " : $scope.projects = " + JSON.stringify($scope.projects));
-                            // $log.debug(CONTROLLER_NAME + " : tasks = " + JSON.stringify(tasks));
-                            // --------------------------------------------------------
+                                            buildEventList(nwds, holidays, tasks, null, null);
 
-                            buildEventList(nwds, holidays, tasks, null, null);
+                                            // end the spinner
+                                            $scope.stopSpin();
 
-                        },
-                        function (response) {
+                                        },
+                                        function (response) {
 
-                            // ==================================================
-                            // - retrieving employee's profile data failed
-                            // ==================================================
+                                            // ==================================================
+                                            // - retrieving employee's profile data failed
+                                            // ==================================================
+                                            // 
+                                            // end the spinner
+                                            $scope.stopSpin();
 
-                            var status = response.status;
-                            var message = response.statusText;
-                            modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
-                        });
+                                            var status = response.status;
+                                            var message = response.statusText;
+                                            modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
+                                        });
 
 
 

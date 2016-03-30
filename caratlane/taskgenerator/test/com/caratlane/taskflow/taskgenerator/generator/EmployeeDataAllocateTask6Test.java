@@ -129,20 +129,13 @@ public class EmployeeDataAllocateTask6Test {
         final Integer skill_id = ID_SKILL_3_3DMS;   // id = 3
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_1;    // nb probucts = 2
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
+        (new TaskAllocator(TOMORROW)).allocate(test, projectData, employeeData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
         final int nbExpectedTasks = 1;
         final int nbTasks = tasks.size();
         assertEquals(nbExpectedTasks, nbTasks);
-
-        final Task task = tasks.get(0);
-
-        // task of duration 240 mins ( 4 hours )
-        final int totalDuration = task.getTotalDuration();
-        final int expectedTotalDuration = NB_PRODUCTS_PROJECT_JADAU_1 * DURATION_SKILL_3_3DMS;  // 2 * 120 = 240 mins
-        assertEquals(expectedTotalDuration, totalDuration);
 
         // expect only one allocation of 240 mins ( 4 hours )
         final LinkedList<TaskAllocation> allocations = employeeData.getTaskAllocations();
@@ -159,7 +152,7 @@ public class EmployeeDataAllocateTask6Test {
         // allocation expected of 4 hours ( which is also the total duration )
         // correted by productivity 4.0 => 8 hours
         final int duration = allocation.getDuration();
-        final int expectedDuration = 2 * expectedTotalDuration;
+        final int expectedDuration = 2 * NB_PRODUCTS_PROJECT_JADAU_1 * DURATION_SKILL_3_3DMS;
         assertEquals(expectedDuration, duration);
     }
 
@@ -177,20 +170,13 @@ public class EmployeeDataAllocateTask6Test {
         final Integer skill_id = ID_SKILL_3_3DMS;   // id = 3
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_2;    // nb probucts = 4
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
+        (new TaskAllocator(TOMORROW)).allocate(test, projectData, employeeData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
         final int nbExpectedTasks = 1;
         final int nbTasks = tasks.size();
         assertEquals(nbExpectedTasks, nbTasks);
-
-        final Task task = tasks.get(0);
-
-        // task of duration 480 mins ( 8 hours )
-        final int totalDuration = task.getTotalDuration();
-        final int expectedTotalDuration = NB_PRODUCTS_PROJECT_JADAU_2 * DURATION_SKILL_3_3DMS;  // 4 * 120 = 480 mins
-        assertEquals(expectedTotalDuration, totalDuration);
 
         // expect only one allocation of 480 mins ( 8 hours )
         // corrected by productivity 4.0 => 2 allocations
@@ -208,7 +194,7 @@ public class EmployeeDataAllocateTask6Test {
 
         // allocation expected of 8 hours ( which is also the total duration )
         final int duration = allocation.getDuration();
-        final int expectedDuration = expectedTotalDuration;  // 4 * 120 = 480 mins
+        final int expectedDuration = NB_PRODUCTS_PROJECT_JADAU_2 * DURATION_SKILL_3_3DMS;  // 4 * 120 = 480 mins
         assertEquals(expectedDuration, duration);
     }
 
@@ -226,20 +212,13 @@ public class EmployeeDataAllocateTask6Test {
         final Integer skill_id = ID_SKILL_3_3DMS;   // id = 3
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_3;    // nb probucts = 6
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
+        (new TaskAllocator(TOMORROW)).allocate(test, projectData, employeeData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
         final int nbExpectedTasks = 1;
         final int nbTasks = tasks.size();
         assertEquals(nbExpectedTasks, nbTasks);
-
-        final Task task = tasks.get(0);
-
-        // task of duration 720 mins ( 12 hours )
-        final int totalDuration = task.getTotalDuration();
-        final int expectedTotalDuration = NB_PRODUCTS_PROJECT_JADAU_3 * DURATION_SKILL_3_3DMS;  // 6 * 120 = 720 mins
-        assertEquals(expectedTotalDuration, totalDuration);
 
         // expect 2 allocations
         // corrected by productivity => 3 allocations
@@ -287,20 +266,13 @@ public class EmployeeDataAllocateTask6Test {
         final Integer skill_id = ID_SKILL_3_3DMS;   // id = 3
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_4;    // nb probucts = 8
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
+        (new TaskAllocator(TOMORROW)).allocate(test, projectData, employeeData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
         final int nbExpectedTasks = 1;
         final int nbTasks = tasks.size();
         assertEquals(nbExpectedTasks, nbTasks);
-
-        final Task task = tasks.get(0);
-
-        // task of duration 960 mins ( 16 hours )
-        final int totalDuration = task.getTotalDuration();
-        final int expectedTotalDuration = NB_PRODUCTS_PROJECT_JADAU_4 * DURATION_SKILL_3_3DMS;  // 8 * 120 = 960 mins
-        assertEquals(expectedTotalDuration, totalDuration);
 
         // expect 2 allocations
         // corrected by productivity => 4 allocations
@@ -347,20 +319,13 @@ public class EmployeeDataAllocateTask6Test {
         final Integer skill_id = ID_SKILL_3_3DMS;   // id = 3
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_5;    // nb probucts = 10
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
+        (new TaskAllocator(TOMORROW)).allocate(test, projectData, employeeData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
         final int nbExpectedTasks = 1;
         final int nbTasks = tasks.size();
         assertEquals(nbExpectedTasks, nbTasks);
-
-        final Task task = tasks.get(0);
-
-        // task of duration 1200 mins ( 20 hours )
-        final int totalDuration = task.getTotalDuration();
-        final int expectedTotalDuration = NB_PRODUCTS_PROJECT_JADAU_5 * DURATION_SKILL_3_3DMS;  // 10 * 120 = 1200 mins
-        assertEquals(expectedTotalDuration, totalDuration);
 
         // expect 3 allocations
         // corrected by productivity 4.0 => 5 allocations

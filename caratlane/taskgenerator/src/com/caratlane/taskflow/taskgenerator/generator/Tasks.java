@@ -77,36 +77,78 @@ public class Tasks {
             final List<TaskAllocation> taskAllocations
                     = TaskAllocationsDbExtractor.getEmployeeTaskAllocations(employee_id);
 
-            taskAllocations.stream()
-                    .filter((allocation) -> {
+            taskAllocations.stream().forEach((allocation) -> {
 
-                        // only interrested in completed or partially completed allocations. 
-                        // The "un-touched" allocations will be re-allocated.
-                        final boolean isCompleted = allocation.isCompleted();
-                        final Integer completion = allocation.getCompletion();
-                        final Integer nbProductsCompleted = allocation.getNbProductsCompleted();
+                // only interrested in completed or partially completed allocations. 
+                // The "un-touched" allocations will be re-allocated.
+                final boolean isCompleted = allocation.isCompleted();
+                final Integer completion = allocation.getCompletion();
+                final Integer nbProductsCompleted = allocation.getNbProductsCompleted();
 
-                        final boolean toKeep = isCompleted
+                final boolean toKeep = isCompleted
                         || !completion.equals(0)
                         || !nbProductsCompleted.equals(0);
 
-                        return toKeep;
-                    })
-                    .forEach((allocation) -> {
-
-                        // add the allocation to its owner
-                        employeeData.addTaskAllocation(allocation);
-
-                        final Integer task_id = allocation.getTaskId();
-
-                        // link to its task if 
-                        final Optional<Task> value = tasks.stream()
+                final Integer task_id = allocation.getTaskId();
+                final Optional<Task> value = tasks.stream()
                         .filter(task -> task.getId().equals(task_id)).findFirst();
 
-                        value.ifPresent(task -> task.addTaskAllocation(allocation));
-                    });
+                if (!toKeep) {
+                    // make sure that tha task is modified 
+                    // for allowing correct serialization
+                    value.get().setModified(true);
+                } else {
+                    // add the allocation to its employee
+                    employeeData.addTaskAllocation(allocation);
+
+                    // attach the allocation to its task
+                    value.get().addTaskAllocation(allocation);
+                }
+            });
         }
 
+//            taskAllocations.stream()
+//                    .filter((allocation) -> {
+//
+//                        // only interrested in completed or partially completed allocations. 
+//                        // The "un-touched" allocations will be re-allocated.
+//                        final boolean isCompleted = allocation.isCompleted();
+//                        final Integer completion = allocation.getCompletion();
+//                        final Integer nbProductsCompleted = allocation.getNbProductsCompleted();
+//
+//                        final boolean toKeep = isCompleted
+//                        || !completion.equals(0)
+//                        || !nbProductsCompleted.equals(0);
+//
+//                        return toKeep;
+//                    })
+//                    .forEach((allocation) -> {
+//
+//                        // add the allocation to its owner
+//                        employeeData.addTaskAllocation(allocation);
+//
+//                        final Integer task_id = allocation.getTaskId();
+//
+//                        // attach the allocation to its task
+//                        final Optional<Task> value = tasks.stream()
+//                        .filter(task -> task.getId().equals(task_id)).findFirst();
+//
+//                        value.get().addTaskAllocation(allocation);
+//
+////                        value.ifPresent(task -> task.addTaskAllocation(allocation));
+//                    });
+//        }
+        // remove tasks that have no allocations,
+        // so these tasks will be re-created and allocated.
+//        projects.stream()
+//                .map((projectData) -> projectData.getTasks())
+//                .forEach((allTasks) -> {
+//                    allTasks.stream().forEach(task -> {
+//                        if (task.getTaskAllocations().size() == 0) {
+//                            task.setModified(true);
+//                        }
+//                    });
+//                });
     }
 
     /**

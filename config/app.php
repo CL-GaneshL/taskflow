@@ -24,7 +24,7 @@ return [
       | your application so that it is used when running Artisan tasks.
       |
      */
-    'url' => 'http://ipos.caratlane.com',
+    'url' => 'http://nuggetbox.gold',
     /*
       |--------------------------------------------------------------------------
       | Application Timezone

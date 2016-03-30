@@ -7,6 +7,7 @@ package com.caratlane.taskflow.taskgenerator.generator;
 
 import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorException;
 import com.caratlane.taskflow.taskgenerator.generator.crud.TasksDbSerializer;
+import com.caratlane.taskflow.taskgenerator.generator.dao.Employee;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Project;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Skill;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Task;
@@ -14,7 +15,6 @@ import com.caratlane.taskflow.taskgenerator.generator.dao.TaskAllocation;
 import com.caratlane.taskflow.taskgenerator.generator.rules.TaskAllocator;
 import static helpers.TestDBConstants.DURATION_SKILL_3_3DMS;
 import static helpers.TestDBConstants.EMPLOYEE_CL0004;
-import static helpers.TestDBConstants.IN_TWO_DAYS;
 import static helpers.TestDBConstants.NB_PRODUCTS_PROJECT_JADAU_6;
 import static helpers.TestDBConstants.PROJECT_JADAU_6;
 import static helpers.TestDBConstants.SKILL_3_3DMS;
@@ -84,7 +84,14 @@ public class SerializeTasks2Test {
         Tasks.getInstance().clearTask(test);
 
         // create the employee CL0004
-        employeeData = new EmployeeData(EMPLOYEE_CL0004);
+        final Employee employee = new Employee(
+                EMPLOYEE_CL0004.getEmployeeId(),
+                EMPLOYEE_CL0004.getProductivity(),
+                EMPLOYEE_CL0004.getEmployementType()
+        );
+
+        TestDBCrud.serializeEmployee(employee);
+        employeeData = new EmployeeData(employee);
         Employees.getInstance().addEmployeeData(test, employeeData);
 
         // create a skill
@@ -96,7 +103,6 @@ public class SerializeTasks2Test {
         );
 
         ID_SKILL = TestDBCrud.serializeSkill(skill);
-
         final Skills skills = Skills.getInstance();
         skills.addSkill(skill);
 
@@ -140,20 +146,13 @@ public class SerializeTasks2Test {
 
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_6;    // nb probucts = 2
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, ID_SKILL, nb_products);
+        (new TaskAllocator(TOMORROW)).allocate(test, projectData, employeeData, ID_SKILL, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
         final int nbExpectedTasks = 1;
         final int nbTasks = tasks.size();
         assertEquals(nbExpectedTasks, nbTasks);
-
-        final Task task = tasks.get(0);
-
-        // task of duration 240 mins ( 4 hours )
-        final int totalDuration = task.getTotalDuration();
-        final int expectedTotalDuration = NB_PRODUCTS_PROJECT_JADAU_6 * DURATION_SKILL_3_3DMS;  // 2 * 120 = 240 mins
-        assertEquals(expectedTotalDuration, totalDuration);
 
         // expect only one allocation of 240 mins ( 4 hours )
         final LinkedList<TaskAllocation> allocations = employeeData.getTaskAllocations();
@@ -164,12 +163,12 @@ public class SerializeTasks2Test {
 
         // no previous allocation, so expected to be the first allocation tomorrow
         final LocalDateTime startDate = allocation.getStartDate();
-        final LocalDateTime expectedstartDate = IN_TWO_DAYS;
+        final LocalDateTime expectedstartDate = TOMORROW;
         assertEquals(expectedstartDate, startDate);
 
         // allocation expected of 4 hours ( which is also the total duration )
         final int duration = allocation.getDuration();
-        final int expectedDuration = expectedTotalDuration;  // 2 * 120 = 240 mins
+        final int expectedDuration = NB_PRODUCTS_PROJECT_JADAU_6 * DURATION_SKILL_3_3DMS;  // 2 * 120 = 240 mins
         assertEquals(expectedDuration, duration);
 
         // serialize tasks in the database.

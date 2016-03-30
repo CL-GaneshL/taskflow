@@ -16,7 +16,6 @@ import java.util.Objects;
 public class Task {
 
     private final DbTask dbTask;
-    private final Integer totalDuration;
     final private LinkedList<TaskAllocation> taskAllocations = new LinkedList<>();
     private boolean created = false;
     private boolean modified = false;
@@ -28,29 +27,24 @@ public class Task {
      */
     public Task(DbTask dbTask) {
         this.dbTask = dbTask;
-        this.totalDuration = 0;
     }
 
     public Task(
             Integer skill_id,
-            Integer project_id,
-            Integer totalDuration
+            Integer project_id
     ) {
-
-        this.totalDuration = totalDuration;
-
         this.dbTask = new DbTask(
                 skill_id,
                 project_id
         );
+
     }
 
     public static Task newTask(
             Integer skill_id,
-            Integer project_id,
-            Integer totalDuration) {
+            Integer project_id) {
 
-        final Task t = new Task(skill_id, project_id, totalDuration);
+        final Task t = new Task(skill_id, project_id);
         t.created = true;
 
         return t;
@@ -62,6 +56,10 @@ public class Task {
 
     public boolean isModified() {
         return modified;
+    }
+
+    public void setModified(boolean modified) {
+        this.modified = modified;
     }
 
     public Integer getId() {
@@ -76,10 +74,6 @@ public class Task {
         return this.dbTask.getProject_id();
     }
 
-    public Integer getTotalDuration() {
-        return totalDuration;
-    }
-
     public LinkedList<TaskAllocation> getTaskAllocations() {
         return taskAllocations;
     }
@@ -88,11 +82,29 @@ public class Task {
         this.taskAllocations.add(taskAllocation);
     }
 
+    /**
+     *
+     * @param task
+     * @param taskAllocation
+     */
     public static void addNewAllocation(
             final Task task,
             final TaskAllocation taskAllocation
     ) {
         task.taskAllocations.add(taskAllocation);
+        task.modified = true;
+    }
+
+    /**
+     *
+     * @param task
+     * @param taskAllocation
+     */
+    public static void removeAllocation(
+            final Task task,
+            final TaskAllocation taskAllocation
+    ) {
+        task.taskAllocations.remove(taskAllocation);
         task.modified = true;
     }
 
@@ -103,8 +115,9 @@ public class Task {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 17 * hash + Objects.hashCode(this.dbTask);
-        hash = 17 * hash + Objects.hashCode(this.totalDuration);
+        hash = 53 * hash + Objects.hashCode(this.dbTask);
+        hash = 53 * hash + (this.created ? 1 : 0);
+        hash = 53 * hash + (this.modified ? 1 : 0);
         return hash;
     }
 
@@ -120,12 +133,15 @@ public class Task {
         if (!Objects.equals(this.dbTask, other.dbTask)) {
             return false;
         }
-        return Objects.equals(this.totalDuration, other.totalDuration);
+        if (this.created != other.created) {
+            return false;
+        }
+        return this.modified == other.modified;
     }
 
     @Override
     public String toString() {
-        return "Task{" + "dbTask=" + dbTask + ", totalDuration=" + totalDuration + ", taskAllocations=" + taskAllocations + '}';
+        return "Task{" + "dbTask=" + dbTask + ", taskAllocations=" + taskAllocations + ", created=" + created + ", modified=" + modified + '}';
     }
 
 }

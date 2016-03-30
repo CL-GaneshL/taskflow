@@ -35,7 +35,7 @@ import static org.junit.Assert.*;
  *
  * @author wdmtraining
  */
-public class SerializeTasks1Test {
+public class SerializeTasks3Test {
 
     final static boolean test = true;
 
@@ -43,19 +43,15 @@ public class SerializeTasks1Test {
     private static ProjectData projectData = null;
 
     static Integer ID_SKILL = null;
+    static Integer ID_PROJECT = null;
+    static Integer ID_EMPLOYEE = null;
 
-    public SerializeTasks1Test() {
+    public SerializeTasks3Test() {
     }
 
     @BeforeClass
     public static void setUpClass() {
 
-//        // company's non working days
-//        final NonWorkingDays nwdsInstance = NonWorkingDays.getInstance();
-//        nwdsInstance.addNwd(test, NWD_1);       // tomorrow
-//
-//        // set up non working days for that employee
-//        // non non working days, no holidays
     }
 
     @AfterClass
@@ -64,9 +60,6 @@ public class SerializeTasks1Test {
         projectData = null;
         employeeData = null;
 
-//        final NonWorkingDays nwdsInstance = NonWorkingDays.getInstance();
-//        nwdsInstance.clearNwd(test);
-        // de-serialize
         TestDBCrud.truncateTables();
     }
 
@@ -90,7 +83,7 @@ public class SerializeTasks1Test {
                 EMPLOYEE_CL0004.getEmployementType()
         );
 
-        TestDBCrud.serializeEmployee(employee);
+        ID_EMPLOYEE = TestDBCrud.serializeEmployee(employee);
         employeeData = new EmployeeData(employee);
         Employees.getInstance().addEmployeeData(test, employeeData);
 
@@ -120,10 +113,10 @@ public class SerializeTasks1Test {
                         PROJECT_JADAU_1.getOpen(test)
                 );
 
-        TestDBCrud.serializeProject(project);
+        ID_PROJECT = TestDBCrud.serializeProject(project);
         projectData = new ProjectData(project);
+        projectData.addSkill(ID_SKILL);
         Projects.getInstance().addProjectData(test, projectData);
-
     }
 
     @After
@@ -136,7 +129,10 @@ public class SerializeTasks1Test {
 
     /**
      * Test of generate method, of class Generator. No previous allocations in
-     * the database.
+     * the database. Re-allocate twice the same task, we should see no change
+     * after the 2nd allocation. This test simulates 2 successive calls to the
+     * TaskGenerator program, the 1st generates and serializes tasks and
+     * allocations, the 2nd re-allocate the same tasks and allocations.
      *
      * @throws TestTaskGeneratorException
      * @throws TaskGeneratorException
@@ -144,9 +140,121 @@ public class SerializeTasks1Test {
     @Test
     public void testAllocateTask_1() throws TestTaskGeneratorException, TaskGeneratorException {
 
-        final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_1;    // nb probucts = 2
+        // allocate for the 1st time
+        _1st_allocation();
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, employeeData, ID_SKILL, nb_products);
+        // remove data from memory
+        Employees.getInstance().clearEmployeeData(test);
+        Skills.getInstance().clearSkills(test);
+        Projects.getInstance().clearProjectsData(test);
+        Employees.getInstance().clearEmployeeData(test);
+        Tasks.getInstance().clearTask(test);
+
+        // create the employee CL0004
+        final Employee employee = new Employee(
+                ID_EMPLOYEE,
+                EMPLOYEE_CL0004.getEmployeeId(),
+                EMPLOYEE_CL0004.getProductivity(),
+                EMPLOYEE_CL0004.getEmployementType()
+        );
+
+        employeeData = new EmployeeData(employee);
+        Employees.getInstance().addEmployeeData(test, employeeData);
+
+        // re create a skill
+        final Skill skill = new Skill(
+                ID_SKILL,
+                SKILL_3_3DMS.getReference(),
+                SKILL_3_3DMS.getDesignation(),
+                SKILL_3_3DMS.getDuration(),
+                SKILL_3_3DMS.getOpen()
+        );
+
+        final Skills skills = Skills.getInstance();
+        skills.addSkill(skill);
+
+        // attach the skill to the employee
+        employeeData.addSkill(ID_SKILL);
+
+        // create the project PROJECT_JADAU_1       
+        final Project project
+                = new Project(
+                        ID_PROJECT,
+                        PROJECT_JADAU_1.getReference(),
+                        PROJECT_JADAU_1.getTemplateId(),
+                        PROJECT_JADAU_1.getNbProducts(),
+                        PROJECT_JADAU_1.getPriority(),
+                        PROJECT_JADAU_1.getStartDate(test),
+                        PROJECT_JADAU_1.getOpen(test)
+                );
+
+        projectData = new ProjectData(project);
+        projectData.addSkill(ID_SKILL);
+        Projects.getInstance().addProjectData(test, projectData);
+
+        _2nd_allocation();
+    }
+
+    public void _1st_allocation() throws TestTaskGeneratorException, TaskGeneratorException {
+
+        (new TaskAllocator(TOMORROW)).allocate(projectData);
+
+        // expect only one task
+        final LinkedList<Task> tasks = projectData.getTasks();
+        final int nbExpectedTasks = 1;
+        final int nbTasks = tasks.size();
+        assertEquals(nbExpectedTasks, nbTasks);
+
+        final Task task = tasks.get(0);
+
+        // task of duration 240 mins ( 4 hours )
+//        final int totalDuration = task.getTotalDuration();
+        final int expectedTotalDuration = NB_PRODUCTS_PROJECT_JADAU_1 * DURATION_SKILL_3_3DMS;  // 2 * 120 = 240 mins
+//        assertEquals(expectedTotalDuration, totalDuration);
+
+        // expect only one allocation of 240 mins ( 4 hours )
+        final LinkedList<TaskAllocation> allocations = employeeData.getTaskAllocations();
+        final int nbExpectedAllocations = 1;
+        assertEquals(nbExpectedAllocations, allocations.size());
+
+        final TaskAllocation allocation = allocations.getLast();
+
+        // no previous allocation, so expected to be the first allocation tomorrow
+        final LocalDateTime startDate = allocation.getStartDate();
+        final LocalDateTime expectedstartDate = TOMORROW;
+        assertEquals(expectedstartDate, startDate);
+
+        // allocation expected of 4 hours ( which is also the total duration )
+        final int duration = allocation.getDuration();
+        final int expectedDuration = expectedTotalDuration;  // 2 * 120 = 240 mins
+        assertEquals(expectedDuration, duration);
+
+        // serialize tasks in the database.
+        final LinkedList<ProjectData> projects = Projects.getInstance().getProjectsData();
+        TasksDbSerializer.serialize(projects);
+
+        // extract the data inserted in the db and check their accuraty
+        final Integer project_id = projectData.getProject().getId();
+        final List<Task> generatedTasks = TestDBCrud.getProjectTasks(project_id);
+
+        final int nbExpectedGeneratedTasks = 1;
+        final int nbGenetatedTasks = tasks.size();
+        assertEquals(nbExpectedGeneratedTasks, nbGenetatedTasks);
+
+        final Task generatedTask = generatedTasks.get(0);
+        final Integer employee_id = employeeData.getEmployee().getId();
+        final Integer generatedTaskId = generatedTask.getId();
+        final List<TaskAllocation> generatedTaskAllocations
+                = TestDBCrud.getEmployeeTaskAllocations(generatedTaskId, employee_id);
+
+        final int nbExpectedGeneratedTaskAllocations = 1;
+        final int nbGenetatedTaskAllocations = generatedTaskAllocations.size();
+        assertEquals(nbExpectedGeneratedTaskAllocations, nbGenetatedTaskAllocations);
+    }
+
+    public void _2nd_allocation() throws TestTaskGeneratorException, TaskGeneratorException {
+
+        (new TaskAllocator(TOMORROW)).allocate(projectData);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
@@ -193,5 +301,4 @@ public class SerializeTasks1Test {
         final int nbGenetatedTaskAllocations = generatedTaskAllocations.size();
         assertEquals(nbExpectedGeneratedTaskAllocations, nbGenetatedTaskAllocations);
     }
-
 }

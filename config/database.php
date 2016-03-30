@@ -65,33 +65,33 @@ return [
         // ---------------------------------------------------------
         // - for testing on Nginx local config
         // ---------------------------------------------------------
-//        'mysql' => [
-//            'driver' => 'mysql',
-//            'host' => env('DB_HOST', '192.168.10.10'),
-//            'port' => env('DB_PORT', 3306),
-//            'database' => env('DB_DATABASE', 'homestead'),
-//            'username' => env('DB_USERNAME', 'homestead'),
-//            'password' => env('DB_PASSWORD', 'secret'),
-//            'charset' => 'utf8',
-//            'collation' => 'utf8_unicode_ci',
-//            'prefix' => '',
-//            'strict' => false,
-//        ],
-        // ---------------------------------------------------------
-        // - for demo on nuggetbox.gold
-        // ---------------------------------------------------------
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', 'internalapps-mysql.caratlane.com'),
-            'port' => env('DB_PORT', 3306),
-            'database' => env('DB_DATABASE', 'taskflowdb'),
-            'username' => env('DB_USERNAME', 'taskflow_user'),
-            'password' => env('DB_PASSWORD', '9AeSrjLH5hj'),
+            'host' => 'localhost',
+            'port' => 3306,
+            'database' => 'testschema',
+            'username' => 'testuser',
+            'password' => 'secret',
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
             'strict' => false,
         ],
+        // ---------------------------------------------------------
+        // - for demo on nuggetbox.gold
+        // ---------------------------------------------------------
+//        'mysql' => [
+//            'driver' => 'mysql',
+//            'host' => env('DB_HOST', 'mysql9.mylogin.ie'),
+//            'port' => env('DB_PORT', 3306),
+//            'database' => env('DB_DATABASE', 'RG343970_nuggetboxgol'),
+//            'username' => env('DB_USERNAME', 'nuggetbox'),
+//            'password' => env('DB_PASSWORD', 'nugg3tb0xdb@dm1n1407'),
+//            'charset' => 'utf8',
+//            'collation' => 'utf8_unicode_ci',
+//            'prefix' => '',
+//            'strict' => false,
+//        ],
 //       'mysql' => [
 //            'driver' => 'mysql',
 //            'host' => env('DB_HOST', 'localhost'),

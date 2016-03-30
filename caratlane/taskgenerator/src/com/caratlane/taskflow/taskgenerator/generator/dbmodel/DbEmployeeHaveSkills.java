@@ -5,19 +5,15 @@
  */
 package com.caratlane.taskflow.taskgenerator.generator.dbmodel;
 
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.EMPLOYEE_SKILL_EMPLOYEE_ID_COL_NAME;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.EMPLOYEE_SKILL_ENTITY_NAME;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.EMPLOYEE_SKILL_SKILL_ID_COL_NAME;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.EMPLOYEE_SKILL_TABLE_NAME;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_EMPLOYEE_SKILLS_QUERY;
-import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_EMPLOYEE_SKILLS_SUFFIX;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.EMPLOYEE_HAVE_SKILLS_EMPLOYEE_ID_COL_NAME;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.EMPLOYEE_HAVE_SKILLS_ENTITY_NAME;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.EMPLOYEE_HAVE_SKILLS_ID_COL_NAME;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.EMPLOYEE_HAVE_SKILLS_TABLE_NAME;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -26,15 +22,9 @@ import javax.validation.constraints.NotNull;
  *
  * @author wdmtraining
  */
-@Entity(name = EMPLOYEE_SKILL_ENTITY_NAME)
-@Table(name = EMPLOYEE_SKILL_TABLE_NAME)
-@NamedQueries({
-    @NamedQuery(
-            name = EMPLOYEE_SKILL_ENTITY_NAME + FIND_EMPLOYEE_SKILLS_SUFFIX,
-            query = FIND_EMPLOYEE_SKILLS_QUERY
-    )
-})
-public class DbEmployeeSkill implements Serializable {
+@Entity(name = EMPLOYEE_HAVE_SKILLS_ENTITY_NAME)
+@Table(name = EMPLOYEE_HAVE_SKILLS_TABLE_NAME)
+public class DbEmployeeHaveSkills implements Serializable {
 
     /**
      * employee id
@@ -42,7 +32,7 @@ public class DbEmployeeSkill implements Serializable {
     @Id
     @NotNull
     @Min(value = 1)
-    @Column(name = EMPLOYEE_SKILL_EMPLOYEE_ID_COL_NAME, insertable = true, updatable = true)
+    @Column(name = EMPLOYEE_HAVE_SKILLS_EMPLOYEE_ID_COL_NAME, insertable = true, updatable = true)
     private Integer employee_id;
 
     /**
@@ -51,16 +41,16 @@ public class DbEmployeeSkill implements Serializable {
     @Id
     @NotNull
     @Min(value = 1)
-    @Column(name = EMPLOYEE_SKILL_SKILL_ID_COL_NAME, insertable = true, updatable = true)
+    @Column(name = EMPLOYEE_HAVE_SKILLS_ID_COL_NAME, insertable = true, updatable = true)
     private Integer skill_id;
 
     /**
      * Default constructor.
      */
-    public DbEmployeeSkill() {
+    public DbEmployeeHaveSkills() {
     }
 
-    public DbEmployeeSkill(
+    public DbEmployeeHaveSkills(
             final Integer employee_id,
             final Integer skill_id
     ) {
@@ -92,7 +82,7 @@ public class DbEmployeeSkill implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final DbEmployeeSkill other = (DbEmployeeSkill) obj;
+        final DbEmployeeHaveSkills other = (DbEmployeeHaveSkills) obj;
         if (!Objects.equals(this.employee_id, other.employee_id)) {
             return false;
         }

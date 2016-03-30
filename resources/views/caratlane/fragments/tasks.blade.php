@@ -31,9 +31,19 @@
 
         <div class="col-md-10 col-md-offset-1">
 
+            <!-- ================================================== -->
+            <!-- - spinner                                          -->
+            <!-- ================================================== -->
+            <span 
+                us-spinner="{radius:30, width:8, length: 16}" 
+                spinner-key="taskSpinner"
+                spinner-start-active="false">
+
+            </span> 
+
             <div ng-controller="taskAllocationCtrl">
 
-                <form class="form-horizontal padding-bottom-20" role="form">
+                <form class="form-horizontal padding-bottom-10" role="form">
 
                     <fieldset>
 

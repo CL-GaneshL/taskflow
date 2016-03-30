@@ -130,10 +130,8 @@ DROP TABLE IF EXISTS `project_templates_have_skills`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_templates_have_skills` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `template_id` int(10) unsigned NOT NULL,
   `skill_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
   UNIQUE KEY `project_templates_have_skills_template_id_skill_id_unique` (`template_id`,`skill_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

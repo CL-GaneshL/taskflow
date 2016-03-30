@@ -86,14 +86,6 @@ public class DbEmployee implements Serializable {
     private EmployementType employement_type;
 
     /**
-     * morning shift
-     */
-//    @NotNull
-//    @Min(value = 0)
-//    @Max(value = 1)
-//    @Column(name = EMPLOYEE_MORNING_SHIFT_COL_NAME, insertable = true, updatable = false)
-//    private Byte morning_shift;
-    /**
      * Default constructor.
      */
     public DbEmployee() {
@@ -104,18 +96,15 @@ public class DbEmployee implements Serializable {
      * @param employeeId
      * @param productivity
      * @param employement_type
-     * @param morning_shift
      */
     public DbEmployee(
             String employeeId,
             Double productivity,
             EmployementType employement_type
-    //            Byte morning_shift
     ) {
         this.employeeId = employeeId;
         this.productivity = productivity;
         this.employement_type = employement_type;
-//        this.morning_shift = morning_shift;
     }
 
     /**
@@ -125,20 +114,17 @@ public class DbEmployee implements Serializable {
      * @param employeeId
      * @param productivity
      * @param employement_type
-     * @param morning_shift
      */
     public DbEmployee(
             Integer id,
             String employeeId,
             Double productivity,
             EmployementType employement_type
-    //            Byte morning_shift
     ) {
         this.id = id;
         this.employeeId = employeeId;
         this.productivity = productivity;
         this.employement_type = employement_type;
-//        this.morning_shift = morning_shift;
     }
 
     public Integer getId() {
@@ -157,9 +143,6 @@ public class DbEmployee implements Serializable {
         return employeeId;
     }
 
-//    public Byte getMorning_shift() {
-//        return morning_shift;
-//    }
     @Override
     public int hashCode() {
         int hash = 3;

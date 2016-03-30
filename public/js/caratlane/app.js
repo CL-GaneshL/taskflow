@@ -69,7 +69,6 @@ app.constant('JS_REQUIRES', {
         'profileOverviewCtrl': ['../../js/caratlane/controllers/profileOverviewCtrl.js'],
         'profileEditCtrl': ['../../js/caratlane/controllers/profileEditCtrl.js'],
         'profileSkillsCtrl': ['../../js/caratlane/controllers/profileSkillsCtrl.js'],
-        'dashboardCtrl': '../../js/caratlane/controllers/dashboardCtrl.js',
         'profileTasksCtrl': '../../js/caratlane/controllers/profileTasksCtrl.js',
         'profileHolidaysCtrl': '../../js/caratlane/controllers/profileHolidaysCtrl.js',
         'skillsCtrl': '../../js/caratlane/controllers/skillsCtrl.js',
@@ -376,15 +375,6 @@ app.config([
                         label: 'Employee Profile'
                     }
                 })
-                // -----------------------------------------
-                // dashboard
-                // -----------------------------------------                
-//                .state('app.dashboard', {
-//                    url: "/dashboard",
-//                    templateUrl: "taskflow/fragments/dashboard",
-//                    resolve: loadSequence('jquery-sparkline', 'dashboardCtrl'),
-//                    title: 'Dashboard'
-//                })
                 // -----------------------------------------
                 // employees states
                 // -----------------------------------------   

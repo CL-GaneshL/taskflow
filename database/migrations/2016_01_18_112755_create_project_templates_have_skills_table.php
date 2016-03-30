@@ -13,10 +13,6 @@ class CreateProjectTemplatesHaveSkillsTable extends Migration {
     public function up() {
         Schema::create('project_templates_have_skills', function (Blueprint $table) {
 
-            // primary key ------------------
-            $table->increments('id');
-            // ------------------------------
-
             $table->integer('template_id')->unsigned();
             $table->integer('skill_id')->unsigned();
 

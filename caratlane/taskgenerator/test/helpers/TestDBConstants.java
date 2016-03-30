@@ -63,14 +63,30 @@ public interface TestDBConstants {
     public static final String DELETE_PROJECTS_TABLE_SQL
             = "DELETE FROM `projects` WHERE `projects`.`id` > 0";
 
+    public static final String DELETE_TEMPLATES_TABLE_SQL
+            = "DELETE FROM `project_templates` WHERE `project_templates`.`id` > 0";
+
+    public static final String DELETE_EMPLOYEES_TABLE_SQL
+            = "DELETE FROM `employees` WHERE `employees`.`id` > 0";
+
+    public static final String DELETE_HOLIDAYS_TABLE_SQL
+            = "DELETE FROM `holidays` WHERE `holidays`.`id` > 0";
+
+    public static final String DELETE_NWDS_TABLE_SQL
+            = "DELETE FROM `non_working_days` WHERE `non_working_days`.`id` > 0";
+
     // ------------------------------------------------------------
     // list of truncate statements
     // ------------------------------------------------------------
     public static final String[] DELETE_TABLES_SQL = {
+        DELETE_HOLIDAYS_TABLE_SQL,
+        DELETE_NWDS_TABLE_SQL,
         DELETE_TASK_ALLOCATION_TABLE_SQL,
         DELETE_TASKS_TABLE_SQL,
+        DELETE_TEMPLATES_TABLE_SQL,
         DELETE_PROJECTS_TABLE_SQL,
-        DELETE_SKILLS_TABLE_SQL
+        DELETE_SKILLS_TABLE_SQL,
+        DELETE_EMPLOYEES_TABLE_SQL
     };
 
     // ------------------------------------------------------------
@@ -78,6 +94,7 @@ public interface TestDBConstants {
     // ------------------------------------------------------------
     public static final Integer ID_EMPLOYEE_CL0004 = 1;
     public static final Double PRODUCTIVITY_EMPLOYEE_CL0004 = 8.0;
+
     public static final Employee EMPLOYEE_CL0004
             = new Employee(
                     ID_EMPLOYEE_CL0004,
@@ -194,6 +211,13 @@ public interface TestDBConstants {
                     START_DATE_PROJECT_JADAU_6, // start_date,
                     (byte) 1 //  open
             );
+
+    // ------------------------------------------------------------
+    // project templates
+    // ------------------------------------------------------------
+    public static final String REF_TEMPLATE_JADAU_1 = "REF JADAU_1";
+    public static final String DES_TEMPLATE_JADAU_1 = "TEMPLATE JADAU_1";
+    public static final Byte OPEN_TEMPLATE_JADAU_1 = (byte) 1;
 
     // ------------------------------------------------------------
     // skills

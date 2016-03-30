@@ -328,7 +328,7 @@ class DBTransactionImpl implements DBTransaction {
 //            LOG.error(FAILED_PERSIST_ENTITY, this);
 //            logErrorStackTrace(LOG, excep);
             throw new DBException(
-                    TRANSACTIONIMPL_EXCEP_FAILED_PERSIST_ENTITY, this.con, entity.toString(), excep.getMessage());
+                    TRANSACTIONIMPL_EXCEP_FAILED_PERSIST_ENTITY, entity.toString(), excep.getMessage());
         }
 
 //        LOG.debug(PERSISTED_ENTITY, this);

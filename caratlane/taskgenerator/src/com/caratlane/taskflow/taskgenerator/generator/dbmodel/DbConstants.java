@@ -27,6 +27,28 @@ public interface DbConstants {
     String PROJECT_OPEN_COL_NAME = "open";
 
     // =====================================================
+    // - template entities
+    // =====================================================
+    String TEMPLATE_ENTITY_NAME = "project_template";
+
+    String TEMPLATE_TABLE_NAME = "project_templates";
+
+    String TEMPLATE_ID_COL_NAME = "id";
+    String TEMPLATE_REFERENCE_COL_NAME = "reference";
+    String TEMPLATE_DESIGNATION_COL_NAME = "designation";
+    String TEMPLATE_OPEN_COL_NAME = "open";
+
+    // =====================================================
+    // - template have skills entities
+    // =====================================================
+    String TEMPLATE_HAVE_SKILLS_ENTITY_NAME = "project_templates_have_skills";
+
+    String TEMPLATE_HAVE_SKILLS_TABLE_NAME = "project_templates_have_skills";
+
+    String TEMPLATE_HAVE_SKILLS_TEMPLATE_ID_COL_NAME = "template_id";
+    String TEMPLATE_HAVE_SKILLS_SKILL_ID_COL_NAME = "skill_id";
+
+    // =====================================================
     // - projects' skills entities
     // =====================================================
     String PROJECT_SKILL_ENTITY_NAME = "project_skill";
@@ -87,6 +109,16 @@ public interface DbConstants {
 
     String EMPLOYEE_SKILL_EMPLOYEE_ID_COL_NAME = "employee_id";
     String EMPLOYEE_SKILL_SKILL_ID_COL_NAME = "skill_id";
+
+ // =====================================================
+    // - employee have skills
+    // =====================================================
+    String EMPLOYEE_HAVE_SKILLS_ENTITY_NAME = "employees_have_skills";
+
+    String EMPLOYEE_HAVE_SKILLS_TABLE_NAME = "employees_have_skills";
+
+    String EMPLOYEE_HAVE_SKILLS_EMPLOYEE_ID_COL_NAME = "employeeId";
+    String EMPLOYEE_HAVE_SKILLS_ID_COL_NAME = "skillId";
 
     // =====================================================
     // - employees

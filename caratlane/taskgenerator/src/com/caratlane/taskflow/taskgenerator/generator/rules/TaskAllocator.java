@@ -33,7 +33,7 @@ import java.util.logging.Level;
  */
 public class TaskAllocator {
 
-    final LocalDateTime allocation_from;
+    final private LocalDateTime allocation_from;
 
     /**
      *
@@ -61,16 +61,21 @@ public class TaskAllocator {
                             return t.getSkillId().equals(skill_id);
                         }).findFirst();
 
+                final EmployeeData employeeData
+                        = EmployeeSkillSuitability.findMostSuitableEmployeeWithSkill(
+                                skill_id, this.allocation_from);
+
+                final Project project = projectData.getProject();
+                final Integer nb_products = project.getNbProducts();
+
                 if (taskOptional.isPresent()) {
                     // if the task already exists, we only need to reallocate
                     // the allocations that are not completed or partially completed.
                     final Task task = taskOptional.get();
-                    this.reallocateTask(task);
+                    this.reallocateTask(task, employeeData, nb_products);
                 } else {
                     // the task has to be created as well as its allocations.
-                    final Project project = projectData.getProject();
-                    final Integer nb_products = project.getNbProducts();
-                    this.allocateNewTask(projectData, skill_id, nb_products);
+                    this.allocateNewTask(projectData, employeeData, skill_id, nb_products);
                 }
 
             } catch (TaskGeneratorException ex) {
@@ -88,29 +93,39 @@ public class TaskAllocator {
      * @param task
      * @throws TaskGeneratorException
      */
-    private void reallocateTask(final Task task) throws TaskGeneratorException {
+    private void reallocateTask(
+            final Task task,
+            final EmployeeData employeeData,
+            final Integer nb_products
+    ) throws TaskGeneratorException {
 
-        final Integer totalDuration = task.getTotalDuration();
-
-        // how much duration has to be re-allocated ?
-        // only completed or partially completed allocations where loaded
-        final LinkedList<TaskAllocation> taskAllocations = task.getTaskAllocations();
-        final int totalCompleted = taskAllocations.stream()
-                .mapToInt(t -> (t.getDuration())).sum();
-
-        int remainder = totalDuration - totalCompleted;
+        // only completed or partially completed allocations 
+        // were kept when initializing Tasks.
         final Integer skill_id = task.getSkillId();
+        final Skill skill = Skills.getInstance().getSkill(skill_id);
+        final Integer skill_duration = skill.getDuration();
 
+        // get all allocations for that task
+        final LinkedList<TaskAllocation> taskAllocations
+                = task.getTaskAllocations();
+
+        // the remaining total duration to allocate
+        int sum = taskAllocations.stream()
+                .mapToInt(TaskAllocation::getDuration)
+                .sum();
+
+        // total quantity of labor in minutes
+        int remainder = nb_products * skill_duration - sum;
+
+        // re-allocate 
         do {
-            final EmployeeData employeeData
-                    = EmployeeSkillSuitability.findMostSuitableEmployeeWithSkill(skill_id, this.allocation_from);
-
             final int allocated
                     = this.allocateNewTaskAllocation(task, employeeData, remainder);
 
             remainder = remainder - allocated;
 
         } while (remainder > 0);
+
     }
 
     /**
@@ -122,6 +137,7 @@ public class TaskAllocator {
      */
     private void allocateNewTask(
             final ProjectData projectData,
+            final EmployeeData employeeData,
             final Integer skill_id,
             final Integer nb_products
     ) throws TaskGeneratorException {
@@ -132,11 +148,8 @@ public class TaskAllocator {
         final Project project = projectData.getProject();
         final Integer project_id = project.getId();
 
-        // total quantity of labor in minutes
-        final Integer totalDuration = nb_products * skill_duration;
-
         // create the task and allocate it to its project.
-        final Task task = Task.newTask(skill_id, project_id, totalDuration);
+        final Task task = Task.newTask(skill_id, project_id);
 
         // add the newly created task to its project
         projectData.addTask(task);
@@ -144,12 +157,10 @@ public class TaskAllocator {
         // also add the task to the global list of tasks
         Tasks.getInstance().addTask(task);
 
-        int remainder = totalDuration;
+        // total quantity of labor in minutes
+        int remainder = nb_products * skill_duration;
 
         do {
-            final EmployeeData employeeData
-                    = EmployeeSkillSuitability.findMostSuitableEmployeeWithSkill(skill_id, this.allocation_from);
-
             final int allocated
                     = this.allocateNewTaskAllocation(task, employeeData, remainder);
 
@@ -273,6 +284,7 @@ public class TaskAllocator {
      *
      * @param test
      * @param projectData
+     * @param employeeData
      * @param skill_id
      * @param nb_products
      * @throws TaskGeneratorException
@@ -280,11 +292,12 @@ public class TaskAllocator {
     public void allocate(
             final Boolean test,
             final ProjectData projectData,
+            final EmployeeData employeeData,
             final Integer skill_id,
             final Integer nb_products
     ) throws TaskGeneratorException {
 
-        this.allocateNewTask(projectData, skill_id, nb_products);
+        this.allocateNewTask(projectData, employeeData, skill_id, nb_products);
     }
 
     /**
