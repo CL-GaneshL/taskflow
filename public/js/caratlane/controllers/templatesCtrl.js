@@ -176,10 +176,9 @@ app.controller(
 
                     var initialSkills = [];
 
-                    // copy by value to preserve the original list
+                    // preserve the original list
                     angular.forEach(skills, function (skill, key) {
                         initialSkills.push(skill);
-
                     });
 
                     // --------------------------------------------------------
@@ -234,8 +233,8 @@ app.controller(
                                                     // $log.debug(CONTROLLER_NAME + " : $scope.skills = " + JSON.stringify($scope.skills));
                                                     // --------------------------------------------------------
 
-                                                    var message = 'Skill ' + skill.designation + ' successfully removed.';
-                                                    modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
+                                                    //var message = 'Skill ' + skill.designation + ' successfully removed.';
+                                                    //modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
 
                                                 },
                                                 function (response) {
@@ -244,9 +243,9 @@ app.controller(
                                                     // - remove skill failed
                                                     // ==================================================
 
-                                                    var status = response.status;
-                                                    var message = response.statusText;
-                                                    modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
+//                                                    var status = response.status;
+//                                                    var message = response.statusText;
+                                                    //modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
                                                 }
                                         );
                                     });
@@ -265,8 +264,8 @@ app.controller(
                                                         // $log.debug(CONTROLLER_NAME + " : add skill = " + JSON.stringify(skill));
                                                         // --------------------------------------------------------
 
-                                                        var message = 'Skill ' + skill.designation + ' successfully added.';
-                                                        modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
+                                                        //var message = 'Skill ' + skill.designation + ' successfully added.';
+                                                        //modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
 
                                                     },
                                                     function (response) {
@@ -275,9 +274,9 @@ app.controller(
                                                         // - add skill failed
                                                         // ==================================================
 
-                                                        var status = response.status;
-                                                        var message = response.statusText;
-                                                        modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
+//                                                        var status = response.status;
+//                                                        var message = response.statusText;
+                                                        //modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
                                                     }
                                             );
                                         }
@@ -295,8 +294,8 @@ app.controller(
                                                         // $log.debug(CONTROLLER_NAME + " : remove skill = " + JSON.stringify(initSkill));
                                                         // --------------------------------------------------------
 
-                                                        var message = 'Skill ' + initSkill.designation + ' successfully removed.';
-                                                        modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
+                                                        //message = 'Skill ' + initSkill.designation + ' successfully removed.';
+                                                        //modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
 
                                                     },
                                                     function (response) {
@@ -305,9 +304,9 @@ app.controller(
                                                         // - remove skill failed
                                                         // ==================================================
 
-                                                        var status = response.status;
-                                                        var message = response.statusText;
-                                                        modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
+//                                                        var status = response.status;
+//                                                        var message = response.statusText;
+                                                        // modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
                                                     }
                                             );
                                         }
@@ -331,7 +330,9 @@ app.controller(
 
                                 if ($scope.newSkill !== null) {
 
-                                    $scope.skills.push($scope.newSkill);
+                                    if (!contains($scope.skills, $scope.newSkill)) {
+                                        $scope.skills.push($scope.newSkill);
+                                    }
                                 }
                             };
 
