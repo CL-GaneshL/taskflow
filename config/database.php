@@ -63,20 +63,35 @@ return [
 //            'strict' => false,
 //        ],
         // ---------------------------------------------------------
-        // - for testing on Nginx local config
+        // - Caratlane production config
         // ---------------------------------------------------------
         'mysql' => [
             'driver' => 'mysql',
-            'host' => 'localhost',
-            'port' => 3306,
-            'database' => 'testschema',
-            'username' => 'testuser',
-            'password' => 'secret',
+            'host' => env('DB_HOST', 'internalapps-mysql.caratlane.com'),
+            'port' => env('DB_PORT', 3306),
+            'database' => env('DB_DATABASE', 'taskflowdb'),
+            'username' => env('DB_USERNAME', 'taskflow_user'),
+            'password' => env('DB_PASSWORD', '9AeSrjLH5hj'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
             'strict' => false,
         ],
+        // ---------------------------------------------------------
+        // - for testing on Nginx local config
+        // ---------------------------------------------------------
+//        'mysql' => [
+//            'driver' => 'mysql',
+//            'host' => 'localhost',
+//            'port' => 3306,
+//            'database' => 'testschema',
+//            'username' => 'testuser',
+//            'password' => 'secret',
+//            'charset' => 'utf8',
+//            'collation' => 'utf8_unicode_ci',
+//            'prefix' => '',
+//            'strict' => false,
+//        ],
         // ---------------------------------------------------------
         // - for demo on nuggetbox.gold
         // ---------------------------------------------------------
