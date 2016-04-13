@@ -25,6 +25,7 @@ public interface CommandLineConstants {
 
     public static final String RESET_ACTION = "reset";
     public static final String GENERATE_ACTION = "generate";
+    public static final String VERSION_ACTION = "version";
 
     public static final String DEBUG_MODE = "debug";
     public static final String DEFAULT_MODE = "";

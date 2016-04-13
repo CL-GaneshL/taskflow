@@ -20,6 +20,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses(
         {
+            AppVersion.class,
             EmployeeDataAllocateTask1Test.class,
             EmployeeDataAllocateTask2Test.class,
             EmployeeDataAllocateTask3Test.class,

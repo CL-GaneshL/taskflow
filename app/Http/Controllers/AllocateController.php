@@ -185,6 +185,24 @@ class AllocateController extends Controller {
         $this->log('   - db username   : [' . $this->getDbUsername() . ']');
         $this->log('   - db password   : [' . $this->getDbPassword() . ']');
         $this->log('   - command line  : [' . $this->getCommandLine("") . ']');
+
+        $action = 'version';
+        $java_bin = $this->getJavaBinary();
+        $jar = $this->getJarFile();
+        $commandline = $this->getCommandLine($action);
+        $command = $java_bin . ' -jar ' . $jar . ' ' . $commandline;
+
+        $process = new Process($command);
+        $process->start();
+
+        $this->log("TaskGenerator version : ");
+        $process->wait(function ($type, $buffer) {
+            $str = str_replace("\r\n", "", $buffer);
+            if (strlen($str) != 0) {
+                $this->log($str);
+            }
+        });
+
         $this->log('--');
 
         return $this->publish("TaskGenerator configuration.");
@@ -236,7 +254,7 @@ class AllocateController extends Controller {
         // trace the msg in the log file
         $max = sizeof($this->buffer);
         for ($i = 0; $i < $max; $i++) {
-            $str = $this->buffer[$i];
+            $str = utf8_encode($this->buffer[$i]);
             \Log::debug($str);
 
             // fill a temporary buffer with the message
@@ -246,6 +264,7 @@ class AllocateController extends Controller {
         // re-initialize the original buffer
         $this->buffer = array();
 
+//        \Log::debug('$response_buffer : ' . print_r($response_buffer, true));
         // ---------------------------------------------------
         // - response
         // ---------------------------------------------------

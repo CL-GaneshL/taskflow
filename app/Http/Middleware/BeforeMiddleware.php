@@ -4,8 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class BeforeMiddleware
-{
+class BeforeMiddleware {
+
     /**
      * Handle an incoming request.
      *
@@ -13,9 +13,8 @@ class BeforeMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
-    {
-        \DB::enableQueryLog();
+    public function handle($request, Closure $next) {
         return $next($request);
     }
+
 }

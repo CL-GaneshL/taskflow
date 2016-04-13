@@ -20,6 +20,11 @@ import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.PASSWORD
 import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.PORT;
 import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.RESET_ACTION;
 import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.USERNAME;
+import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.VERSION_ACTION;
+import static com.caratlane.taskflow.taskgenerator.Version.APP_AUTHOR;
+import static com.caratlane.taskflow.taskgenerator.Version.APP_COPYRIGHT;
+import static com.caratlane.taskflow.taskgenerator.Version.APP_NAME;
+import static com.caratlane.taskflow.taskgenerator.Version.APP_VERSION;
 import com.caratlane.taskflow.taskgenerator.db.DBManager;
 import com.caratlane.taskflow.taskgenerator.db.DBException;
 import com.caratlane.taskflow.taskgenerator.exceptions.CommandLineException;
@@ -179,68 +184,89 @@ public class TaskGenerator {
             System.out.println("TaskGenerator : Command Line : exception => " + ex.getMessage());
         }
 
-        // ==============================================================
-        // - initialize the app
-        // ==============================================================
-        try {
-            LogManager.initialize(logpath, mode);
+        if (action.equals(VERSION_ACTION)) {
 
-            // ---------------------------------------------------------------------
-            LogManager.getLogger().log(Level.FINE, "Initilizing TaskGenerator ...");
-            // ---------------------------------------------------------------------
+            System.out.println("App : " + APP_NAME);
+            System.out.println("Author : " + APP_AUTHOR);
+            System.out.println("Copyright : " + APP_COPYRIGHT);
+            System.out.println("Version : " + APP_VERSION);
 
-            DBManager.initialize(
-                    host,
-                    port,
-                    database,
-                    username,
-                    password
-            );
+        } else {
+            // ==============================================================
+            // - initialize the app
+            // ==============================================================
+            try {
+                LogManager.initialize(logpath, mode);
 
-            generator = new Generator();
+                // ---------------------------------------------------------------------
+                LogManager.getLogger().log(Level.FINE, "Initilizing TaskGenerator ...");
+                // ---------------------------------------------------------------------
 
-            switch (action) {
+                DBManager.initialize(
+                        host,
+                        port,
+                        database,
+                        username,
+                        password
+                );
 
-                case RESET_ACTION:
-                    // ==============================================================
-                    // - reset database
-                    // ==============================================================
+                generator = new Generator();
 
-                    generator.reset();
-                    break;
+                switch (action) {
 
-                case GENERATE_ACTION:
-                    // ==============================================================
-                    // - task generation
-                    // ==============================================================
-                    generator.generate();
-                    break;
+                    case RESET_ACTION:
+                        // ==============================================================
+                        // - reset database
+                        // ==============================================================
+                        displayVersion();
+                        generator.reset();
+                        break;
 
+                    case GENERATE_ACTION:
+                        // ==============================================================
+                        // - task generation
+                        // ==============================================================
+                        displayVersion();
+                        generator.generate();
+                        break;
+
+                }
+
+            } catch (TaskGeneratorException | IOException | DBException ex) {
+
+                // ==============================================================
+                // - top level exception catch !
+                // ==============================================================
+                LogManager.getLogger().log(Level.SEVERE, null, ex);
+
+                exitStatus = ERROR_EXIT_STATUS;
+
+            } finally {
+                // ==============================================================
+                // - terminate the app
+                // ==============================================================
+                DBManager.shutdown();
+
+                // ---------------------------------------------------------------------
+                LogManager.getLogger().log(Level.FINE, "TaskGenerator shutdown.");
+                // ---------------------------------------------------------------------
+
+                LogManager.shutdown();
             }
-
-        } catch (TaskGeneratorException | IOException | DBException ex) {
-
-            // ==============================================================
-            // - top level exception catch !
-            // ==============================================================
-            LogManager.getLogger().log(Level.SEVERE, null, ex);
-
-            exitStatus = ERROR_EXIT_STATUS;
-
-        } finally {
-            // ==============================================================
-            // - terminate the app
-            // ==============================================================
-            DBManager.shutdown();
-
-            // ---------------------------------------------------------------------
-            LogManager.getLogger().log(Level.FINE, "TaskGenerator shutdown.");
-            // ---------------------------------------------------------------------
-
-            LogManager.shutdown();
         }
 
         System.exit(exitStatus);
+    }
+
+    /**
+     *
+     */
+    private static void displayVersion() {
+
+        LogManager.getLogger().log(Level.INFO, "App : " + APP_NAME);
+        LogManager.getLogger().log(Level.INFO, "Author : " + APP_AUTHOR);
+        LogManager.getLogger().log(Level.INFO, APP_COPYRIGHT);
+        LogManager.getLogger().log(Level.INFO, "Version : " + APP_VERSION);
     }
 
 }

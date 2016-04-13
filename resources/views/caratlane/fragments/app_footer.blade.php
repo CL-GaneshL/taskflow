@@ -6,10 +6,12 @@
 
 
     <div class="pull-left col-xs-9">
-        &copy; <% app.year %> 
+
+        <em><% app.name %></em>
+        &nbsp; V<% app.version %> ,        
+        &nbsp; &copy; <% app.year %> 
         <span class="text-bold text-uppercase"><% app.author %></span>
-        . 
-        <span>All rights reserved</span> 
+        . <span>All rights reserved</span> 
     </div>
 
     <div class="col-xs-1 pull-right padding-right-0">

@@ -23,7 +23,11 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                         $scope.getJavaVersion = function () {
 
                             $scope.version_logs = [];
-                            var msg = {'msg': "Requesting server ..."};
+
+                            var msg = {'msg': ""};
+                            $scope.version_logs.push(msg);
+
+                            msg = {'msg': "Requesting server ..."};
                             $scope.version_logs.push(msg);
 
                             var allocationPromise = taskAllocationSrvc.getJavaConfiguration();
@@ -55,7 +59,7 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                                         // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
                                         // --------------------------------------------------------
 
-                                        var msg = {'msg': "... Error occured while trying to query the server."};
+                                        var msg = {'msg': "... error occured while trying to query the server."};
                                         $scope.version_logs.push(msg);
 
                                         var status = response.status;
@@ -71,7 +75,11 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                         $scope.getTaskflowConfiguration = function () {
 
                             $scope.configuration_logs = [];
-                            var msg = {'msg': "Requesting server ..."};
+
+                            var msg = {'msg': ""};
+                            $scope.configuration_logs.push(msg);
+
+                            msg = {'msg': "Requesting server ..."};
                             $scope.configuration_logs.push(msg);
 
                             var allocationPromise = taskAllocationSrvc.getTaskflowConfiguration();
@@ -103,7 +111,7 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                                         // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
                                         // --------------------------------------------------------
 
-                                        var msg = {'msg': "... Error occured while trying to query the server."};
+                                        var msg = {'msg': "... error occured while trying to query the server."};
                                         $scope.configuration_logs.push(msg);
 
                                         var status = response.status;
