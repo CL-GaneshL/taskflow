@@ -8,9 +8,9 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                     '$log',
                     "$scope",
                     "$uibModal",
-                    "taskAllocationSrvc",
+                    "settingsSrvc",
                     "modalSrvc",
-                    function ($log, $scope, $uibModal, taskAllocationSrvc, modalSrvc) {
+                    function ($log, $scope, $uibModal, settingsSrvc, modalSrvc) {
 
                         var CONTROLLER_NAME = 'settingsTaskGeneratorCtrl';
 
@@ -30,7 +30,7 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                             msg = {'msg': "Requesting server ..."};
                             $scope.version_logs.push(msg);
 
-                            var allocationPromise = taskAllocationSrvc.getJavaConfiguration();
+                            var allocationPromise = settingsSrvc.getJavaConfiguration();
                             allocationPromise.then(
                                     function (response) {
 
@@ -82,7 +82,7 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                             msg = {'msg': "Requesting server ..."};
                             $scope.configuration_logs.push(msg);
 
-                            var allocationPromise = taskAllocationSrvc.getTaskflowConfiguration();
+                            var allocationPromise = settingsSrvc.getTaskflowConfiguration();
                             allocationPromise.then(
                                     function (response) {
 

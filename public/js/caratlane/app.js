@@ -95,6 +95,7 @@ app.constant('JS_REQUIRES', {
         'authenticationSrvc': '../../js/caratlane/services/authenticationSrvc.js',
         'employeesSrvc': '../../js/caratlane/services/employeesSrvc.js',
         'taskAllocationSrvc': '../../js/caratlane/services/taskAllocationSrvc.js',
+        'settingsSrvc': '../../js/caratlane/services/settingsSrvc.js',
         'nonWorkingDaysSrvc': '../../js/caratlane/services/nonWorkingDaysSrvc.js',
         'holidaysSrvc': '../../js/caratlane/services/holidaysSrvc.js',
         'tasksSrvc': '../../js/caratlane/services/tasksSrvc.js',
@@ -502,7 +503,7 @@ app.config([
                     resolve: loadSequence(
                             'modalSrvc',
                             'nonWorkingDaysSrvc',
-                            'taskAllocationSrvc',
+                            'settingsSrvc',
                             'settingsNonWorkingDaysCtrl',
                             'settingsTaskGeneratorCtrl'
                             ),

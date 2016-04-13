@@ -117,8 +117,12 @@ Route::group(['prefix' => CARATLANE_APIS_V1_PATH], function() {
     // -------------------------------------------------------------------------------
     Route::get('allocate', 'AllocateController@allocate');
     Route::get('allocate/reset', 'AllocateController@reset');
-    Route::get('allocate/taskflow-configuration', 'AllocateController@getTaskflowConfiguration');
-    Route::get('allocate/java-configuration', 'AllocateController@getJavaConfiguration');
+
+    // -------------------------------------------------------------------------------
+    // - settings routes
+    // -------------------------------------------------------------------------------
+    Route::get('settings/taskflow-configuration', 'SettingsController@getTaskflowConfiguration');
+    Route::get('settings/java-configuration', 'SettingsController@getJavaConfiguration');
 });
 
 /*

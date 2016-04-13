@@ -7,11 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\SettingsHelper;
 use Symfony\Component\Process\Process;
 
-class AllocateController extends Controller {
+class SettingsController extends Controller {
 
     private $HTTP_OK = null;
     private $HTTP_INTERNAL_SERVER_ERROR = null;
     private $HTTP_INTERNAL_SERVER_ERROR_MSG = null;
+
 //    private $buffer = null;
 
     public function __construct() {
@@ -26,56 +27,6 @@ class AllocateController extends Controller {
         $this->middleware('jwt.auth');
 
 //        $this->buffer = array();
-    }
-
-    /**
-     * 
-     */
-    public function allocate() {
-        
-        $settings = new SettingsHelper();
-
-        \Log::debug('Task allocation : ...........................................');
-
-        $action = 'generate';
-        $java_bin = $settings->getJavaBinary();
-        $jar = $settings->getJarFile();
-        $commandline = $settings->getCommandLine($action);
-
-        $command = $java_bin . ' -jar ' . $jar . ' ' . $commandline;
-        \Log::debug('   - Command : [' . $command . ']');
-
-        $process = new Process($command);
-        $process->start();
-
-        $process->wait(function ($type, $buffer) {
-            \Log::debug($buffer);
-        });
-    }
-
-    /**
-     * 
-     */
-    public function reset() {
-        
-         $settings = new SettingsHelper();
-
-        \Log::debug('Task reset : ...........................................');
-
-        $action = 'reset';
-        $java_bin = $settings->getJavaBinary();
-        $jar = $settings->getJarFile();
-        $commandline = $settings->getCommandLine($action);
-
-        $command = $java_bin . ' -jar ' . $jar . ' ' . $commandline;
-        \Log::debug('   - Command : [' . $command . ']');
-
-        $process = new Process($command);
-        $process->start();
-
-        $process->wait(function ($type, $buffer) {
-            \Log::debug($buffer);
-        });
     }
 
 //    private function getDebugMode() {
@@ -174,68 +125,72 @@ class AllocateController extends Controller {
     /**
      * 
      */
-//    public function getTaskflowConfiguration() {
-//
-//        $this->log('');
-//        $this->log('............................');
-//        $this->log('TaskGenerator configuration :');
-//
-//        $this->log('   - debug mode    : [' . $this->getDebugMode() . ']');
-//        $this->log('   - java binary   : [' . $this->getJavaBinary() . ']');
-//        $this->log('   - jar file      : [' . $this->getJarFile() . ']');
-//        $this->log('   - log path      : [' . $this->getLogPath() . ']');
-//        $this->log('   - db host       : [' . $this->getDbHost() . ']');
-//        $this->log('   - db port       : [' . $this->getDbPort() . ']');
-//        $this->log('   - database      : [' . $this->getDatabase() . ']');
-//        $this->log('   - db username   : [' . $this->getDbUsername() . ']');
-//        $this->log('   - db password   : [' . $this->getDbPassword() . ']');
-//        $this->log('   - command line  : [' . $this->getCommandLine("") . ']');
-//
-//        $action = 'version';
-//        $java_bin = $this->getJavaBinary();
-//        $jar = $this->getJarFile();
-//        $commandline = $this->getCommandLine($action);
-//        $command = $java_bin . ' -jar ' . $jar . ' ' . $commandline;
-//
-//        $process = new Process($command);
-//        $process->start();
-//
-//        $this->log("TaskGenerator version : ");
-//        $process->wait(function ($type, $buffer) {
-//            $str = str_replace("\r\n", "", $buffer);
-//            if (strlen($str) != 0) {
-//                $this->log($str);
-//            }
-//        });
-//
-//        $this->log('--');
-//
-//        return $this->publish("TaskGenerator configuration.");
-//    }
+    public function getTaskflowConfiguration() {
+
+        $settings = new SettingsHelper();
+
+        $settings->log('');
+        $settings->log('............................');
+        $settings->log('TaskGenerator configuration :');
+
+        $settings->log('   - debug mode    : [' . $settings->getDebugMode() . ']');
+        $settings->log('   - java binary   : [' . $settings->getJavaBinary() . ']');
+        $settings->log('   - jar file      : [' . $settings->getJarFile() . ']');
+        $settings->log('   - log path      : [' . $settings->getLogPath() . ']');
+        $settings->log('   - db host       : [' . $settings->getDbHost() . ']');
+        $settings->log('   - db port       : [' . $settings->getDbPort() . ']');
+        $settings->log('   - database      : [' . $settings->getDatabase() . ']');
+        $settings->log('   - db username   : [' . $settings->getDbUsername() . ']');
+        $settings->log('   - db password   : [' . $settings->getDbPassword() . ']');
+        $settings->log('   - command line  : [' . $settings->getCommandLine("") . ']');
+
+        $action = 'version';
+        $java_bin = $settings->getJavaBinary();
+        $jar = $settings->getJarFile();
+        $commandline = $settings->getCommandLine($action);
+        $command = $java_bin . ' -jar ' . $jar . ' ' . $commandline;
+
+        $process = new Process($command);
+        $process->start();
+
+        $settings->log("TaskGenerator version : ");
+        $process->wait(function ($type, $buffer)use ($settings) {
+            $str = str_replace("\r\n", "", $buffer);
+            if (strlen($str) != 0) {
+                $settings->log($str);
+            }
+        });
+
+        $settings->log('--');
+
+        return $settings->publish("TaskGenerator configuration.");
+    }
 
     /**
      * 
      */
-//    public function getJavaConfiguration() {
-//
-//        $this->log('');
-//        $this->log('............................');
-//        $this->log('TaskGenerator Java version :');
-//
-//        $process = new Process($this->getJavaBinary() . ' ' . '-version');
-//        $process->start();
-//        $process->wait(function ($type, $buffer) {
-//
-//            $str = str_replace("\r\n", "", $buffer);
-//            if (strlen($str) != 0) {
-//                $this->log($str);
-//            }
-//        });
-//
-//        $this->log('--');
-//
-//        return $this->publish("TaskGenerator Java version.");
-//    }
+    public function getJavaConfiguration() {
+
+        $settings = new SettingsHelper();
+
+        $settings->log('');
+        $settings->log('............................');
+        $settings->log('TaskGenerator Java version :');
+
+        $process = new Process($settings->getJavaBinary() . ' ' . '-version');
+        $process->start();
+        $process->wait(function ($type, $buffer)use ($settings) {
+
+            $str = str_replace("\r\n", "", $buffer);
+            if (strlen($str) != 0) {
+                $settings->log($str);
+            }
+        });
+
+        $settings->log('--');
+
+        return $settings->publish("TaskGenerator Java version.");
+    }
 
     /**
      * 
@@ -279,5 +234,4 @@ class AllocateController extends Controller {
 //                    'message' => $msg
 //                        ], $this->HTTP_OK);
 //    }
-
 }
