@@ -1,3 +1,8 @@
+<!-- ============================================================= -->
+<!-- -- authenticated user role and privileges                     -->
+<!-- ============================================================= -->
+
+@inject('settings', 'App\Helpers\SettingsHelper')
 
 <!-- ================================================== -->
 <!-- - page body                                        -->
@@ -6,7 +11,10 @@
 
     <div class="row col-md-12">
 
-        {{ phpinfo() }} 
+        
+      {{ $settings->getPhpInfo() }}
+      
+      
 
     </div>
 
