@@ -287,13 +287,14 @@ app.controller(
                     var projects = $scope.projects.filter(function (project) {
 
                         // --------------------------------------------------------
-                        $log.debug(CONTROLLER_NAME + " : id = " + id + ", project.id = " + project.id);
+                        $log.debug(CONTROLLER_NAME + " : id = [" + id + "], project.id = [" + project.id + "]");
+                        $log.debug(CONTROLLER_NAME + " : typeof id = " + typeof id + ", typeof project.id = " + typeof project.id);
                         // --------------------------------------------------------
 
                         return project.id === id;
                     });
 
-                    if (projects.length === 1) {
+                    if (projects.length >= 1) {
                         project = projects[0];
                     }
 
