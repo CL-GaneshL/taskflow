@@ -278,13 +278,28 @@ app.controller(
 
                     var project = null;
 
+                    // --------------------------------------------------------
+                    $log.debug(CONTROLLER_NAME + " : findProject : ");
+                    $log.debug(CONTROLLER_NAME + " : $scope.projects = " + JSON.stringify($scope.projects));
+                    // --------------------------------------------------------
+
+
                     var projects = $scope.projects.filter(function (project) {
+
+                        // --------------------------------------------------------
+                        $log.debug(CONTROLLER_NAME + " : id = " + id + ", project.id = " + project.id);
+                        // --------------------------------------------------------
+
                         return project.id === id;
                     });
 
                     if (projects.length === 1) {
                         project = projects[0];
                     }
+
+                    // --------------------------------------------------------
+                    $log.debug(CONTROLLER_NAME + " : result : projects = " + JSON.stringify(projects));
+                    // --------------------------------------------------------
 
                     return project;
                 };
