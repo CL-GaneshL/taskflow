@@ -92,6 +92,7 @@ app.constant('JS_REQUIRES', {
         'pageSrvc': '../../js/caratlane/services/pageSrvc.js',
         'userSrvc': '../../js/caratlane/services/userSrvc.js',
         'signinSrvc': '../../js/caratlane/services/signinSrvc.js',
+        'logoutSrvc': '../../js/caratlane/services/logoutSrvc.js',
         'authenticationSrvc': '../../js/caratlane/services/authenticationSrvc.js',
         'employeesSrvc': '../../js/caratlane/services/employeesSrvc.js',
         'taskAllocationSrvc': '../../js/caratlane/services/taskAllocationSrvc.js',
@@ -320,6 +321,7 @@ app.config([
                     templateUrl: "taskflow/fragments/logout",
                     resolve: loadSequence(
                             'signinSrvc',
+                            'logoutSrvc',
                             'logoutCtrl'
                             )
                 })

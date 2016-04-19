@@ -34,7 +34,10 @@ app.controller(
 
                     var employee = $scope.profile = profileSrvc.getEmployee();
                     var employee_id = employee.id;
-                    $log.debug(CONTROLLER_NAME + " : employee = " + JSON.stringify(employee));
+
+                    // --------------------------------------------------------
+                    // $log.debug(CONTROLLER_NAME + " : employee = " + JSON.stringify(employee));
+                    // --------------------------------------------------------
 
                     var dataPromise = profileSrvc.getUserProfile(employee_id);
 
@@ -140,7 +143,7 @@ app.controller(
                     // $log.debug(CONTROLLER_NAME + " : taskId = " + taskId);
                     // $log.debug(CONTROLLER_NAME + " : allocationToUpdate = " + JSON.stringify(allocationToUpdate));
                     // --------------------------------------------------------
-                    
+
                     var project_nb_products = allocationToUpdate.project_nb_products;
                     var durationInMins = allocationToUpdate.duration;
 
@@ -197,9 +200,9 @@ app.controller(
                                 var title = $scope.title;
 
                                 var allocationToUpdate = {
-                                    id: $scope.id,                                 
+                                    id: $scope.id,
                                     task_id: $scope.task_id,
-                                       employee_id: $scope.employee_id,
+                                    employee_id: $scope.employee_id,
                                     start_date: $scope.start_date,
                                     completion: tasksSrvc.formatCompletion2Mins($scope.completion),
                                     nb_products_completed: $scope.nb_products_completed,

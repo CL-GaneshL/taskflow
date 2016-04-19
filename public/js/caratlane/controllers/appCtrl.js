@@ -178,7 +178,7 @@ app.config(function ($logProvider) {
                     var user = JSON.parse(localStorage.getItem('user'));
 
                     // --------------------------------------------------------
-                    console.debug(CONTROLLER_NAME + " : init the app for authentication : user = " + JSON.stringify(user));
+                    console.debug(CONTROLLER_NAME + " : user = " + JSON.stringify(user));
                     // --------------------------------------------------------
 
                     // If there is any user data in local storage then the user is quite
@@ -214,7 +214,7 @@ app.config(function ($logProvider) {
                                     };
 
                                     // --------------------------------------------------------
-                                    console.debug(CONTROLLER_NAME + " : init the app for authentication : toState = " + JSON.stringify(toState));
+                                    // console.debug(CONTROLLER_NAME + " : toState = " + JSON.stringify(toState));
                                     // --------------------------------------------------------
 
                                     // If the user is logged in and we hit the signin route we don't need
@@ -226,7 +226,7 @@ app.config(function ($logProvider) {
                                         event.preventDefault();
 
                                         // --------------------------------------------------------
-                                        console.debug(CONTROLLER_NAME + " : init the app for authentication : re direct to app.profile.");
+                                        // console.debug(CONTROLLER_NAME + " : re direct to app.profile.");
                                         // --------------------------------------------------------
 
                                         // redirect to the user profile page
@@ -234,7 +234,7 @@ app.config(function ($logProvider) {
                                     }
                                     else {
                                         // --------------------------------------------------------
-                                        console.debug(CONTROLLER_NAME + " : init the app for authentication : no redirection.");
+                                        // console.debug(CONTROLLER_NAME + " : no redirection.");
                                         // --------------------------------------------------------
                                     }
 
@@ -245,13 +245,16 @@ app.config(function ($logProvider) {
                                     // - retrieving user's profile failed
                                     // ==================================================
 
+                                    // signinSrvc.setCredentials(null);
+                                    localStorage.removeItem('user');
+                                    $rootScope.authenticated = false;
+
 //                                    var status = response.status;
 //                                    var message = response.statusText;
 //                                    modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
 
                                     // redirect to signin page
                                     $state.go('login.signin');
-
                                 }
                         );
                     }

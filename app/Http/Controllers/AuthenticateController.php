@@ -33,6 +33,10 @@ class AuthenticateController extends Controller {
         $this->middleware('jwt.auth', ['except' => ['authenticate']]);
     }
 
+    /**
+     * 
+     * @return type
+     */
     public function index() {
 
         // -------------------------------------
@@ -42,8 +46,18 @@ class AuthenticateController extends Controller {
         return $users;
     }
 
+    /**
+     * 
+     * @param Request $request
+     * @return type
+     */
     public function authenticate(Request $request) {
+
         $credentials = $request->only('username', 'password');
+
+        // ---------------------------------------------------
+        \Log::debug('authenticate : $credentials = ' . print_r($credentials, true));
+        // ---------------------------------------------------
 
         try {
             // verify the credentials and create a token for the user
@@ -63,10 +77,17 @@ class AuthenticateController extends Controller {
             );
         }
 
+        // ---------------------------------------------------
+        \Log::debug('authenticate : $token = ' . print_r($token, true));
+        // ---------------------------------------------------
         // if no errors are encountered we can return a JWT
         return response()->json(compact('token'));
     }
 
+    /**
+     * 
+     * @return type
+     */
     public function getAuthenticatedUser() {
 
         try {
@@ -85,8 +106,25 @@ class AuthenticateController extends Controller {
             return response()->json(['token_absent'], $e->getStatusCode());
         }
 
+        // ---------------------------------------------------
+        // \Log::debug('authenticate : $user = ' . print_r($user, true));
+        // ---------------------------------------------------
         // the token is valid and we have found the user via the sub claim
         return response()->json(compact('user'));
+    }
+
+    /**
+     * 
+     * @param Request $request
+     */
+    public function logout(Request $request) {
+
+        // ---------------------------------------------------
+        \Log::debug('logout : logging out ... ');
+        // ---------------------------------------------------
+
+        $token = JWTAuth::getToken();
+        JWTAuth::invalidate($token);
     }
 
 }

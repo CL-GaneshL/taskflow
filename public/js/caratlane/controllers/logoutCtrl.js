@@ -1,7 +1,5 @@
 'use strict';
-/** 
- * controller for User Profile Example
- */
+
 app.controller(
         'logoutCtrl',
         [
@@ -9,29 +7,50 @@ app.controller(
             '$rootScope',
             '$interval',
             '$state',
+            '$auth',
             'signinSrvc',
-            function ($log, $rootScope, $interval, $state, signinSrvc) {
+            'logoutSrvc',
+            function (
+                    $log,
+                    $rootScope,
+                    $interval,
+                    $state,
+                    $auth,
+                    signinSrvc,
+                    logoutSrvc
+                    )
+            {
 
                 var CONTROLLER_NAME = 'logoutCtrl';
 
-                signinSrvc.setCredentials(null);
-                localStorage.removeItem('user');
-                $rootScope.authenticated = false;
+                var dataPromise = logoutSrvc.logout();
+                dataPromise.then(
+                        function (response) {
 
-                $rootScope.user = {
-                    fullName: '',
-                    avatar: '../../img/caratlane/avatar-150.png'
-                };
+                            $auth.logout().then(function () {
 
-                // --------------------------------------------------------
-                $log.debug(CONTROLLER_NAME + " : logout ");
-                // --------------------------------------------------------
+                                signinSrvc.setCredentials(null);
+                                localStorage.removeItem('user');
+                                $rootScope.authenticated = false;
 
-                // add a short delay ...
-                $interval(function () {
-                    // go back to the signin page
-                    $state.go('login.signin', {});
-                }, 1000, 1);
+                                $rootScope.user = {
+                                    fullName: '',
+                                    avatar: '../../img/caratlane/avatar-150.png'
+                                };
+                               
+                                // add a short delay ...
+                                $interval(function () {
+                                    // go back to the signin page
+                                    $state.go('login.signin');
+
+                                    // --------------------------------------------------------
+                                    $log.debug(CONTROLLER_NAME + " : Successfully logged out.");
+                                    // --------------------------------------------------------
+
+                                }, 1000, 1);
+
+                            });
+                        });
 
                 // ==================================================
             }

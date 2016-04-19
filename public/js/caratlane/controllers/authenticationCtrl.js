@@ -44,7 +44,7 @@ app.controller(
                                         // ==================================================
 
                                         // --------------------------------------------------------
-                                        $log.debug(CONTROLLER_NAME + " : authentication : response = " + JSON.stringify(response));
+                                        // $log.debug(CONTROLLER_NAME + " : authentication : response = " + JSON.stringify(response));
                                         // --------------------------------------------------------
 
                                         // Stringify the returned data to prepare it to go into local storage
@@ -97,6 +97,10 @@ app.controller(
                                                     $log.debug(CONTROLLER_NAME + " : retrieving user's profile failed : response = " + JSON.stringify(response));
                                                     // --------------------------------------------------------
 
+                                                    signinSrvc.setCredentials(null);
+                                                    localStorage.removeItem('user');
+                                                    $rootScope.authenticated = false;
+
 //                                                    var status = response.status;
 //                                                    var message = response.statusText;
 //                                                    modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
@@ -118,8 +122,9 @@ app.controller(
                                         $log.debug(CONTROLLER_NAME + " : failed to get the authenticated user : response = " + JSON.stringify(response));
                                         // --------------------------------------------------------
 
-                                        // remove credentials
                                         signinSrvc.setCredentials(null);
+                                        localStorage.removeItem('user');
+                                        $rootScope.authenticated = false;
 
                                         var serverMsg = response.data.error;
                                         if (serverMsg === "token_expired") {
@@ -151,6 +156,8 @@ app.controller(
                             // --------------------------------------------------------
 
                             signinSrvc.setCredentials(null);
+                            localStorage.removeItem('user');
+                            $rootScope.authenticated = false;
 
                             // login failed
                             var message = 'Unauthorized User';

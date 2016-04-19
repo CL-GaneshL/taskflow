@@ -12,41 +12,6 @@
 <ul class="main-navigation-menu">
 
     <!-- ================================================== -->
-    <!-- dashboard                                          -->
-    <!-- ================================================== -->
-
-    <!--    @if ( $authUser->hasRole('ADMIN_ROLE') || $authUser->hasRole('PROJECT_MANAGER_ROLE') )
-    
-        <li ui-sref-active="active">
-            <a ui-sref="app.dashboard">
-                <div class="item-content">
-                    <div class="item-media">
-                        <i class="fa fa-home"></i>
-                    </div>
-                    <div class="item-inner">
-                        <span class="title">Dashboard</span>
-                    </div>
-                </div>
-            </a>
-        </li>
-    
-        @else
-    
-        <div class="item-content">
-            <div class="item-media">
-                <i class="fa fa-home"></i>
-            </div>
-            <div class="item-inner">
-                <span class="title">Dashboard</span>
-            </div>
-        </div>
-    
-        @endif-->
-
-
-
-
-    <!-- ================================================== -->
     <!-- my profile                                         -->
     <!-- ================================================== -->
 

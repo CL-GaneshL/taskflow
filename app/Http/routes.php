@@ -94,6 +94,8 @@ Route::group(['prefix' => CARATLANE_APIS_V1_PATH], function() {
     Route::resource('authenticate', 'AuthenticateController', ['only' => ['index']]);
     Route::post('authenticate', 'AuthenticateController@authenticate');
     Route::get('authenticate/user', 'AuthenticateController@getAuthenticatedUser');
+    Route::put('logout', 'AuthenticateController@logout');
+
 
     // -------------------------------------------------------------------------------
     // - API's routes

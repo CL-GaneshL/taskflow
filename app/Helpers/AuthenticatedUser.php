@@ -21,7 +21,6 @@ class AuthenticatedUser {
     private $privileges = null;
 
     public function __construct() {
-
         $this->initialize();
     }
 
@@ -52,7 +51,7 @@ class AuthenticatedUser {
         $this->role = $roles[0]->role_name;
 
         // ----------------------------------------------
-        // - retireve the authenticated user privileges from the DB
+        // - retrieve the authenticated user privileges from the DB
         // ----------------------------------------------
         $privileges = \DB::table('privileges')
                 ->select('privilege_name')
@@ -66,11 +65,11 @@ class AuthenticatedUser {
         }
 
         // ----------------------------------------------
-        \Log::debug("AuthenticatedUserRoles : ");
-        \Log::debug('Authenticated user role Id = ' . print_r($role_id, true));
+        //\Log::debug("AuthenticatedUserRoles : ");
+        //\Log::debug('Authenticated user role Id = ' . print_r($role_id, true));
         // \Log::debug(print_r($user, true));
         \Log::debug('Authenticated user role = ' . print_r($this->role, true));
-        \Log::debug('Authenticated user privileges = ' . print_r($this->privileges, true));
+        //\Log::debug('Authenticated user privileges = ' . print_r($this->privileges, true));
         // ----------------------------------------------
     }
 
