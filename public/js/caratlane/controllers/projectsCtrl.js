@@ -37,8 +37,8 @@ app.controller(
                             $scope.templates = response.templates;
 
                             // --------------------------------------------------------
-                            // $log.debug(CONTROLLER_NAME + " : $scope.projects = " + JSON.stringify($scope.projects));
-                            // $log.debug(CONTROLLER_NAME + " : $scope.templates = " + JSON.stringify($scope.templates));
+                            $log.debug(CONTROLLER_NAME + " : $scope.projects = " + JSON.stringify($scope.projects));
+                            $log.debug(CONTROLLER_NAME + " : $scope.templates = " + JSON.stringify($scope.templates));
                             // --------------------------------------------------------
                         },
                         function (response) {
@@ -133,7 +133,18 @@ app.controller(
                 // ==================================================
                 $scope.closeProject = function (project_id) {
 
+                    // --------------------------------------------------------
+                    $log.debug(CONTROLLER_NAME + " : close Project :");
+                    $log.debug(CONTROLLER_NAME + " : project_id = " + project_id);
+                    $log.debug(CONTROLLER_NAME + " : $scope.projects = " + JSON.stringify($scope.projects));
+                    // --------------------------------------------------------
+
                     var projectToClose = $scope.findProject(project_id);
+
+                    // --------------------------------------------------------
+                    $log.debug(CONTROLLER_NAME + " : projectToClose = " + JSON.stringify(projectToClose));
+                    // --------------------------------------------------------
+
                     validCloseProjectModal(projectToClose, function () {
 
                         var projectPromise = projectsSrvc.closeProject(project_id);
