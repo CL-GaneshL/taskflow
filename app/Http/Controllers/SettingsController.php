@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Helpers\Controllers;
+namespace App\Http\Controllers;
 
 use Config;
+use App\Helpers\SettingsHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\SettingsHelper;
 use Symfony\Component\Process\Process;
 
 class SettingsController extends Controller {
