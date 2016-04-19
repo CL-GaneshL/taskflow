@@ -53,42 +53,70 @@ app.controller(
                 // ==================================================
                 $scope.createTemplate = function () {
 
-                    validCreateTemplateModal(
-                            $scope.newTemplateReference,
-                            $scope.newTemplateDesignation,
-                            function (reference, designation) {
+                    var valid = true;
+                    var message = null;
 
-                                var templatePromise = templatesSrvc.createTemplate(reference, designation);
-                                templatePromise.then(
-                                        function (response) {
+                    // check the reference
+                    // --------------------------------------------------------
+                    $log.debug(CONTROLLER_NAME + " : reference = " + $scope.newTemplateReference);
+                    // --------------------------------------------------------
+                    if ($scope.newTemplateReference === "") {
+                        valid = false;
+                        message = "Invalid Template reference.";
+                    }
 
-                                            var newTemplate = response.template;
-                                            $scope.templates.push(newTemplate);
+                    // check the designation
+                    // --------------------------------------------------------
+                    $log.debug(CONTROLLER_NAME + " : designation = " + $scope.newTemplateDesignation);
+                    // --------------------------------------------------------
+                    if ($scope.newTemplateDesignation === "") {
+                        valid = false;
+                        message = "Invalid Template designation.";
+                    }
 
-                                            var message = 'Template : '
-                                                    + newTemplate.reference + ', '
-                                                    + newTemplate.designation
-                                                    + ', was successfuly created!';
+                    if (valid === false) {
+                        modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
+                    }
+                    else {
 
-                                            modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
-                                        },
-                                        function (response) {
+                        // data are valid, display the modal
 
-                                            // --------------------------------------------------------
-                                            // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
-                                            // --------------------------------------------------------
+                        validCreateTemplateModal(
+                                $scope.newTemplateReference,
+                                $scope.newTemplateDesignation,
+                                function (reference, designation) {
 
-                                            // ==================================================
-                                            // - create Template failed
-                                            // ==================================================
+                                    var templatePromise = templatesSrvc.createTemplate(reference, designation);
+                                    templatePromise.then(
+                                            function (response) {
 
-                                            var status = response.status;
-                                            var message = response.statusText;
-                                            modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
-                                        }
-                                );
-                            });
+                                                var newTemplate = response.template;
+                                                $scope.templates.push(newTemplate);
 
+                                                var message = 'Template : '
+                                                        + newTemplate.reference + ', '
+                                                        + newTemplate.designation
+                                                        + ', was successfuly created!';
+
+                                                modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
+                                            },
+                                            function (response) {
+
+                                                // --------------------------------------------------------
+                                                // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
+                                                // --------------------------------------------------------
+
+                                                // ==================================================
+                                                // - create Template failed
+                                                // ==================================================
+
+                                                var status = response.status;
+                                                var message = response.statusText;
+                                                modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
+                                            }
+                                    );
+                                });
+                    }
                 };
 
                 // ==================================================

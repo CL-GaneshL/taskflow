@@ -62,71 +62,113 @@ app.controller(
                 // ==================================================
                 $scope.createProject = function () {
 
-                    var newProjectReference = $scope.toCreateProject.template.reference;
-                    var newProjectDesignation = $scope.toCreateProject.template.designation;
+                    var valid = true;
+                    var message = null;
 
-                    var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                    // check the reference
+                    // --------------------------------------------------------
+                    // $log.debug(CONTROLLER_NAME + " : reference = " + $scope.toCreateProject.template);
+                    // --------------------------------------------------------
+                    if ($scope.toCreateProject.template === null) {
+                        valid = false;
+                        message = "You must select a Project Template.";
+                    }
 
-                    var day = (new Date($scope.toCreateProject.start_date)).getDate();
-                    var month = (new Date($scope.toCreateProject.start_date)).getMonth();
-                    var year = (new Date($scope.toCreateProject.start_date)).getFullYear();
+                    // check the start date
+                    // --------------------------------------------------------
+                    // $log.debug(CONTROLLER_NAME + " : start_date = " + $scope.toCreateProject.start_date);
+                    // --------------------------------------------------------
+                    // start date always valid cos of data picker initialization
 
-                    var monthStr = monthNames[month];
-                    newProjectReference += '_' + monthStr + '_' + year;
+                    // check the nb of products
+                    // --------------------------------------------------------
+                    // $log.debug(CONTROLLER_NAME + " : nb_products = " + $scope.toCreateProject.nb_products);
+                    // --------------------------------------------------------
+                    if ($scope.toCreateProject.nb_products === parseInt($scope.toCreateProject.nb_products, 10)) {
+                        valid = false;
+                        message = "Nb Products must be an integer.";
+                    }
 
-                    var startDate = year + '-' + (month + 1) + '-' + day + ' 00:00:00';
+                    // check the priority
+                    // --------------------------------------------------------
+                    // $log.debug(CONTROLLER_NAME + " : priority = " + $scope.toCreateProject.priority);
+                    // --------------------------------------------------------
+                    if ($scope.toCreateProject.priority === null) {
+                        valid = false;
+                        message = "You must select a Project Template.";
+                    }
 
-                    var newProject = {
-                        'reference': newProjectReference,
-                        'template_id': $scope.toCreateProject.template.id,
-                        'nb_products': $scope.toCreateProject.nb_products,
-                        'priority': $scope.toCreateProject.priority,
-                        'start_date': startDate,
-                        'project_designation': newProjectDesignation
-                    };
+                    if (valid === false) {
+                        modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
+                    }
+                    else {
 
-                    validCreateProjectModal(newProject, function (newProject)
-                    {
-                        var projectPromise = projectsSrvc.createProject(newProject);
-                        projectPromise.then(
-                                function (response) {
+                        // data are valid, display the modal
 
-                                    var createdProject = response.project;
+                        var newProjectReference = $scope.toCreateProject.template.reference;
+                        var newProjectDesignation = $scope.toCreateProject.template.designation;
 
-                                    // --------------------------------------------------------
-                                    // $log.debug(CONTROLLER_NAME + " : $scope.projects = " + JSON.stringify($scope.projects));
-                                    // $log.debug(CONTROLLER_NAME + " : createdProject = " + JSON.stringify(createdProject));
-                                    // --------------------------------------------------------
+                        var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-                                    $scope.projects.push(createdProject);
+                        var day = (new Date($scope.toCreateProject.start_date)).getDate();
+                        var month = (new Date($scope.toCreateProject.start_date)).getMonth();
+                        var year = (new Date($scope.toCreateProject.start_date)).getFullYear();
 
-                                    // --------------------------------------------------------
-                                    // $log.debug(CONTROLLER_NAME + " : $scope.projects = " + JSON.stringify($scope.projects));
-                                    // --------------------------------------------------------
+                        var monthStr = monthNames[month];
+                        newProjectReference += '_' + monthStr + '_' + year;
 
-                                    var message = 'Project : ' + createdProject.reference + ', was successfuly created!';
-                                    modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
-                                },
-                                function (response) {
+                        var startDate = year + '-' + (month + 1) + '-' + day + ' 00:00:00';
 
-                                    // --------------------------------------------------------
-                                    // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
-                                    // --------------------------------------------------------
+                        var newProject = {
+                            'reference': newProjectReference,
+                            'template_id': $scope.toCreateProject.template.id,
+                            'nb_products': $scope.toCreateProject.nb_products,
+                            'priority': $scope.toCreateProject.priority,
+                            'start_date': startDate,
+                            'project_designation': newProjectDesignation
+                        };
 
-                                    // ==================================================
-                                    // - create team failed
-                                    // ==================================================
+                        validCreateProjectModal(newProject, function (newProject)
+                        {
+                            var projectPromise = projectsSrvc.createProject(newProject);
+                            projectPromise.then(
+                                    function (response) {
 
-                                    var status = response.status;
-                                    var message = response.statusText;
-                                    modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
-                                }
-                        );
-                    });
+                                        var createdProject = response.project;
 
+                                        // --------------------------------------------------------
+                                        // $log.debug(CONTROLLER_NAME + " : $scope.projects = " + JSON.stringify($scope.projects));
+                                        // $log.debug(CONTROLLER_NAME + " : createdProject = " + JSON.stringify(createdProject));
+                                        // --------------------------------------------------------
+
+                                        $scope.projects.push(createdProject);
+
+                                        // --------------------------------------------------------
+                                        // $log.debug(CONTROLLER_NAME + " : $scope.projects = " + JSON.stringify($scope.projects));
+                                        // --------------------------------------------------------
+
+                                        var message = 'Project : ' + createdProject.reference + ', was successfuly created!';
+                                        modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
+                                    },
+                                    function (response) {
+
+                                        // --------------------------------------------------------
+                                        // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
+                                        // --------------------------------------------------------
+
+                                        // ==================================================
+                                        // - create team failed
+                                        // ==================================================
+
+                                        var status = response.status;
+                                        var message = response.statusText;
+                                        modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
+                                    }
+                            );
+                        });
+                    }
                 };
-
 
                 // ==================================================
                 // - delete a team main function 
