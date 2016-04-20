@@ -37,8 +37,8 @@ app.controller(
                             $scope.templates = response.templates;
 
                             // --------------------------------------------------------
-                            $log.debug(CONTROLLER_NAME + " : $scope.projects = " + JSON.stringify($scope.projects));
-                            $log.debug(CONTROLLER_NAME + " : $scope.templates = " + JSON.stringify($scope.templates));
+                            // $log.debug(CONTROLLER_NAME + " : $scope.projects = " + JSON.stringify($scope.projects));
+                            // $log.debug(CONTROLLER_NAME + " : $scope.templates = " + JSON.stringify($scope.templates));
                             // --------------------------------------------------------
                         },
                         function (response) {
@@ -76,9 +76,12 @@ app.controller(
 
                     // check the start date
                     // --------------------------------------------------------
-                    // $log.debug(CONTROLLER_NAME + " : start_date = " + $scope.toCreateProject.start_date);
+                    $log.debug(CONTROLLER_NAME + " : start_date = " + $scope.toCreateProject.start_date);
                     // --------------------------------------------------------
-                    // start date always valid cos of data picker initialization
+                    if ($scope.toCreateProject.start_date === undefined) {
+                        valid = false;
+                        message = "Start Date must be defined.";
+                    }
 
                     // check the nb of products
                     // --------------------------------------------------------
@@ -138,7 +141,6 @@ app.controller(
                                         var createdProject = response.project;
 
                                         // --------------------------------------------------------
-                                        // $log.debug(CONTROLLER_NAME + " : $scope.projects = " + JSON.stringify($scope.projects));
                                         // $log.debug(CONTROLLER_NAME + " : createdProject = " + JSON.stringify(createdProject));
                                         // --------------------------------------------------------
 
@@ -175,16 +177,10 @@ app.controller(
                 // ==================================================
                 $scope.closeProject = function (project_id) {
 
-                    // --------------------------------------------------------
-                    $log.debug(CONTROLLER_NAME + " : close Project :");
-                    $log.debug(CONTROLLER_NAME + " : project_id = " + project_id);
-                    $log.debug(CONTROLLER_NAME + " : $scope.projects = " + JSON.stringify($scope.projects));
-                    // --------------------------------------------------------
-
                     var projectToClose = $scope.findProject(project_id);
 
                     // --------------------------------------------------------
-                    $log.debug(CONTROLLER_NAME + " : projectToClose = " + JSON.stringify(projectToClose));
+                    // $log.debug(CONTROLLER_NAME + " : projectToClose = " + JSON.stringify(projectToClose));
                     // --------------------------------------------------------
 
                     validCloseProjectModal(projectToClose, function () {
@@ -278,19 +274,7 @@ app.controller(
 
                     var project = null;
 
-                    // --------------------------------------------------------
-                    $log.debug(CONTROLLER_NAME + " : findProject : ");
-                    $log.debug(CONTROLLER_NAME + " : $scope.projects = " + JSON.stringify($scope.projects));
-                    // --------------------------------------------------------
-
-
                     var projects = $scope.projects.filter(function (project) {
-
-                        // --------------------------------------------------------
-                        $log.debug(CONTROLLER_NAME + " : id = [" + id + "], project.id = [" + project.id + "]");
-                        $log.debug(CONTROLLER_NAME + " : typeof id = " + typeof id + ", typeof project.id = " + typeof project.id);
-                        // --------------------------------------------------------
-
                         return project.id === id;
                     });
 
