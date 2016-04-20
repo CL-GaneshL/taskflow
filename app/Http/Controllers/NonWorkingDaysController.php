@@ -107,26 +107,6 @@ class NonWorkingDaysController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-
-        // ---------------------------------------------------
-        // -update the non working day record 
-        // ---------------------------------------------------
-        $nwd = NonWorkingDay::find($id);
-
-        $nwd->title = trim($request->title) !== '' ? $request->title : null;
-        $nwd->type = trim($request->type) !== '' ? $request->type : null;
-        $nwd->date = trim($request->date) !== '' ? $request->date : null;
-
-        // ---------------------------------------------------
-        // \Log::debug('update : $nwd = ' . print_r($nwd, true));
-        // ---------------------------------------------------
-
-        $nwd->save();
-
-        return response()->json([
-                    'message' => 'Non-Working Day updated succesfully',
-                    'data' => $nwd
-                        ], 200);
     }
 
     /**

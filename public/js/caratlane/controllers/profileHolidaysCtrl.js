@@ -138,81 +138,88 @@ angular.module('profileHolidays', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'n
 
                                     $scope.save = function () {
 
-                                        var title = $scope.title;
-                                        var employee_id = $scope.employee_id;
-                                        var start_date = formatJS2MySQLDate(new Date($scope.start_date));
-                                        var end_date = formatJS2MySQLDate(new Date($scope.end_date));
+                                        var valid = true;
+                                        var message = null;
 
-                                        var newHoliday = {
-                                            'title': title,
-                                            'employee_id': employee_id,
-                                            'start_date': start_date,
-                                            'end_date': end_date
-                                        };
+                                        // check the title
+                                        // --------------------------------------------------------
+                                        $log.debug(CONTROLLER_NAME + " : title = " + $scope.title);
+                                        // --------------------------------------------------------
+                                        if ($scope.title === undefined || $scope.title === null) {
+                                            valid = false;
+                                            message = "You must select a Title.";
+                                        }
 
-                                        var holidayPromise = holidaysSrvc.createHoliday(newHoliday);
-                                        holidayPromise.then(
-                                                function (response) {
+                                        // check the start date
+                                        // --------------------------------------------------------
+                                        $log.debug(CONTROLLER_NAME + " : start_date = " + $scope.start_date);
+                                        // --------------------------------------------------------
+                                        if ($scope.start_date === undefined || $scope.start_date === null) {
+                                            valid = false;
+                                            message = "Start Date must be defined.";
+                                        }
 
-                                                    var createdHoliday = response.holiday;
+                                        // check the end date
+                                        // --------------------------------------------------------
+                                        $log.debug(CONTROLLER_NAME + " : end_date = " + $scope.end_date);
+                                        // --------------------------------------------------------
+                                        if ($scope.end_date === undefined || $scope.end_date === null) {
+                                            valid = false;
+                                            message = "End Date must be defined.";
+                                        }
 
-                                                    // --------------------------------------------------------
-                                                    $log.debug(CONTROLLER_NAME + " : createdHoliday = " + JSON.stringify(createdHoliday));
-                                                    // --------------------------------------------------------
+                                        if (valid === false) {
+                                            modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
+                                        }
+                                        else {
+                                            var title = $scope.title;
+                                            var employee_id = $scope.employee_id;
+                                            var start_date = formatJS2MySQLDate(new Date($scope.start_date));
+                                            var end_date = formatJS2MySQLDate(new Date($scope.end_date));
 
-                                                    // add the new updated holiday event
-                                                    holidays.push(createdHoliday);
+                                            var newHoliday = {
+                                                'title': title,
+                                                'employee_id': employee_id,
+                                                'start_date': start_date,
+                                                'end_date': end_date
+                                            };
 
-                                                    // and rebuild the list
-                                                    buildEventList(nwds, holidays);
+                                            var holidayPromise = holidaysSrvc.createHoliday(newHoliday);
+                                            holidayPromise.then(
+                                                    function (response) {
 
-                                                    var title = createdHoliday.title;
-                                                    var message = 'Holiday : ' + title + ', was successfuly created!';
-                                                    modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
-                                                },
-                                                function (response) {
+                                                        var createdHoliday = response.holiday;
 
-                                                    // --------------------------------------------------------
-                                                    // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
-                                                    // --------------------------------------------------------
+                                                        // --------------------------------------------------------
+                                                        $log.debug(CONTROLLER_NAME + " : createdHoliday = " + JSON.stringify(createdHoliday));
+                                                        // --------------------------------------------------------
 
-                                                    var status = response.status;
-                                                    var message = response.statusText;
-                                                    modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
-                                                }
-                                        );
+                                                        // add the new updated holiday event
+                                                        holidays.push(createdHoliday);
 
+                                                        // and rebuild the list
+                                                        buildEventList(nwds, holidays);
+
+                                                        var title = createdHoliday.title;
+                                                        var message = 'Holiday : ' + title + ', was successfuly created!';
+                                                        modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
+                                                    },
+                                                    function (response) {
+
+                                                        // --------------------------------------------------------
+                                                        // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
+                                                        // --------------------------------------------------------
+
+                                                        var status = response.status;
+                                                        var message = response.statusText;
+                                                        modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
+                                                    }
+                                            );
+                                        }
                                         $uibModalInstance.dismiss('cancel');
                                     };
                                 }
                             });
-                        };
-
-                        // ==================================================
-                        // - when user click on the event's edit icon
-                        // ==================================================
-                        $scope.editEvent = function (calendarEvent) {
-
-                            // --------------------------------------------------------
-                            // $log.debug(CONTROLLER_NAME + " : calendarEvent = " + JSON.stringify(calendarEvent));
-                            // --------------------------------------------------------
-
-                            // cannot edit company's non working days.
-                            var type = calendarEvent.type;
-                            if (type === non_working_type || type === weekend_type) {
-                                var message = 'Cannot edit company\'s non working days from this page.';
-                                modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
-                                return;
-                            }
-
-                            if (isProjectManger) {
-                                $scope.editHolidayEvent(calendarEvent);
-                            }
-                            else {
-                                var message = 'You do not have the rights to edit Holidays events.';
-                                modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
-                                return;
-                            }
                         };
 
                         // ==================================================
@@ -245,131 +252,11 @@ angular.module('profileHolidays', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'n
                         // ==================================================
                         // - 
                         // ==================================================
-                        $scope.editHolidayEvent = function (calendarEvent) {
-
-                            // --------------------------------------------------------
-                            $log.debug(CONTROLLER_NAME + " : calendarEvent = " + JSON.stringify(calendarEvent));
-                            // --------------------------------------------------------
-
-                            // --------------------------------------------------------
-                            // - initialization of the date and time pickers
-                            // --------------------------------------------------------
-
-                            // tomorrow at 0am
-                            var tomorrow = new Date();
-                            tomorrow.setHours(24, 0, 0, 0); // next midnignt
-
-                            // the day after tomorrow at 0am
-                            var tmrwPlusOneDay = new Date();
-                            tmrwPlusOneDay.setHours(2 * 24, 0, 0, 0); // next midnignt
-
-                            // allowes date picker from min_date = now 
-                            // to max_date one year ahead
-                            var min_date = tomorrow;
-                            var max_date = new Date(tomorrow);
-                            max_date.setDate(max_date.getDate() + 365);
-
-                            var title = calendarEvent.title;
-                            var start_date = calendarEvent.start_date;
-                            var end_date = calendarEvent.end_date;
-                            var employee_id = employee.id;
-                            var data_hour_step = 1;
-                            var data_minute_step = 30;
-                            var original_id = calendarEvent.original_id;
-
-                            // ==================================================
-                            // - edit event modal
-                            // ==================================================
-                            $uibModal.open({
-                                templateUrl: 'taskflow/fragments/modal_holiday_update',
-                                controller: function ($scope, $uibModalInstance) {
-                                    $scope.$modalInstance = $uibModalInstance;
-                                    $scope.min_date = min_date;
-                                    $scope.max_date = max_date;
-                                    $scope.data_hour_step = data_hour_step;
-                                    $scope.data_minute_step = data_minute_step;
-                                    $scope.title = title;
-                                    $scope.employee_id = employee_id;
-                                    $scope.start_date = start_date;
-                                    $scope.end_date = end_date;
-                                    $scope.original_id = original_id;
-
-                                    $scope.cancel = function () {
-                                        $uibModalInstance.dismiss('cancel');
-                                    };
-
-                                    $scope.update = function () {
-
-                                        var title = $scope.title;
-                                        var employee_id = $scope.employee_id;
-                                        var start_date = formatJS2MySQLDate(new Date($scope.start_date));
-                                        var end_date = formatJS2MySQLDate(new Date($scope.end_date));
-
-                                        var toUpdateHoliday = {
-                                            id: $scope.original_id,
-                                            'title': title,
-                                            'employee_id': employee_id,
-                                            'start_date': start_date,
-                                            'end_date': end_date
-                                        };
-
-                                        // --------------------------------------------------------
-                                        $log.debug(CONTROLLER_NAME + " : toUpdateHoliday = " + JSON.stringify(toUpdateHoliday));
-                                        // --------------------------------------------------------
-
-                                        var holidayPromise = holidaysSrvc.updateHoliday(toUpdateHoliday);
-                                        holidayPromise.then(
-                                                function (response) {
-
-                                                    var updatedHoliday = response.holiday;
-
-                                                    // --------------------------------------------------------
-                                                    // $log.debug(CONTROLLER_NAME + " : updatedHoliday = " + JSON.stringify(updatedHoliday));
-                                                    // --------------------------------------------------------
-
-                                                    // remove the event from the calendar's list of events 
-                                                    holidays = holidays.filter(function (holiday) {
-                                                        return holiday.id !== updatedHoliday.id;
-                                                    });
-
-                                                    // replace by the new updated holiday event
-                                                    holidays.push(updatedHoliday);
-
-                                                    // and rebuild the list
-                                                    buildEventList(nwds, holidays);
-
-                                                    var title = updatedHoliday.title;
-                                                    var message = 'Holiday : ' + title + ', was successfuly updated!';
-                                                    modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
-                                                },
-                                                function (response) {
-
-                                                    // --------------------------------------------------------
-                                                    // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
-                                                    // --------------------------------------------------------
-
-                                                    var status = response.status;
-                                                    var message = response.statusText;
-                                                    modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
-                                                }
-                                        );
-
-                                        $uibModalInstance.dismiss('cancel');
-                                    };
-                                }
-                            });
-
-                        };
-
-                        // ==================================================
-                        // - 
-                        // ==================================================
                         $scope.deleteHolidayEvent = function (calendarEvent) {
 
                             // --------------------------------------------------------
                             $log.debug(CONTROLLER_NAME + " : calendarEvent = " + JSON.stringify(calendarEvent));
                             // --------------------------------------------------------
-
 
                             var title = calendarEvent.title;
                             var original_id = calendarEvent.original_id;
@@ -564,8 +451,12 @@ angular.module('profileHolidays', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'n
                                 var employee_id = holidays[index].employee_id;
                                 var start_date = holidays[index].start_date;
                                 var end_date = holidays[index].end_date;
-                                var startsAt = holidaysSrvc.getHolidaysStartsAt(new Date(holidays[index].start_date));
-                                var endsAt = holidaysSrvc.getHolidaysEndsAt(new Date(holidays[index].end_date));
+
+                                var startsAt = holidaysSrvc.getHolidaysStartsAt(
+                                        new Date(holidays[index].start_date));
+
+                                var endsAt = holidaysSrvc.getHolidaysEndsAt(
+                                        new Date(holidays[index].end_date));
 
                                 var event = {
                                     'id': event_id_water_mark,

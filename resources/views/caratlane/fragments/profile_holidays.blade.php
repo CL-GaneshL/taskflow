@@ -120,14 +120,10 @@
                 </div>
 
                 <div class="row col-md-12 padding-15">
+                    
                     <!-- ================================================== -->
                     <!-- - the calendar                                     -->
                     <!-- ================================================== --> 
-
-                    <!-- -- --------------------------------------------------- --> 
-                    <!-- -- - task editable only by Project Manager                  -->
-                    <!-- -- --------------------------------------------------- --> 
-                    @if ( $authUser->hasRole('ADMIN_ROLE') || $authUser->hasRole('PROJECT_MANAGER_ROLE') )
 
                     <mwl-calendar
                         events="events"
@@ -135,9 +131,7 @@
                         view-title="calendarTitle"
                         current-day="calendarDay"
                         on-event-times-changed="eventTimesChanged(calendarEvent); calendarEvent.startsAt = calendarNewEventStart; calendarEvent.endsAt = calendarNewEventEnd"
-                        edit-event-html="'<i class=\'glyphicon glyphicon-pencil\'></i>'"
                         delete-event-html="'<i class=\'glyphicon glyphicon-remove\'></i>'"
-                        on-edit-event-click="editEvent(calendarEvent)"
                         on-delete-event-click="deleteEvent(calendarEvent)"
                         on-event-click="editEvent(calendarEvent)"
                         on-view-change-click="eventViewChanged(calendarEvent)"
@@ -147,31 +141,6 @@
                         day-view-split="15"
                         cell-modifier="modifyCell(calendarCell)">
                     </mwl-calendar>
-
-                    <!-- -- --------------------------------------------------- --> 
-                    @else
-                    <!-- -- --------------------------------------------------- --> 
-
-                    <mwl-calendar
-                        events="events"
-                        view="calendarView"
-                        view-title="calendarTitle"
-                        current-day="calendarDay"
-                        on-event-times-changed="eventTimesChanged(calendarEvent); calendarEvent.startsAt = calendarNewEventStart; calendarEvent.endsAt = calendarNewEventEnd"
-                        edit-event-html="'<i class=\'glyphicon glyphicon-pencil\'></i>'"
-                        on-edit-event-click="editEvent(calendarEvent)"
-                        on-delete-event-click=""
-                        on-event-click="editEvent(calendarEvent)"
-                        on-view-change-click="eventViewChanged(calendarEvent)"
-                        cell-is-open="isCellOpen"
-                        day-view-start="00:00"
-                        day-view-end="08:00"
-                        day-view-split="15"
-                        cell-modifier="modifyCell(calendarCell)">
-                    </mwl-calendar>
-
-                    @endif
-                    <!-- -- --------------------------------------------------- --> 
 
                 </div>
 

@@ -56,42 +56,6 @@ app.factory("holidaysSrvc", function ($log, $http) {
         );
     };
 
-    // --------------------------------------------------------
-    // - Update a holiday record in the db.
-    // --------------------------------------------------------
-    var updateHoliday = function (toUpdateHoliday) {
-
-        // --------------------------------------------------------
-        // $log.debug(FACTORY_NAME + " : toUpdateHoliday = " + JSON.stringify(toUpdateHoliday));
-        // --------------------------------------------------------
-
-        return $http(
-                {
-                    method: "PUT",
-                    url: '/taskflow/apis/v1/holidays/' + toUpdateHoliday.id,
-                    data: {
-                        id: toUpdateHoliday.id,
-                        title: toUpdateHoliday.title,
-                        employee_id: toUpdateHoliday.employee_id,
-                        start_date: toUpdateHoliday.start_date,
-                        end_date: toUpdateHoliday.end_date
-                    }
-                }
-
-        ).then(function (response) {
-
-            var holiday = response.data.data;
-
-            // --------------------------------------------------------
-            // $log.debug(FACTORY_NAME + " : response holiday = " + JSON.stringify(holiday));
-            // --------------------------------------------------------
-
-            return {
-                holiday: holiday
-            };
-        });
-    };
-
     // ==================================================
     // - 
     // ==================================================
@@ -103,9 +67,9 @@ app.factory("holidaysSrvc", function ($log, $http) {
     // - 
     // ==================================================
     function getHolidaysEndsAt(end_date) {
+        
         var end_date_at_midnight = new Date(end_date);
-        end_date_at_midnight.setMinutes(23 * 60 + 59);
-
+        end_date_at_midnight.setMinutes(8 * 60);
         return end_date_at_midnight;
     }
 
@@ -115,7 +79,6 @@ app.factory("holidaysSrvc", function ($log, $http) {
     return {
         createHoliday: createHoliday,
         deleteHoliday: deleteHoliday,
-        updateHoliday: updateHoliday,
         getHolidaysStartsAt: getHolidaysStartsAt,
         getHolidaysEndsAt: getHolidaysEndsAt
     };

@@ -100,12 +100,13 @@
                                    ng-init="startOpen = false"
                                    class="form-control underline"
                                    ng-click="startOpen = !startOpen" 
-                                   uib-datepicker-popup="fullDate"             
+                                   uib-datepicker-popup="fullDate"           
                                    is-open="startOpen"     
                                    min-date="event.min_date"
                                    max-date="event.max_date" 
                                    close-text="Close" 
-                                   ng-readonly="true" />
+                                   ng-readonly="true"
+                                   disabled="" />
                             <i class="ti-calendar"></i>
                         </span>
 

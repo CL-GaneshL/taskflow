@@ -69,7 +69,7 @@ app.controller(
                     // --------------------------------------------------------
                     // $log.debug(CONTROLLER_NAME + " : reference = " + $scope.toCreateProject.template);
                     // --------------------------------------------------------
-                    if ($scope.toCreateProject.template === null) {
+                    if ($scope.toCreateProject.template === undefined || $scope.toCreateProject.template === null) {
                         valid = false;
                         message = "You must select a Project Template.";
                     }
@@ -78,7 +78,7 @@ app.controller(
                     // --------------------------------------------------------
                     $log.debug(CONTROLLER_NAME + " : start_date = " + $scope.toCreateProject.start_date);
                     // --------------------------------------------------------
-                    if ($scope.toCreateProject.start_date === undefined) {
+                    if ($scope.toCreateProject.start_date === undefined || $scope.toCreateProject.start_date === null) {
                         valid = false;
                         message = "Start Date must be defined.";
                     }

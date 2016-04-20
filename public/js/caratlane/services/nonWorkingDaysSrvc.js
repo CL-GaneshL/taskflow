@@ -86,42 +86,6 @@ app.factory("nonWorkingDaysSrvc", function ($log, $http) {
         );
     };
 
-// --------------------------------------------------------
-    // - Update a non-working day record in the db.
-    // --------------------------------------------------------
-    var updateNonWorkingDay = function (toUpdateNonWorkingDay) {
-
-        // --------------------------------------------------------
-        // $log.debug(FACTORY_NAME + " : newNonWorkingDay = " + JSON.stringify(toUpdateNonWorkingDay));
-        // --------------
-
-        var id = toUpdateNonWorkingDay.id;
-
-        return $http(
-                {
-                    method: "PUT",
-                    url: '/taskflow/apis/v1/nonworkingdays/' + id,
-                    data: {
-                        title: toUpdateNonWorkingDay.title,
-                        type: toUpdateNonWorkingDay.type,
-                        date: toUpdateNonWorkingDay.date
-                    }
-                }
-
-        ).then(function (response) {
-
-            var non_working_day = response.data.data;
-
-            // --------------------------------------------------------
-            // $log.debug(FACTORY_NAME + " : response non_working_day = " + JSON.stringify(non_working_day));
-            // --------------------------------------------------------
-
-            return {
-                non_working_day: non_working_day
-            };
-        });
-    };
-
     // ==================================================
     // - 
     // ==================================================
@@ -133,7 +97,10 @@ app.factory("nonWorkingDaysSrvc", function ($log, $http) {
     // - 
     // ==================================================
     function getNwdEndsAt(end_date) {
-        return new Date(end_date);
+
+        var end_date_at_midnight = new Date(end_date);
+        end_date_at_midnight.setMinutes(8 * 60);
+        return end_date_at_midnight;
     }
 
     // --------------------------------------------------------
@@ -143,7 +110,6 @@ app.factory("nonWorkingDaysSrvc", function ($log, $http) {
         getNonWorkingDays: getNonWorkingDays,
         createNonWorkingDay: createNonWorkingDay,
         deleteNonWorkingDay: deleteNonWorkingDay,
-        updateNonWorkingDay: updateNonWorkingDay,
         getNwdStartsAt: getNwdStartsAt,
         getNwdEndsAt: getNwdEndsAt
     };
