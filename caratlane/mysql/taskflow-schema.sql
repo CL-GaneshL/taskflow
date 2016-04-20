@@ -116,7 +116,9 @@ CREATE TABLE `project_templates` (
   `reference` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `designation` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `open` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `project_templates_reference_unique` (`reference`),
+  UNIQUE KEY `project_templates_designation_unique` (`designation`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
