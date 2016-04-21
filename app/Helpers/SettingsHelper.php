@@ -136,7 +136,7 @@ class SettingsHelper {
     public function getLaravelLogFileContent() {
 
         $log_path = storage_path('logs');
-        $today = "2016-04-21";
+        $today = date('Y-m-d', time());
         $filename = "laravel-" . $today . '.log';
         $logpath = $log_path . DIRECTORY_SEPARATOR . $filename;
 

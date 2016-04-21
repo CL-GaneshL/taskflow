@@ -342,6 +342,7 @@ SET character_set_client = utf8;
  1 AS `nb_products`,
  1 AS `priority`,
  1 AS `start_date`,
+ 1 AS `end_date`,
  1 AS `open`*/;
 SET character_set_client = @saved_cs_client;
 
