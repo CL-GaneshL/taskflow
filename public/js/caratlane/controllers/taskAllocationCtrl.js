@@ -696,6 +696,10 @@ app.controller(
                     // start the spinner
                     $scope.startSpin();
 
+                    // remove current tasks for thecalendar
+                    tasks = {};
+                    buildEventList(nwds, holidays, tasks, null, null);
+
                     // --------------------------------------------------------
                     $log.debug(CONTROLLER_NAME + " : allocate ..... ");
                     // --------------------------------------------------------

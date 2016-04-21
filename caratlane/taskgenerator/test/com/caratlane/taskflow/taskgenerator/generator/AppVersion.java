@@ -56,7 +56,7 @@ public class AppVersion {
         final String expectedAppCopyrigth = "©2016, Caratlane";
         assertEquals(expectedAppCopyrigth, APP_COPYRIGHT);
 
-        final String expectedAppVersion = "1.0.0";
+        final String expectedAppVersion = "1.0.1";
         assertEquals(expectedAppVersion, APP_VERSION);
 
     }

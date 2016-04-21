@@ -129,6 +129,7 @@ public interface TestDBConstants {
                     NB_PRODUCTS_PROJECT_JADAU_1, // nb_products,
                     9, // priority,
                     START_DATE_PROJECT_JADAU_1, // start_date,
+                    null, // end_date
                     (byte) 1 //  open
             );
 
@@ -145,6 +146,7 @@ public interface TestDBConstants {
                     NB_PRODUCTS_PROJECT_JADAU_2, // nb_products,
                     9, // priority,
                     START_DATE_PROJECT_JADAU_2, // start_date,
+                    null, // end_date
                     (byte) 1 //  open
             );
 
@@ -161,6 +163,7 @@ public interface TestDBConstants {
                     NB_PRODUCTS_PROJECT_JADAU_3, // nb_products,
                     9, // priority,
                     START_DATE_PROJECT_JADAU_3, // start_date,
+                    null, // end_date
                     (byte) 1 //  open
             );
 
@@ -177,6 +180,7 @@ public interface TestDBConstants {
                     NB_PRODUCTS_PROJECT_JADAU_4, // nb_products,
                     9, // priority,
                     START_DATE_PROJECT_JADAU_4, // start_date,
+                    null, // end_date
                     (byte) 1 //  open
             );
 
@@ -193,6 +197,7 @@ public interface TestDBConstants {
                     NB_PRODUCTS_PROJECT_JADAU_5, // nb_products,
                     9, // priority,
                     START_DATE_PROJECT_JADAU_5, // start_date,
+                    null, // end_date
                     (byte) 1 //  open
             );
 
@@ -209,6 +214,7 @@ public interface TestDBConstants {
                     NB_PRODUCTS_PROJECT_JADAU_6, // nb_products,
                     9, // priority,
                     START_DATE_PROJECT_JADAU_6, // start_date,
+                    null, // end_date
                     (byte) 1 //  open
             );
 

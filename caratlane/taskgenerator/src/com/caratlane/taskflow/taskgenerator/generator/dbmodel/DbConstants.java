@@ -24,6 +24,7 @@ public interface DbConstants {
     String PROJECT_NB_PRODUCTS_COL_NAME = "nb_products";
     String PROJECT_PRIORITY_COL_NAME = "priority";
     String PROJECT_START_DATE_COL_NAME = "start_date";
+    String PROJECT_END_DATE_COL_NAME = "end_date";
     String PROJECT_OPEN_COL_NAME = "open";
 
     // =====================================================
@@ -110,7 +111,7 @@ public interface DbConstants {
     String EMPLOYEE_SKILL_EMPLOYEE_ID_COL_NAME = "employee_id";
     String EMPLOYEE_SKILL_SKILL_ID_COL_NAME = "skill_id";
 
- // =====================================================
+    // =====================================================
     // - employee have skills
     // =====================================================
     String EMPLOYEE_HAVE_SKILLS_ENTITY_NAME = "employees_have_skills";

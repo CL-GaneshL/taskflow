@@ -38,6 +38,7 @@ public class Project {
      * @param nb_products
      * @param priority
      * @param start_date
+     * @param end_date
      * @param open
      */
     public Project(
@@ -47,6 +48,7 @@ public class Project {
             final Integer nb_products,
             final Integer priority,
             final Date start_date,
+            final Date end_date,
             final Byte open
     ) {
 
@@ -57,6 +59,7 @@ public class Project {
                 nb_products,
                 priority,
                 start_date,
+                end_date,
                 open
         );
     }
@@ -68,6 +71,7 @@ public class Project {
      * @param nb_products
      * @param priority
      * @param start_date
+     * @param end_date
      * @param open
      */
     public Project(
@@ -76,6 +80,7 @@ public class Project {
             final Integer nb_products,
             final Integer priority,
             final Date start_date,
+            final Date end_date,
             final Byte open
     ) {
 
@@ -85,6 +90,7 @@ public class Project {
                 nb_products,
                 priority,
                 start_date,
+                end_date,
                 open
         );
     }
@@ -139,6 +145,28 @@ public class Project {
     }
 
     /**
+     *
+     * @return
+     */
+    public LocalDateTime getEndDate() {
+
+        final Date end_date = this.dbProject.getEnd_date();
+        final LocalDateTime end_date_ld
+                = end_date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        return end_date_ld;
+    }
+
+    /**
+     *
+     * @param l_end_date
+     */
+    public void setEndDate(LocalDateTime l_end_date) {
+        final Date end_date = Date.from(l_end_date.atZone(ZoneId.systemDefault()).toInstant());
+        dbProject.setEnd_date(end_date);
+    }
+
+    /**
      * For test purposes only.
      *
      * @param test
@@ -146,6 +174,10 @@ public class Project {
      */
     public Date getStartDate(boolean test) {
         return this.dbProject.getStart_date();
+    }
+
+    public Date getEndDate(boolean test) {
+        return this.dbProject.getEnd_date();
     }
 
     public DbProject getDbProject() {

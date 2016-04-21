@@ -672,7 +672,7 @@ app.run([
             name: 'TaskFlow',
             author: 'Caratlane',
             description: 'Caratlane - Task Allocation Tool',
-            version: '1.0.0',
+            version: '1.0.1',
             year: ((new Date()).getFullYear()), // automatic current year (for copyright information)
             isMobile: (function () {// true if the browser is a mobile device
                 var check = false;

@@ -10,7 +10,8 @@ import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorException;
 import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorRuntimeException;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.TOMORROW;
 import com.caratlane.taskflow.taskgenerator.generator.crud.TaskDbReseter;
-import com.caratlane.taskflow.taskgenerator.generator.crud.TasksDbSerializer;
+import com.caratlane.taskflow.taskgenerator.generator.crud.DataDbSerializer;
+import com.caratlane.taskflow.taskgenerator.generator.rules.ProjectUpdator;
 import com.caratlane.taskflow.taskgenerator.generator.rules.TaskAllocator;
 import com.caratlane.taskflow.taskgenerator.logging.LogManager;
 import java.time.LocalDateTime;
@@ -50,6 +51,7 @@ public class Generator {
         try {
             final LocalDateTime allocation_from = TOMORROW;
             final TaskAllocator taskAllocator = new TaskAllocator(allocation_from);
+            final ProjectUpdator projectUpdator = new ProjectUpdator();
 
             for (int priority = 10; priority >= 1; priority--) {
 
@@ -72,11 +74,11 @@ public class Generator {
                 });
             }
 
-            // serialize tasks in the database.
-            final LinkedList<ProjectData> projects
-                    = Projects.getInstance().getProjectsData();
+            // update projects before serializing 
+            projectUpdator.updateProjects();
 
-            TasksDbSerializer.serialize(projects);
+            // serialize projects and tasks in the database.
+            DataDbSerializer.serialize();
 
         } catch (TaskGeneratorRuntimeException ex) {
 

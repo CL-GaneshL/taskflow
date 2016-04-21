@@ -14,8 +14,6 @@ import com.caratlane.taskflow.taskgenerator.generator.NonWorkingDays;
 import com.caratlane.taskflow.taskgenerator.generator.Projects;
 import com.caratlane.taskflow.taskgenerator.generator.Skills;
 import com.caratlane.taskflow.taskgenerator.generator.Tasks;
-import static helpers.TestDBConstants.SKILL_3_3DMS;
-import static helpers.TestDBConstants.SKILL_5_3RenC;
 import static helpers.TestDBConstants.TEST_DB_DATABASE;
 import static helpers.TestDBConstants.TEST_DB_HOST;
 import static helpers.TestDBConstants.TEST_DB_PASSWORD;

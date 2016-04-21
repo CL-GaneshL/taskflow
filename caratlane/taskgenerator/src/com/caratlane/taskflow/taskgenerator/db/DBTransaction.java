@@ -76,8 +76,7 @@ public interface DBTransaction {
      * @return a list of the results
      * @throws DBException if fails to query the database
      */
-    public int delete(@NotNull
-            final String name, Object... parameters) throws DBException;
+    public int delete(@NotNull final String name, Object... parameters) throws DBException;
 
     /**
      * Updates an entity. Merges the state of the given entity into the current
@@ -88,7 +87,8 @@ public interface DBTransaction {
      * @return the managed instance that the state was merged to.
      * @throws DBException if the update fails.
      */
-    public <T extends HexaDBEntity> T update(@NotNull T entity) throws DBException;
+//    public <T extends HexaDBEntity> T update(@NotNull T entity) throws DBException;
+    public <T> T update(@NotNull final T entity) throws DBException;
 
     /**
      * Execute native SQL code.

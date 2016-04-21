@@ -10,6 +10,7 @@ VIEW `v_projects` AS
         `projects`.`nb_products` AS `nb_products`,
         `projects`.`priority` AS `priority`,
         `projects`.`start_date` AS `start_date`,
+        `projects`.`end_date` AS `end_date`,
         `projects`.`open` AS `open`
     FROM
         `projects`

@@ -394,7 +394,7 @@ class DBTransactionImpl implements DBTransaction {
     }
 
     @Override
-    public <T extends HexaDBEntity> T update(@NotNull T entity) throws DBException {
+    public <T> T update(final @NotNull T entity) throws DBException {
 
         assert this.em != null && this.em.isOpen() : ("em = " + this.em);
 

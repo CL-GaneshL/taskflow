@@ -128,6 +128,7 @@ public class Generator1Test {
                         PROJECT_JADAU_1.getNbProducts(),
                         PROJECT_JADAU_1.getPriority(),
                         PROJECT_JADAU_1.getStartDate(test),
+                        PROJECT_JADAU_1.getEndDate(test),
                         PROJECT_JADAU_1.getOpen(test)
                 );
 

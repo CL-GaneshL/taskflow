@@ -6,7 +6,7 @@
 package com.caratlane.taskflow.taskgenerator.generator;
 
 import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorException;
-import com.caratlane.taskflow.taskgenerator.generator.crud.TasksDbSerializer;
+import com.caratlane.taskflow.taskgenerator.generator.crud.DataDbSerializer;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Employee;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Project;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Skill;
@@ -117,6 +117,7 @@ public class SerializeTasks2Test {
                         PROJECT_JADAU_6.getNbProducts(),
                         PROJECT_JADAU_6.getPriority(),
                         PROJECT_JADAU_6.getStartDate(test),
+                        PROJECT_JADAU_6.getEndDate(test),
                         PROJECT_JADAU_6.getOpen(test)
                 );
 
@@ -172,8 +173,7 @@ public class SerializeTasks2Test {
         assertEquals(expectedDuration, duration);
 
         // serialize tasks in the database.
-        final LinkedList<ProjectData> projects = Projects.getInstance().getProjectsData();
-        TasksDbSerializer.serialize(projects);
+        DataDbSerializer.serialize();
 
         // extract the data inserted in the db and check their accuraty
         final Integer project_id = projectData.getProject().getId();
