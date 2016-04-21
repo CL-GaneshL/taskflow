@@ -17,8 +17,8 @@ class CreateProjectTemplatesTable extends Migration {
             $table->increments('id');
             // ------------------------------
 
-            $table->string('reference')->unique();
-            $table->string('designation')->unique();
+            $table->string('reference');
+            $table->string('designation');
             $table->boolean('open')->default(true);
         });
     }

@@ -26,7 +26,7 @@
 
         <div class="row col-md-12">
 
-            <div class="col-md-4">
+            <div class="col-md-5">
 
                 <!-- ================================================== -->
                 <!-- - new skill form                                   -->
@@ -134,15 +134,16 @@
             <!-- ================================================== -->
             <!-- - skills table                                     -->
             <!-- ================================================== -->                    
-            <div class="col-md-8">
+            <div class="col-md-7">
 
                 <table class="table table-condensed table-striped table-hover">
 
                     <thead>
                         <tr>
-                            <th class="hidden-xs col-md-2">Reference</th>    
+                            <th class="col-md-2">Reference</th>    
                             <th class="col-md-2 text-center">Duration</th>
-                            <th>Designation</th>
+                            <th class="col-md-7">Designation</th>
+                            <th></th>
                         </tr>
                     </thead>
 
@@ -150,7 +151,7 @@
 
                         <tr ng-repeat="skill in skills"  >
 
-                            <td class="hidden-xs col-md-2"> <% skill.reference %> </td>
+                            <td class="col-md-2"> <% skill.reference %> </td>
                             <td class="col-md-2 text-center"> <% skill.duration %> </td>
                             <td class="col-md-7"> <% skill.designation %> </td>
 

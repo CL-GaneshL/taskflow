@@ -62,7 +62,6 @@ app.controller(
                         // --------------------------------------------------------
                         .error(function (data, status, headers, config) {
 
-                            var status = '500';
                             var message = 'Internal server error.';
                             modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
                         });
@@ -125,8 +124,8 @@ app.controller(
                                         // $log.error("skillsCtrl : addSkill : error data = " + JSON.stringify(data));
                                         // --------------------------------------------------------
 
-                                        var msg = 'Internal server error status = 500!';
-                                        modalSrvc.showErrorMessageModal(msg);
+                                        var message = 'Internal server error.';
+                                        modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
                                     });
                         });
                     }
@@ -163,8 +162,8 @@ app.controller(
                                 // --------------------------------------------------------
                                 .error(function (data, status, headers, config) {
 
-                                    var msg = 'Internal server error status = 500!';
-                                    modalSrvc.showErrorMessageModal(msg);
+                                    var message = 'Internal server error.';
+                                    modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
                                 });
                     });
                 };
@@ -223,29 +222,36 @@ app.controller(
                 function isFormValid(reference, designation, duration) {
 
                     var valid = true;
+                    var message = null;
+
                     // --------------------------------------------------------
                     // $log.debug("skillsCtrl : isFormValid : reference = " + reference);
                     // $log.debug("skillsCtrl : isFormValid : designation = " + designation);
                     // $log.debug("skillsCtrl : isFormValid : duration = " + duration);
                     // --------------------------------------------------------
 
-                    if (reference === '') {
-                        showErrorMessageModal('Reference is required.');
+                    if (reference === '' || reference === null || reference === undefined) {
+                        message = 'Reference is required.';
                         valid = false;
                     }
 
-                    if (valid === true) {
-                        if (reference.length > 7) {
-                            showErrorMessageModal('Reference must have a maximum length of 7 characters.');
-                            valid = false;
-                        }
+                    if (reference.length > 7) {
+                        message = 'Reference must have a maximum length of 7 characters.';
+                        valid = false;
                     }
 
-                    if (valid === true) {
-                        if (reference.length > 40) {
-                            showErrorMessageModal('Designation must have a maximum length of 40 characters.');
-                            valid = false;
-                        }
+                    if (designation === '' || designation === null || designation === undefined) {
+                        message = 'Designation is required.';
+                        valid = false;
+                    }
+
+                    if (designation.length > 40) {
+                        message = 'Designation must have a maximum length of 40 characters.';
+                        valid = false;
+                    }
+
+                    if (valid === false) {
+                        modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
                     }
 
                     return valid;

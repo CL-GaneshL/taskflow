@@ -17,7 +17,7 @@ class CreateSkillsTable extends Migration {
             $table->increments('id');
             // ------------------------------
 
-            $table->string('reference')->unique();
+            $table->string('reference');
             $table->string('designation');
             $table->integer('duration')->default(0);
             $table->boolean('open')->default(true);

@@ -116,9 +116,7 @@ CREATE TABLE `project_templates` (
   `reference` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `designation` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `open` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `project_templates_reference_unique` (`reference`),
-  UNIQUE KEY `project_templates_designation_unique` (`designation`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -150,9 +148,9 @@ CREATE TABLE `projects` (
   `nb_products` int(10) unsigned NOT NULL,
   `priority` tinyint(3) unsigned NOT NULL,
   `start_date` date NOT NULL,
+  `end_date` date DEFAULT NULL,
   `open` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `projects_reference_unique` (`reference`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -199,8 +197,7 @@ CREATE TABLE `skills` (
   `designation` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `duration` int(11) NOT NULL DEFAULT '0',
   `open` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `skills_reference_unique` (`reference`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

@@ -65,14 +65,6 @@ class SkillsController extends Controller {
     public function store(Request $request) {
 
         // ---------------------------------------------------
-        // - valid received data
-        // ---------------------------------------------------
-        $this->validate($request, [
-            'reference' => 'unique:skills|required|max:7',
-            'designation' => 'max:35',
-        ]);
-
-        // ---------------------------------------------------
         // - create and store the data
         // ---------------------------------------------------
         $skill = Skill::create($request->all());

@@ -60,7 +60,9 @@ app.controller(
                     // --------------------------------------------------------
                     $log.debug(CONTROLLER_NAME + " : reference = " + $scope.newTemplateReference);
                     // --------------------------------------------------------
-                    if ($scope.newTemplateReference === "") {
+                    if ($scope.newTemplateReference === ""
+                            || $scope.newTemplateReference === null
+                            || $scope.newTemplateReference === undefined) {
                         valid = false;
                         message = "Invalid Template reference.";
                     }
@@ -69,7 +71,9 @@ app.controller(
                     // --------------------------------------------------------
                     $log.debug(CONTROLLER_NAME + " : designation = " + $scope.newTemplateDesignation);
                     // --------------------------------------------------------
-                    if ($scope.newTemplateDesignation === "") {
+                    if ($scope.newTemplateDesignation === ""
+                            || $scope.newTemplateDesignation === null
+                            || $scope.newTemplateDesignation === undefined) {
                         valid = false;
                         message = "Invalid Template designation.";
                     }

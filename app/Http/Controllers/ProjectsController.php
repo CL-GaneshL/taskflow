@@ -37,9 +37,9 @@ class ProjectsController extends Controller {
         //      -- open projects
         //      -- sorted by priority from high to low
         // ---------------------------------------------------
+
         $projects = \DB::table('projects')
-                ->leftjoin('project_templates', 'project_templates.id', '=', 'projects.template_id')
-                ->select('projects.*', 'project_templates.designation')
+                ->select('projects.*')
                 ->where('projects.open', '=', true)
                 ->orderBy('projects.start_date', 'desc')
                 ->get();
@@ -104,8 +104,7 @@ class ProjectsController extends Controller {
         $newProjectId = $newProject->id;
 
         $project = \DB::table('projects')
-                ->leftjoin('project_templates', 'project_templates.id', '=', 'projects.template_id')
-                ->select('projects.*', 'project_templates.designation')
+                ->select('projects.*')
                 ->where('projects.id', '=', $newProjectId)
                 ->get();
 

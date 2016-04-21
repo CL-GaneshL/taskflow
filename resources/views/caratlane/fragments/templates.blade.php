@@ -25,7 +25,7 @@
 
         <div class="row col-md-12">
 
-            <div class="col-md-6">
+            <div class="col-md-5">
 
                 <!-- ================================================== -->
                 <!-- - new template form                                 -->
@@ -108,14 +108,15 @@
             <!-- ================================================== -->
             <!-- - template table                                     -->
             <!-- ================================================== -->                    
-            <div class="col-md-6">
+            <div class="col-md-7">
 
                 <table class="table table-condensed table-striped table-hover">
 
                     <thead>
                         <tr>
-                            <th class="col-md-3">Reference</th>
-                            <th class="hidden-xs col-md-7">Designation</th>
+                            <th class="col-md-4">Reference</th>
+                            <th class="col-md-6">Designation</th>
+                            <th></th>
                         </tr>
                     </thead>
 
@@ -123,13 +124,13 @@
 
                         <tr ng-repeat="template in templates"  >
 
-                            <td class="col-md-3"> <% template.reference %> </td>
-                            <td class="col-md-7"> <% template.designation %> </td>
+                            <td class="col-md-4"> <% template.reference %> </td>
+                            <td class="col-md-6"> <% template.designation %> </td>
 
                             <!-- ================================================== -->
                             <!-- - edit and remove icons                            -->
                             <!-- ================================================== -->  
-                            <td class="col-md-3">
+                            <td>
                                 <div class="visible-md visible-lg hidden-sm hidden-xs">
 
                                     <a href="#"

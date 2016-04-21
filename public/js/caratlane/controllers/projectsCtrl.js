@@ -33,8 +33,15 @@ app.controller(
                 projectPromise.then(
                         function (response) {
 
-                            $scope.projects = response.projects;
                             $scope.templates = response.templates;
+
+                            // display of the end date if null
+                            $scope.projects = response.projects.filter(function (project) {
+                                if (project.end_date === null) {
+                                    project.end_date = "-";
+                                }
+                                return true;
+                            });
 
                             // --------------------------------------------------------
                             // $log.debug(CONTROLLER_NAME + " : $scope.projects = " + JSON.stringify($scope.projects));
@@ -144,6 +151,7 @@ app.controller(
                                         // $log.debug(CONTROLLER_NAME + " : createdProject = " + JSON.stringify(createdProject));
                                         // --------------------------------------------------------
 
+                                        createdProject.end_date = "-";
                                         $scope.projects.push(createdProject);
 
                                         // --------------------------------------------------------

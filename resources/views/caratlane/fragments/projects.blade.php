@@ -24,7 +24,7 @@
 
         <div class="row col-md-12">
 
-            <div class="col-md-6">
+            <div class="col-md-5">
 
                 <!-- ================================================== -->
                 <!-- - new project form                                 -->
@@ -171,16 +171,18 @@
             <!-- ================================================== -->
             <!-- - Projects table                                     -->
             <!-- ================================================== -->                    
-            <div class="col-md-6">
+            <div class="col-md-7">
 
                 <table class="table table-condensed table-striped table-hover">
 
                     <thead>
                         <tr>
-                            <th class="hidden-xs col-md-3">Reference</th>
-                            <th class="hidden-xs col-md-1 text-center">PRY</th>
-                            <th class="hidden-xs col-md-1 text-center">NBP</th>
-                            <th class="hidden-xs col-md-5">Designation</th>
+                            <th class="col-md-5">Reference</th>
+                            <th class="col-md-1 text-center">PRY</th>
+                            <th class="col-md-1 text-center">NBP</th>
+                            <th class="col-md-2 text-center">Start</th>
+                            <th class="col-md-2 text-center">End</th>
+                            <td>
                         </tr>
                     </thead>
 
@@ -188,15 +190,16 @@
 
                         <tr ng-repeat="project in projects"  >
 
-                            <td class="col-md-3"> <% project.reference %> </td>
+                            <td class="col-md-5"> <% project.reference %> </td>
                             <td class="col-md-1 text-center"> <% project.priority %> </td>
                             <td class="col-md-1 text-center"> <% project.nb_products %> </td>
-                            <td class="col-md-5"> <% project.designation %> </td>
+                            <td class="col-md-2 text-center"> <% project.start_date %> </td>
+                            <td class="col-md-2 text-center"> <% project.end_date %> </td>
 
                             <!-- ================================================== -->
                             <!-- - edit and remove icons                            -->
                             <!-- ================================================== -->  
-                            <td class="col-md-2">
+                            <td class="col-md-1">
                                 <div class="visible-md visible-lg hidden-sm hidden-xs">
 
                                     <a href="#"

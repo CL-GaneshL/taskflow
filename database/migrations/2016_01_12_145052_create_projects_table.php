@@ -17,7 +17,7 @@ class CreateProjectsTable extends Migration {
             $table->increments('id');
             // ------------------------------
 
-            $table->string('reference')->unique();
+            $table->string('reference');
             $table->integer('template_id')->unsigned();
             $table->integer('nb_products')->unsigned();
             $table->tinyInteger('priority')->unsigned();
