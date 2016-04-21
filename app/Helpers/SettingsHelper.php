@@ -133,6 +133,25 @@ class SettingsHelper {
         return $commandline;
     }
 
+    public function getLaravelLogFileContent() {
+
+        $log_path = storage_path('logs');
+        $today = "2016-04-21";
+        $filename = "laravel-" . $today . '.log';
+        $logpath = $log_path . DIRECTORY_SEPARATOR . $filename;
+
+        $contents = '<p>';
+        $contents .= 'Laravel log file :';
+        $contents .= '   - path    : [' . $logpath . ']';
+
+        $file_contents = file_get_contents($logpath);
+        $contents .= nl2br($file_contents);
+
+        $contents .= '</p>';
+
+        echo $contents;
+    }
+
     /**
      * 
      * @param type $str

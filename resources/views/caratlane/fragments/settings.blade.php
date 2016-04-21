@@ -45,6 +45,13 @@
                     <div ng-include="'taskflow/fragments/settings_php_info'"></div>
                 </uib-tab>
 
+                <!-- ================================================== -->
+                <!-- - laravel log file                                 -->
+                <!-- ================================================== --> 
+                <uib-tab heading="Laravel logs" >
+                    <div ng-include="'taskflow/fragments/settings_laravel_log'"></div>
+                </uib-tab>
+
             </uib-tabset>
 
         </div>
