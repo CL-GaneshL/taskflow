@@ -13,6 +13,7 @@ import com.caratlane.taskflow.taskgenerator.generator.dao.EmployeeSkill;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Holiday;
 import com.caratlane.taskflow.taskgenerator.generator.dao.NonWorkingDay;
 import com.caratlane.taskflow.taskgenerator.logging.LogManager;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -48,7 +49,13 @@ public class Employees {
      *
      * @throws TaskGeneratorException
      */
-    public static void initialize() throws TaskGeneratorException {
+    public static void initialize(final Date from) throws TaskGeneratorException {
+
+        // ---------------------------------------------------------------------
+        LogManager.getLogger().log(Level.FINE, "-+++++++++++++++++++++++++++++++++++++++++++++");
+        LogManager.getLogger().log(Level.FINE, "Initializing employees ...");
+        LogManager.getLogger().log(Level.FINE, "-+++++++++++++++++++++++++++++++++++++++++++++");
+        // ---------------------------------------------------------------------
 
         employeData = new LinkedList<>();
 
@@ -56,6 +63,12 @@ public class Employees {
 
             final List<Employee> empls = EmployeesDbExtractor.getAllEmployees();
             empls.stream().forEach((Employee employee) -> {
+
+                // ---------------------------------------------------------------------
+                LogManager.getLogger().log(Level.FINE, "-------------------------------------------");
+                LogManager.getLogger().log(Level.FINE, "Employee : {0}", employee);
+                LogManager.getLogger().log(Level.FINE, "-------------------------------------------");
+                // ---------------------------------------------------------------------
 
                 try {
                     // create an employee record
@@ -75,7 +88,7 @@ public class Employees {
 
                     // holidays for this employee
                     final LinkedList<Holiday> holidays
-                            = EmployeesDbExtractor.getEmployeeHolidays(employee_id);
+                            = EmployeesDbExtractor.getEmployeeHolidays(employee_id, from);
 
                     final LinkedList<NonWorkingDay> nwds = NonWorkingDays.getInstance().getNwds();
                     employeeData.setEmployeeNonWorkingDays(holidays, nwds);

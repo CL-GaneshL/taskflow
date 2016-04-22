@@ -11,13 +11,13 @@ import com.caratlane.taskflow.taskgenerator.db.DBManager;
 import com.caratlane.taskflow.taskgenerator.db.DBTransaction;
 import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorException;
 import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorRuntimeException;
+import com.caratlane.taskflow.taskgenerator.generator.TaskAllocations;
 import com.caratlane.taskflow.taskgenerator.generator.crud.ProjectsDbExtractor;
 import com.caratlane.taskflow.taskgenerator.generator.crud.TaskAllocationsDbExtractor;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Employee;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Project;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Skill;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Task;
-import com.caratlane.taskflow.taskgenerator.generator.dao.TaskAllocation;
 import com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbEmployee;
 import com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbEmployeeHaveSkills;
 import com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbProject;
@@ -106,7 +106,7 @@ public class TestDBCrud {
      * @return
      * @throws TaskGeneratorException
      */
-    public static List<TaskAllocation> getEmployeeTaskAllocations(
+    public static TaskAllocations getEmployeeTaskAllocations(
             final Integer task_id,
             final Integer employee_id
     ) throws TaskGeneratorException {
@@ -120,7 +120,7 @@ public class TestDBCrud {
      * @return
      * @throws TaskGeneratorException
      */
-    public static List<TaskAllocation> getEmployeeTaskAllocations(
+    public static TaskAllocations getEmployeeTaskAllocations(
             final Integer employee_id) throws TaskGeneratorException {
 
         return TaskAllocationsDbExtractor.getEmployeeTaskAllocations(employee_id);

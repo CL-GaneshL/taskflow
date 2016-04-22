@@ -19,7 +19,6 @@ import java.util.Objects;
 public class TaskAllocation {
 
     private final DbTaskAllocation dbTaskAllocation;
-    private boolean created = true;
 
     public TaskAllocation(
             final Integer employee_id,
@@ -50,8 +49,6 @@ public class TaskAllocation {
                 start_date,
                 duration
         );
-
-        taskAllocation.created = true;
 
         return taskAllocation;
     }

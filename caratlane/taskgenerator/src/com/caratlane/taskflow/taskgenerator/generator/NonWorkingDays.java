@@ -8,6 +8,7 @@ package com.caratlane.taskflow.taskgenerator.generator;
 import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorException;
 import com.caratlane.taskflow.taskgenerator.generator.dao.NonWorkingDay;
 import com.caratlane.taskflow.taskgenerator.generator.crud.NwdsDbExtractor;
+import java.util.Date;
 import java.util.LinkedList;
 
 /**
@@ -33,9 +34,9 @@ public class NonWorkingDays {
 //    public List<NonWorkingDays> getNonWokingDays() {
 //        return nwds;
 //    }
-    public static void initialize() throws TaskGeneratorException {
+    public static void initialize(final Date from) throws TaskGeneratorException {
 
-        nwds = NwdsDbExtractor.getNonWorkingDays();
+        nwds = NwdsDbExtractor.getNonWorkingDays(from);
     }
 
     /**
@@ -68,7 +69,12 @@ public class NonWorkingDays {
      * @para
      */
     public void addNwd(boolean test, final NonWorkingDay nwd) {
+
         nwds.add(nwd);
+
+        // ---------------------------------------------------------------------
+//        LogManager.getLogger().log(Level.FINE, "Added Non Working Day = {0}", nwd);
+        // ---------------------------------------------------------------------
     }
 
     /**

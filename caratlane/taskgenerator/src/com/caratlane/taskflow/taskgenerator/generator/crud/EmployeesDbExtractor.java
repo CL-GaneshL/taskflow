@@ -16,12 +16,12 @@ import com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbEmployee;
 import com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbEmployeeSkill;
 import com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbHoliday;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers._D_IN_THREE_MONTH;
-import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers._D_TODAY;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.getQueryName;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_ALL_EMPLOYEES_SUFFIX;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_EMPLOYEE_HOLIDAYS_SUFFIX;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_EMPLOYEE_SKILLS_SUFFIX;
 import com.caratlane.taskflow.taskgenerator.logging.LogManager;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -135,10 +135,15 @@ public class EmployeesDbExtractor {
     /**
      *
      * @param employee_id
+     * @param from
      * @return
      * @throws TaskGeneratorException
      */
-    public static LinkedList<Holiday> getEmployeeHolidays(Integer employee_id) throws TaskGeneratorException {
+    public static LinkedList<Holiday> getEmployeeHolidays(
+            final Integer employee_id,
+            final Date from
+    )
+            throws TaskGeneratorException {
 
         final LinkedList<Holiday> holidays = new LinkedList<>();
 
@@ -153,7 +158,7 @@ public class EmployeesDbExtractor {
             dbNwds = con.query(queryName,
                     DbHoliday.class,
                     "employee_id", employee_id,
-                    "now", _D_TODAY,
+                    "now", from,
                     "max_date", _D_IN_THREE_MONTH
             );
 

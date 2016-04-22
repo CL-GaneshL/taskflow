@@ -215,7 +215,8 @@ public class SerializeTasks3Test {
 //        assertEquals(expectedTotalDuration, totalDuration);
 
         // expect only one allocation of 240 mins ( 4 hours )
-        final LinkedList<TaskAllocation> allocations = employeeData.getTaskAllocations();
+        final LinkedList<TaskAllocation> allocations
+                = employeeData.getTaskAllocations().getAllocations();
         final int nbExpectedAllocations = 1;
         assertEquals(nbExpectedAllocations, allocations.size());
 
@@ -246,7 +247,7 @@ public class SerializeTasks3Test {
         final Integer employee_id = employeeData.getEmployee().getId();
         final Integer generatedTaskId = generatedTask.getId();
         final List<TaskAllocation> generatedTaskAllocations
-                = TestDBCrud.getEmployeeTaskAllocations(generatedTaskId, employee_id);
+                = TestDBCrud.getEmployeeTaskAllocations(generatedTaskId, employee_id).getAllocations();
 
         final int nbExpectedGeneratedTaskAllocations = 1;
         final int nbGenetatedTaskAllocations = generatedTaskAllocations.size();
@@ -264,7 +265,8 @@ public class SerializeTasks3Test {
         assertEquals(nbExpectedTasks, nbTasks);
 
         // expect only one allocation of 240 mins ( 4 hours )
-        final LinkedList<TaskAllocation> allocations = employeeData.getTaskAllocations();
+        final LinkedList<TaskAllocation> allocations
+                = employeeData.getTaskAllocations().getAllocations();
         final int nbExpectedAllocations = 1;
         assertEquals(nbExpectedAllocations, allocations.size());
 
@@ -295,7 +297,7 @@ public class SerializeTasks3Test {
         final Integer employee_id = employeeData.getEmployee().getId();
         final Integer generatedTaskId = generatedTask.getId();
         final List<TaskAllocation> generatedTaskAllocations
-                = TestDBCrud.getEmployeeTaskAllocations(generatedTaskId, employee_id);
+                = TestDBCrud.getEmployeeTaskAllocations(generatedTaskId, employee_id).getAllocations();
 
         final int nbExpectedGeneratedTaskAllocations = 1;
         final int nbGenetatedTaskAllocations = generatedTaskAllocations.size();

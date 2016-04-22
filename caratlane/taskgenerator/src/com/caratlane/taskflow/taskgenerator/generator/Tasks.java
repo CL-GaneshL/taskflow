@@ -9,7 +9,6 @@ import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorException;
 import com.caratlane.taskflow.taskgenerator.generator.crud.ProjectsDbExtractor;
 import com.caratlane.taskflow.taskgenerator.generator.crud.TaskAllocationsDbExtractor;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Task;
-import com.caratlane.taskflow.taskgenerator.generator.dao.TaskAllocation;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -74,10 +73,10 @@ public class Tasks {
 
             final Integer employee_id = employeeData.getEmployee().getId();
 
-            final List<TaskAllocation> taskAllocations
+            final TaskAllocations taskAllocations
                     = TaskAllocationsDbExtractor.getEmployeeTaskAllocations(employee_id);
 
-            taskAllocations.stream().forEach((allocation) -> {
+            taskAllocations.getAllocations().stream().forEach((allocation) -> {
 
                 // only interrested in completed or partially completed allocations. 
                 // The "un-touched" allocations will be re-allocated.

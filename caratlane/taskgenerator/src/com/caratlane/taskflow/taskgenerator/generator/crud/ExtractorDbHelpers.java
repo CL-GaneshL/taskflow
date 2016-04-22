@@ -24,6 +24,7 @@ public class ExtractorDbHelpers {
     public final static Date _D_IN_TWO_DAYS;
     public final static Date _D_IN_THREE_DAYS;
     public final static Date _D_IN_FOUR_DAYS;
+    public final static Date _D_IN_FIVE_DAYS;
     public final static Date _D_IN_THREE_MONTH;
 
     public final static LocalDateTime TODAY;
@@ -31,10 +32,11 @@ public class ExtractorDbHelpers {
     public final static LocalDateTime IN_TWO_DAYS;
     public final static LocalDateTime IN_THREE_DAYS;
     public final static LocalDateTime IN_FOUR_DAYS;
+    public final static LocalDateTime IN_FIVE_DAYS;
 
     public static enum NWDType {
 
-        WEEKEND, NON_WORKING
+        WEEKEND, NON_WORKING, HOLIDAYS,
     }
 
     public static enum EmployementType {
@@ -54,6 +56,7 @@ public class ExtractorDbHelpers {
         final LocalDateTime in2daysMidnight = todayMidnight.plusDays(2);
         final LocalDateTime in3daysMidnight = todayMidnight.plusDays(3);
         final LocalDateTime in4daysMidnight = todayMidnight.plusDays(4);
+        final LocalDateTime in5daysMidnight = todayMidnight.plusDays(5);
         final LocalDateTime in3months = todayMidnight.plusMonths(3);
 
         _D_TODAY = Date.from(todayMidnight.atZone(ZoneId.systemDefault()).toInstant());
@@ -61,6 +64,7 @@ public class ExtractorDbHelpers {
         _D_IN_TWO_DAYS = Date.from(in2daysMidnight.atZone(ZoneId.systemDefault()).toInstant());
         _D_IN_THREE_DAYS = Date.from(in3daysMidnight.atZone(ZoneId.systemDefault()).toInstant());
         _D_IN_FOUR_DAYS = Date.from(in4daysMidnight.atZone(ZoneId.systemDefault()).toInstant());
+        _D_IN_FIVE_DAYS = Date.from(in5daysMidnight.atZone(ZoneId.systemDefault()).toInstant());
         _D_IN_THREE_MONTH = Date.from(in3months.atZone(ZoneId.systemDefault()).toInstant());
 
         TODAY = todayMidnight;
@@ -68,6 +72,7 @@ public class ExtractorDbHelpers {
         IN_TWO_DAYS = todayMidnight.plusDays(2);
         IN_THREE_DAYS = todayMidnight.plusDays(3);
         IN_FOUR_DAYS = todayMidnight.plusDays(4);
+        IN_FIVE_DAYS = todayMidnight.plusDays(5);
 
     }
 

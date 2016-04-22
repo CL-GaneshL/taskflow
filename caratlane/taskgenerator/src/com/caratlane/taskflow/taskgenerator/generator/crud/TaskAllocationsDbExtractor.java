@@ -9,13 +9,13 @@ import com.caratlane.taskflow.taskgenerator.db.DBConnection;
 import com.caratlane.taskflow.taskgenerator.db.DBException;
 import com.caratlane.taskflow.taskgenerator.db.DBManager;
 import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorException;
+import com.caratlane.taskflow.taskgenerator.generator.TaskAllocations;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.getQueryName;
 import com.caratlane.taskflow.taskgenerator.generator.dao.TaskAllocation;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_EMPLOYEE_TASK_ALLOCATIONS_SUFFIX;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_TASK_EMPLOYEE_TASK_ALLOCATIONS_SUFFIX;
 import com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbTaskAllocation;
 import com.caratlane.taskflow.taskgenerator.logging.LogManager;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -34,12 +34,12 @@ public class TaskAllocationsDbExtractor {
      * @return
      * @throws TaskGeneratorException
      */
-    public static List<TaskAllocation> getEmployeeTaskAllocations(
+    public static TaskAllocations getEmployeeTaskAllocations(
             final Integer task_id,
             final Integer employee_id
     ) throws TaskGeneratorException {
 
-        final List<TaskAllocation> taskAllocations = new LinkedList<>();
+        final TaskAllocations taskAllocations = new TaskAllocations();
 
         final String queryName
                 = getQueryName(DbTaskAllocation.class, FIND_TASK_EMPLOYEE_TASK_ALLOCATIONS_SUFFIX);
@@ -64,7 +64,7 @@ public class TaskAllocationsDbExtractor {
 
             // build the list of Tasks to be returned
             final Consumer<TaskAllocation> action = (TaskAllocation t) -> {
-                taskAllocations.add(t);
+                taskAllocations.addAllocation(t);
             };
 
             dbTasks.stream().map(mapper).forEach(action);
@@ -94,10 +94,10 @@ public class TaskAllocationsDbExtractor {
      * @return
      * @throws TaskGeneratorException
      */
-    public static List<TaskAllocation> getEmployeeTaskAllocations(final Integer employee_id)
+    public static TaskAllocations getEmployeeTaskAllocations(final Integer employee_id)
             throws TaskGeneratorException {
 
-        final List<TaskAllocation> taskAllocations = new LinkedList<>();
+        final TaskAllocations taskAllocations = new TaskAllocations();
 
         final String queryName
                 = getQueryName(DbTaskAllocation.class, FIND_EMPLOYEE_TASK_ALLOCATIONS_SUFFIX);
@@ -121,7 +121,7 @@ public class TaskAllocationsDbExtractor {
 
             // build the list of Tasks to be returned
             final Consumer<TaskAllocation> action = (TaskAllocation t) -> {
-                taskAllocations.add(t);
+                taskAllocations.addAllocation(t);
             };
 
             dbTasks.stream().map(mapper).forEach(action);

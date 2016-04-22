@@ -5,6 +5,7 @@
  */
 package com.caratlane.taskflow.taskgenerator.generator.dao;
 
+import com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers;
 import java.time.LocalDateTime;
 
 /**
@@ -12,6 +13,12 @@ import java.time.LocalDateTime;
  * @author wdmtraining
  */
 public interface EmployeeNonWorkingDay {
+
+    public Integer getId();
+
+    public String getTitle();
+
+    public ExtractorDbHelpers.NWDType getType();
 
     public LocalDateTime getDate();
 

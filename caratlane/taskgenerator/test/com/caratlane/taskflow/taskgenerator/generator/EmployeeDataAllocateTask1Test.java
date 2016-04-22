@@ -21,7 +21,6 @@ import static helpers.TestDBConstants.NB_PRODUCTS_PROJECT_JADAU_2;
 import static helpers.TestDBConstants.NB_PRODUCTS_PROJECT_JADAU_3;
 import static helpers.TestDBConstants.NB_PRODUCTS_PROJECT_JADAU_4;
 import static helpers.TestDBConstants.NB_PRODUCTS_PROJECT_JADAU_5;
-import static helpers.TestDBConstants.NWD_1;
 import static helpers.TestDBConstants.PROJECT_JADAU_1;
 import static helpers.TestDBConstants.PROJECT_JADAU_2;
 import static helpers.TestDBConstants.PROJECT_JADAU_3;
@@ -56,8 +55,8 @@ public class EmployeeDataAllocateTask1Test {
     public static void setUpClass() {
 
         // company's non working days
-        final NonWorkingDays nwdsInstance = NonWorkingDays.getInstance();
-        nwdsInstance.addNwd(test, NWD_1);       // tomorrow
+//        final NonWorkingDays nwdsInstance = NonWorkingDays.getInstance();
+//        nwdsInstance.addNwd(test, NWD_1);       // tomorrow
 
         final Skills skills = Skills.getInstance();
         skills.addSkill(SKILL_3_3DMS);      // id = 3
@@ -138,7 +137,8 @@ public class EmployeeDataAllocateTask1Test {
         assertEquals(nbExpectedTasks, nbTasks);
 
         // expect only one allocation of 240 mins ( 4 hours )
-        final LinkedList<TaskAllocation> allocations = employeeData.getTaskAllocations();
+        final LinkedList<TaskAllocation> allocations
+                = employeeData.getTaskAllocations().getAllocations();
         final int nbExpectedAllocations = 1;
         assertEquals(nbExpectedAllocations, allocations.size());
 
@@ -178,7 +178,8 @@ public class EmployeeDataAllocateTask1Test {
         assertEquals(nbExpectedTasks, nbTasks);
 
         // expect only one allocation of 480 mins ( 8 hours )
-        final LinkedList<TaskAllocation> allocations = employeeData.getTaskAllocations();
+        final LinkedList<TaskAllocation> allocations
+                = employeeData.getTaskAllocations().getAllocations();
         final int nbExpectedAllocations = 1;
         assertEquals(nbExpectedAllocations, allocations.size());
 
@@ -218,7 +219,8 @@ public class EmployeeDataAllocateTask1Test {
         assertEquals(nbExpectedTasks, nbTasks);
 
         // expect 2 allocations
-        final LinkedList<TaskAllocation> allocations = employeeData.getTaskAllocations();
+        final LinkedList<TaskAllocation> allocations
+                = employeeData.getTaskAllocations().getAllocations();
         final int nbExpectedAllocations = 2;
         assertEquals(nbExpectedAllocations, allocations.size());
 
@@ -272,7 +274,8 @@ public class EmployeeDataAllocateTask1Test {
         final Task task = tasks.get(0);
 
         // expect 2 allocations
-        final LinkedList<TaskAllocation> allocations = employeeData.getTaskAllocations();
+        final LinkedList<TaskAllocation> allocations
+                = employeeData.getTaskAllocations().getAllocations();
         final int nbExpectedAllocations = 2;
         assertEquals(nbExpectedAllocations, allocations.size());
 
@@ -324,7 +327,8 @@ public class EmployeeDataAllocateTask1Test {
         assertEquals(nbExpectedTasks, nbTasks);
 
         // expect 3 allocations
-        final LinkedList<TaskAllocation> allocations = employeeData.getTaskAllocations();
+        final LinkedList<TaskAllocation> allocations
+                = employeeData.getTaskAllocations().getAllocations();
         final int nbExpectedAllocations = 3;
         assertEquals(nbExpectedAllocations, allocations.size());
 

@@ -277,8 +277,16 @@ public interface TestDBConstants {
     // ------------------------------------------------------------
     // holidays
     // ------------------------------------------------------------
-    // employee 1, one day holidays in 2 days
+    // one day holidays tomorrow
     public static final Holiday HOLIDAY_1
+            = new Holiday(
+                    1, // employee_id ,
+                    _D_TOMORROW, // start_date ,
+                    _D_TOMORROW // end_date ,
+            );
+
+    // one day holidays in two days
+    public static final Holiday HOLIDAY_2
             = new Holiday(
                     1, // employee_id ,
                     _D_IN_TWO_DAYS, // start_date ,

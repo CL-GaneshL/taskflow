@@ -27,6 +27,8 @@ import org.junit.runners.Suite;
             EmployeeDataAllocateTask4Test.class,
             EmployeeDataAllocateTask5Test.class,
             EmployeeDataAllocateTask6Test.class,
+            EmployeeDataAllocateTask7Test.class,
+            EmployeeDataAllocateTask8Test.class,
             SerializeTasks1Test.class,
             SerializeTasks2Test.class,
             SerializeTasks3Test.class,

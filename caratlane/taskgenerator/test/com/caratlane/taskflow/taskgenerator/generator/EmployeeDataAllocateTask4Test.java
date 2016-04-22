@@ -114,7 +114,7 @@ public class EmployeeDataAllocateTask4Test {
     // - Using the same data as EmployeeDataAllocateTask1Test,
     // - however introducting a non working days.
     // - IN_TWO_DAYS is a non working day, tasks are expected to be allocated
-    // - from IN_THREE_DAYS.
+    // - TOMORROW and in IN_THREE_DAYS onwards.
     // ==================================================================
     /**
      * Test of allocateTask method, of class EmployeeData.
@@ -139,7 +139,8 @@ public class EmployeeDataAllocateTask4Test {
         assertEquals(nbExpectedTasks, nbTasks);
 
         // expect only one allocation of 240 mins ( 4 hours )
-        final LinkedList<TaskAllocation> allocations = employeeData.getTaskAllocations();
+        final LinkedList<TaskAllocation> allocations
+                = employeeData.getTaskAllocations().getAllocations();
         final int nbExpectedAllocations = 1;
         assertEquals(nbExpectedAllocations, allocations.size());
 
@@ -180,7 +181,8 @@ public class EmployeeDataAllocateTask4Test {
         assertEquals(nbExpectedTasks, nbTasks);
 
         // expect only one allocation of 480 mins ( 8 hours )
-        final LinkedList<TaskAllocation> allocations = employeeData.getTaskAllocations();
+        final LinkedList<TaskAllocation> allocations
+                = employeeData.getTaskAllocations().getAllocations();
         final int nbExpectedAllocations = 1;
         assertEquals(nbExpectedAllocations, allocations.size());
 
@@ -220,7 +222,8 @@ public class EmployeeDataAllocateTask4Test {
         assertEquals(nbExpectedTasks, nbTasks);
 
         // expect 2 allocations
-        final LinkedList<TaskAllocation> allocations = employeeData.getTaskAllocations();
+        final LinkedList<TaskAllocation> allocations
+                = employeeData.getTaskAllocations().getAllocations();
         final int nbExpectedAllocations = 2;
         assertEquals(nbExpectedAllocations, allocations.size());
 
@@ -272,7 +275,8 @@ public class EmployeeDataAllocateTask4Test {
         assertEquals(nbExpectedTasks, nbTasks);
 
         // expect 2 allocations
-        final LinkedList<TaskAllocation> allocations = employeeData.getTaskAllocations();
+        final LinkedList<TaskAllocation> allocations
+                = employeeData.getTaskAllocations().getAllocations();
         final int nbExpectedAllocations = 2;
         assertEquals(nbExpectedAllocations, allocations.size());
 
@@ -324,7 +328,8 @@ public class EmployeeDataAllocateTask4Test {
         assertEquals(nbExpectedTasks, nbTasks);
 
         // expect 3 allocations
-        final LinkedList<TaskAllocation> allocations = employeeData.getTaskAllocations();
+        final LinkedList<TaskAllocation> allocations
+                = employeeData.getTaskAllocations().getAllocations();
         final int nbExpectedAllocations = 3;
         assertEquals(nbExpectedAllocations, allocations.size());
 

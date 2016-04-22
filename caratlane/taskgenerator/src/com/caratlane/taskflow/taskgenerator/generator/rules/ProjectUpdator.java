@@ -11,7 +11,6 @@ import com.caratlane.taskflow.taskgenerator.generator.dao.Task;
 import com.caratlane.taskflow.taskgenerator.generator.dao.TaskAllocation;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  *

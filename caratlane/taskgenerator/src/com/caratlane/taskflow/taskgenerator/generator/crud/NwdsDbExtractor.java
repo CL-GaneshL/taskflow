@@ -12,10 +12,10 @@ import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorException;
 import com.caratlane.taskflow.taskgenerator.generator.dao.NonWorkingDay;
 import com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbNonWorkingDays;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers._D_IN_THREE_MONTH;
-import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers._D_TODAY;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.getQueryName;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbQueries.FIND_NWD_SUFFIX;
 import com.caratlane.taskflow.taskgenerator.logging.LogManager;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -28,7 +28,8 @@ import java.util.logging.Level;
  */
 public class NwdsDbExtractor {
 
-    public static LinkedList<NonWorkingDay> getNonWorkingDays() throws TaskGeneratorException {
+    public static LinkedList<NonWorkingDay> getNonWorkingDays(final Date from)
+            throws TaskGeneratorException {
 
         final LinkedList<NonWorkingDay> nwds = new LinkedList<>();
 
@@ -43,7 +44,7 @@ public class NwdsDbExtractor {
             dbNwds = con.query(
                     queryName,
                     DbNonWorkingDays.class,
-                    "now", _D_TODAY,
+                    "now", from,
                     "max_date", _D_IN_THREE_MONTH
             );
 

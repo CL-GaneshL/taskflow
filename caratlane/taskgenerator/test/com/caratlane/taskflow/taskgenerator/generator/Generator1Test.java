@@ -160,7 +160,7 @@ public class Generator1Test {
         assertEquals(nbExpectedTasks, nbTasks);
 
         final List<TaskAllocation> allocations
-                = TestDBCrud.getEmployeeTaskAllocations(ID_EMPLOYEE);
+                = TestDBCrud.getEmployeeTaskAllocations(ID_EMPLOYEE).getAllocations();
 
         final int nbExpectedAllocations = 1;
         assertEquals(nbExpectedAllocations, allocations.size());
@@ -199,7 +199,7 @@ public class Generator1Test {
         assertEquals(nbExpectedTasks, nbTasks);
 
         List<TaskAllocation> allocations
-                = TestDBCrud.getEmployeeTaskAllocations(ID_EMPLOYEE);
+                = TestDBCrud.getEmployeeTaskAllocations(ID_EMPLOYEE).getAllocations();
 
         int nbExpectedAllocations = 1;
         assertEquals(nbExpectedAllocations, allocations.size());
@@ -229,7 +229,7 @@ public class Generator1Test {
         nbTasks = tasks.size();
         assertEquals(nbExpectedTasks, nbTasks);
 
-        allocations = TestDBCrud.getEmployeeTaskAllocations(ID_EMPLOYEE);
+        allocations = TestDBCrud.getEmployeeTaskAllocations(ID_EMPLOYEE).getAllocations();
 
         nbExpectedAllocations = 1;
         assertEquals(nbExpectedAllocations, allocations.size());

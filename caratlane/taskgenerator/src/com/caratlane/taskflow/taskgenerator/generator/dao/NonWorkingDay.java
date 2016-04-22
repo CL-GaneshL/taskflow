@@ -53,14 +53,17 @@ public class NonWorkingDay implements EmployeeNonWorkingDay {
         );
     }
 
+    @Override
     public Integer getId() {
         return dbNonWorkingDays.getId();
     }
 
+    @Override
     public String getTitle() {
         return dbNonWorkingDays.getTitle();
     }
 
+    @Override
     public NWDType getType() {
 
         NWDType ret = null;
@@ -110,7 +113,11 @@ public class NonWorkingDay implements EmployeeNonWorkingDay {
 
     @Override
     public String toString() {
-        return "NonWorkingDays{" + "dbNonWorkingDays=" + dbNonWorkingDays + '}';
+        return "NonWorkingDays{" + "id=" + this.getId()
+                + ", title=" + this.getTitle()
+                + ", type=" + this.getType()
+                + ", date=" + this.getDate()
+                + '}';
     }
 
 }

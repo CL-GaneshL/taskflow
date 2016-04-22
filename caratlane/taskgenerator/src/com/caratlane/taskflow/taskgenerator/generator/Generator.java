@@ -11,6 +11,7 @@ import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorRuntimeExcep
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.TOMORROW;
 import com.caratlane.taskflow.taskgenerator.generator.crud.TaskDbReseter;
 import com.caratlane.taskflow.taskgenerator.generator.crud.DataDbSerializer;
+import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers._D_TOMORROW;
 import com.caratlane.taskflow.taskgenerator.generator.rules.ProjectUpdator;
 import com.caratlane.taskflow.taskgenerator.generator.rules.TaskAllocator;
 import com.caratlane.taskflow.taskgenerator.logging.LogManager;
@@ -106,7 +107,7 @@ public class Generator {
         // ---------------------------------------------
         // non working days to come 
         // ---------------------------------------------
-        NonWorkingDays.initialize();
+        NonWorkingDays.initialize(_D_TOMORROW);
 
         // ---------------------------------------------
         // skills
@@ -121,7 +122,7 @@ public class Generator {
         // ---------------------------------------------
         // all employees
         // ---------------------------------------------
-        Employees.initialize();
+        Employees.initialize(_D_TOMORROW);
 
         // ---------------------------------------------
         // All tasks from all open projects

@@ -6,11 +6,11 @@
 package com.caratlane.taskflow.taskgenerator.generator;
 
 import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorException;
+import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.IN_FIVE_DAYS;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Task;
 import com.caratlane.taskflow.taskgenerator.generator.dao.TaskAllocation;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.IN_FOUR_DAYS;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.IN_THREE_DAYS;
-import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.IN_TWO_DAYS;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.TOMORROW;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Holiday;
 import com.caratlane.taskflow.taskgenerator.generator.dao.NonWorkingDay;
@@ -18,6 +18,7 @@ import com.caratlane.taskflow.taskgenerator.generator.rules.TaskAllocator;
 import helpers.TestTaskGeneratorException;
 import static helpers.TestDBConstants.DURATION_SKILL_3_3DMS;
 import static helpers.TestDBConstants.EMPLOYEE_CL0004;
+import static helpers.TestDBConstants.HOLIDAY_2;
 import static helpers.TestDBConstants.ID_SKILL_3_3DMS;
 import static helpers.TestDBConstants.NB_PRODUCTS_PROJECT_JADAU_1;
 import static helpers.TestDBConstants.NB_PRODUCTS_PROJECT_JADAU_2;
@@ -45,14 +46,14 @@ import org.junit.Test;
  *
  * @author wdmtraining
  */
-public class EmployeeDataAllocateTask3Test {
+public class EmployeeDataAllocateTask8Test {
 
     final static boolean test = true;
 
     private static EmployeeData employeeData = null;
     private static ProjectData projectData = null;
 
-    public EmployeeDataAllocateTask3Test() {
+    public EmployeeDataAllocateTask8Test() {
     }
 
     @BeforeClass
@@ -60,7 +61,7 @@ public class EmployeeDataAllocateTask3Test {
 
         // company's non working days
         final NonWorkingDays nwdsInstance = NonWorkingDays.getInstance();
-        nwdsInstance.addNwd(test, NWD_1);       // tomorrow
+            nwdsInstance.addNwd(test, NWD_1);       // tomorrow
 
         final Skills skills = Skills.getInstance();
         skills.addSkill(SKILL_3_3DMS);      // id = 3
@@ -76,6 +77,7 @@ public class EmployeeDataAllocateTask3Test {
         // set up non working days for that employee
         final LinkedList<NonWorkingDay> nwds = NonWorkingDays.getInstance().getNwds();
         final LinkedList<Holiday> holidays = new LinkedList<>();
+        holidays.add(HOLIDAY_2);    // holidays in two days
         employeeData.setEmployeeNonWorkingDays(holidays, nwds);
 
     }
@@ -113,9 +115,11 @@ public class EmployeeDataAllocateTask3Test {
     // ==================================================================
     // - Test series of the allocateTask() method.
     // - Using the same data as EmployeeDataAllocateTask1Test,
-    // - however introducting a non working days.
-    // - TOMORROW is a non working day, tasks are expected to be allocated
-    // - from IN_TWO_DAYS.
+    // - however introducting an holiday day.
+    // - IN_TWO_DAYS is an holiday day, tasks are expected to be allocated
+    // - in IN_THREE_DAYS onwards.
+    // - we expecte the exact same results as EmployeeDataAllocateTask4Test,
+    // - as the non working day is replaced by an holiday day.
     // ==================================================================
     /**
      * Test of allocateTask method, of class EmployeeData.
@@ -150,7 +154,7 @@ public class EmployeeDataAllocateTask3Test {
         // no previous allocation, so expected to be the first 
         // allocation in 2 days ( tomorrow is Non Working Day)
         final LocalDateTime startDate = allocation.getStartDate();
-        final LocalDateTime expectedstartDate = IN_TWO_DAYS;
+        final LocalDateTime expectedstartDate = IN_THREE_DAYS;
         assertEquals(expectedstartDate, startDate);
 
         // allocation expected of 4 hours ( which is also the total duration )
@@ -189,10 +193,9 @@ public class EmployeeDataAllocateTask3Test {
 
         final TaskAllocation allocation = allocations.getLast();
 
-        // no previous allocation, so expected to be the first 
-        // allocation in 2 days ( tomorrow is Non Working Day)
+        // no previous allocation, so expected to be the first allocation tomorrow
         final LocalDateTime startDate = allocation.getStartDate();
-        final LocalDateTime expectedstartDate = IN_TWO_DAYS;
+        final LocalDateTime expectedstartDate = IN_THREE_DAYS;
         assertEquals(expectedstartDate, startDate);
 
         // allocation expected of 8 hours ( which is also the total duration )
@@ -231,10 +234,9 @@ public class EmployeeDataAllocateTask3Test {
 
         final TaskAllocation allocation0 = allocations.get(0);
 
-        // no previous allocation, so expected to be the first 
-        // allocation in 2 days ( tomorrow is Non Working Day)
+        // no previous allocation, so expected to be the first allocation tomorrow
         final LocalDateTime startDate0 = allocation0.getStartDate();
-        final LocalDateTime expectedstartDate0 = IN_TWO_DAYS;
+        final LocalDateTime expectedstartDate0 = IN_THREE_DAYS;
         assertEquals(expectedstartDate0, startDate0);
 
         // allocation expected of 8 hours ( full shift allocation )
@@ -244,9 +246,9 @@ public class EmployeeDataAllocateTask3Test {
 
         final TaskAllocation allocation1 = allocations.get(1);
 
-        // the 2nd allocation should start the day after tomorrow
+        // the 2nd allocation should start in 3 days ( tomorrow + 1 non working day )
         final LocalDateTime startDate1 = allocation1.getStartDate();
-        final LocalDateTime expectedstartDate1 = IN_THREE_DAYS;
+        final LocalDateTime expectedstartDate1 = IN_FOUR_DAYS;
         assertEquals(expectedstartDate1, startDate1);
 
         // allocation expected of 4 hours ( the remaining )
@@ -285,10 +287,9 @@ public class EmployeeDataAllocateTask3Test {
 
         final TaskAllocation allocation0 = allocations.get(0);
 
-        // no previous allocation, so expected to be the first 
-        // allocation in 2 days ( tomorrow is Non Working Day)
+        // no previous allocation, so expected to be the first allocation tomorrow
         final LocalDateTime startDate0 = allocation0.getStartDate();
-        final LocalDateTime expectedstartDate0 = IN_TWO_DAYS;
+        final LocalDateTime expectedstartDate0 = IN_THREE_DAYS;
         assertEquals(expectedstartDate0, startDate0);
 
         // allocation expected of 8 hours ( full shift allocation )
@@ -298,9 +299,9 @@ public class EmployeeDataAllocateTask3Test {
 
         final TaskAllocation allocation1 = allocations.get(1);
 
-        // the 2nd allocation should start in 3 days
+        // the 2nd allocation should start in 3 days ( tomorrow + 1 non working day )
         final LocalDateTime startDate1 = allocation1.getStartDate();
-        final LocalDateTime expectedstartDate1 = IN_THREE_DAYS;
+        final LocalDateTime expectedstartDate1 = IN_FOUR_DAYS;
         assertEquals(expectedstartDate1, startDate1);
 
         // allocation expected of 8 hours ( the remaining )
@@ -339,10 +340,9 @@ public class EmployeeDataAllocateTask3Test {
 
         final TaskAllocation allocation0 = allocations.get(0);
 
-        // no previous allocation, so expected to be the first 
-        // allocation in 2 days ( tomorrow is Non Working Day)
+        // no previous allocation, so expected to be the first allocation tomorrow
         final LocalDateTime startDate0 = allocation0.getStartDate();
-        final LocalDateTime expectedstartDate0 = IN_TWO_DAYS;
+        final LocalDateTime expectedstartDate0 = IN_THREE_DAYS;
         assertEquals(expectedstartDate0, startDate0);
 
         // allocation expected of 8 hours ( full shift allocation )
@@ -352,9 +352,9 @@ public class EmployeeDataAllocateTask3Test {
 
         final TaskAllocation allocation1 = allocations.get(1);
 
-        // the 2nd allocation should start in 3 days
+        // the 2nd allocation should start in 3 days ( tomorrow + 1 non working day )
         final LocalDateTime startDate1 = allocation1.getStartDate();
-        final LocalDateTime expectedstartDate1 = IN_THREE_DAYS;
+        final LocalDateTime expectedstartDate1 = IN_FOUR_DAYS;
         assertEquals(expectedstartDate1, startDate1);
 
         // allocation expected of 8 hours
@@ -366,7 +366,7 @@ public class EmployeeDataAllocateTask3Test {
 
         // the 3nd allocation
         final LocalDateTime startDate2 = allocation2.getStartDate();
-        final LocalDateTime expectedstartDate2 = IN_FOUR_DAYS;
+        final LocalDateTime expectedstartDate2 = IN_FIVE_DAYS;
         assertEquals(expectedstartDate2, startDate2);
 
         // allocation expected of 4 hours ( the remaining )

@@ -79,13 +79,6 @@ public class EmployeeAvailability {
             final EmployeeData employeeData,
             final LocalDateTime from
     ) {
-        // the allocation can be done any time during the day
-        // the employee may already have started their shift
-        // and therefore the allocation would be dated in the past.
-        // e.g. intern employee start at 6am, current time is 3pm
-        // the employee first allocation is at 0am, 1st hour of 
-        // the shift, so 6am for that employee. At 3pm this
-        // employee is already finished !!
         return getNextWorkingShift(employeeData, from); // TOMORROW
     }
 
@@ -97,7 +90,7 @@ public class EmployeeAvailability {
      */
     private static LocalDateTime getNextWorkingShift(
             final EmployeeData employeeData,
-            final LocalDateTime fromDateAtMidnight
+            final LocalDateTime from
     ) {
 
         LocalDateTime nextWorkingShift;
@@ -106,7 +99,7 @@ public class EmployeeAvailability {
                 = employeeData.getEmployeeNonWorkingDays();
 
         // start iterating working days
-        nextWorkingShift = fromDateAtMidnight;
+        nextWorkingShift = from;
 
         final Iterator<EmployeeNonWorkingDay> it = nonWorkingDays.iterator();
         while (it.hasNext()) {
@@ -115,12 +108,7 @@ public class EmployeeAvailability {
             final LocalDateTime nwd = it.next().getDate();
 
             if (nextWorkingShift.isBefore(nwd)) {
-                continue;
-            }
-
-            if (nextWorkingShift.isAfter(nwd)) {
-                // the proposed nextWorkingShift day is not a non 
-                // working day, so we have it !
+                // nextWorkingShift is a working day
                 break;
             }
 

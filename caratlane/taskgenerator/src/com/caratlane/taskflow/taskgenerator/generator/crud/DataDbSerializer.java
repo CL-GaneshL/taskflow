@@ -98,12 +98,26 @@ public class DataDbSerializer {
                     // the task does not exist in the database 
                     // we create the task and its allocations
                     final Integer task_id = persistTask(task);
-                    persistTaskAllocations(task, task_id);
+
+                    // ---------------------------------------------------------------------
+                    LogManager.getLogger().log(Level.FINE, "============================================");
+                    LogManager.getLogger().log(Level.FINE, "New Task = {0}", task);
+                    LogManager.getLogger().log(Level.FINE, "============================================");
+                    // ---------------------------------------------------------------------
+
+                    persistAllocations(task, task_id);
                 } else if (isModified) {
+
+                    // ---------------------------------------------------------------------
+                    LogManager.getLogger().log(Level.FINE, "============================================");
+                    LogManager.getLogger().log(Level.FINE, "Modified Task = {0}", task);
+                    LogManager.getLogger().log(Level.FINE, "============================================");
+                    // ---------------------------------------------------------------------
+
                     // the task does already exist in the database.
                     // we only create the allocations. We also have to 
                     // delete previously existing allocations.                     
-                    persistTaskAllocations(task);
+                    persistAllocations(task);
                 }
 
             } catch (DBException ex) {
@@ -147,10 +161,6 @@ public class DataDbSerializer {
         long task_id = transaction.persistGetId(dbTask);
         final Integer int_task_id = toIntExact(task_id);
 
-        // -------------------------------------------------
-        LogManager.getLogger().log(Level.FINE, "===> {0}", dbTask);
-        // -------------------------------------------------
-
         return int_task_id;
     }
 
@@ -160,7 +170,7 @@ public class DataDbSerializer {
      * @param transaction
      * @throws TaskGeneratorException
      */
-    private static void persistTaskAllocations(
+    private static void persistAllocations(
             final Task task,
             final Integer task_id
     ) throws DBException {
@@ -176,7 +186,7 @@ public class DataDbSerializer {
             transaction.persist(dbTaskAllocation);
 
             // -------------------------------------------------
-            LogManager.getLogger().log(Level.FINE, "===> {0}", dbTaskAllocation);
+            LogManager.getLogger().log(Level.FINE, "Allocation ===> {0}", dbTaskAllocation);
             // -------------------------------------------------
 
         }
@@ -188,7 +198,7 @@ public class DataDbSerializer {
      * @param task
      * @throws DBException
      */
-    private static void persistTaskAllocations(final Task task) throws DBException {
+    private static void persistAllocations(final Task task) throws DBException {
 
         final Integer task_id = task.getId();
         final String queryName = getQueryName(DbTaskAllocation.class, DELETE_TASK_ALLOCATIONS_SUFFIX);
@@ -204,7 +214,7 @@ public class DataDbSerializer {
             dbTaskAllocation.setTask_id(task_id);
 
             // -------------------------------------------------
-            LogManager.getLogger().log(Level.FINE, "===> {0}", dbTaskAllocation);
+            LogManager.getLogger().log(Level.FINE, "Allocation ===> {0}", dbTaskAllocation);
             // -------------------------------------------------
 
             transaction.persist(dbTaskAllocation);
