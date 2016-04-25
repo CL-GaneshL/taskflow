@@ -177,7 +177,7 @@
 
                     <thead>
                         <tr>
-                            <th class="col-md-5">Reference</th>
+                            <th class="col-md-4">Reference</th>
                             <th class="col-md-1 text-center">PRY</th>
                             <th class="col-md-1 text-center">NBP</th>
                             <th class="col-md-2 text-center">Start</th>
@@ -190,7 +190,7 @@
 
                         <tr ng-repeat="project in projects"  >
 
-                            <td class="col-md-5"> <% project.reference %> </td>
+                            <td class="col-md-4"> <% project.reference %> </td>
                             <td class="col-md-1 text-center"> <% project.priority %> </td>
                             <td class="col-md-1 text-center"> <% project.nb_products %> </td>
                             <td class="col-md-2 text-center"> <% project.start_date %> </td>
@@ -199,9 +199,17 @@
                             <!-- ================================================== -->
                             <!-- - edit and remove icons                            -->
                             <!-- ================================================== -->  
-                            <td class="col-md-1">
+                            <td class="col-md-2">
                                 <div class="visible-md visible-lg hidden-sm hidden-xs">
 
+                                    <a href="#"
+                                       class="btn btn-transparent btn-xs" 
+                                       tooltip-placement="top" 
+                                       uib-tooltip="Edit Project"
+                                       ng-click="updateProject( <% project.id %> )" >
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                    
                                     <a href="#"
                                        class="btn btn-transparent btn-xs tooltips" 
                                        tooltip-placement="top"
@@ -209,6 +217,7 @@
                                        ng-click="closeProject( <% project.id %> )" >
                                         <i class="fa fa-times fa fa-white"></i>
                                     </a>
+                                                                                                            
                                 </div>
 
                                 <div class="visible-xs visible-sm hidden-md hidden-lg">
@@ -221,6 +230,12 @@
                                         </a>
 
                                         <ul class="dropdown-menu pull-right dropdown-light" role="menu">
+                                            <li>
+                                                <a href="#"  
+                                                   ng-click="updateProject( <% project . id %> )" >
+                                                    Edit
+                                                </a>
+                                            </li>
                                             <li>
                                                 <a href="#" 
                                                    ng-click="closeProject( <% project.id %> )" >

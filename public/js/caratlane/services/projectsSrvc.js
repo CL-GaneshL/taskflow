@@ -38,7 +38,7 @@ app.factory("projectsSrvc", function ($log, $http) {
     };
 
     // --------------------------------------------------------
-    // - createa new Project in the db.
+    // - create a new Project in the db.
     // --------------------------------------------------------
     var createProject = function (newProject) {
 
@@ -61,6 +61,38 @@ app.factory("projectsSrvc", function ($log, $http) {
 
             // --------------------------------------------------------
             // $log.debug(FACTORY_NAME + " : createProject response = " + JSON.stringify(response));
+            // --------------------------------------------------------
+
+            return {
+                project: project
+            };
+        });
+    };
+
+    // --------------------------------------------------------
+    // - update a Project in the db.
+    // --------------------------------------------------------
+    var updateProject = function (projectToUpdate) {
+
+        return $http(
+                {
+                    method: "PUT",
+                    url: '/taskflow/apis/v1/projects/' + projectToUpdate.id,
+                    data: {
+                        reference: projectToUpdate.reference,
+                        template_id: projectToUpdate.template_id,
+                        nb_products: projectToUpdate.nb_products,
+                        priority: projectToUpdate.priority,
+                        start_date: projectToUpdate.start_date
+                    }
+                }
+
+        ).then(function (response) {
+
+            var project = response.data.data;
+
+            // --------------------------------------------------------
+            // $log.debug(FACTORY_NAME + " : updateProject response = " + JSON.stringify(response));
             // --------------------------------------------------------
 
             return {
@@ -99,6 +131,7 @@ app.factory("projectsSrvc", function ($log, $http) {
     return {
         getAllProjects: getAllProjects,
         closeProject: closeProject,
+        updateProject: updateProject,
         createProject: createProject
     };
 

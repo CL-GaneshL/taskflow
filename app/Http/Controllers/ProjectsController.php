@@ -41,7 +41,8 @@ class ProjectsController extends Controller {
         $projects = \DB::table('projects')
                 ->select('projects.*')
                 ->where('projects.open', '=', true)
-                ->orderBy('projects.start_date', 'desc')
+                ->orderBy('projects.priority', 'desc')
+                ->orderBy('projects.start_date', 'asc')
                 ->get();
 
         // ---------------------------------------------------
@@ -145,7 +146,29 @@ class ProjectsController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        //
+
+        // ---------------------------------------------------
+        // -update the project 
+        // ---------------------------------------------------
+        $project = Project::find($id);
+
+        $project->reference = trim($request->reference) !== '' ? $request->reference : null;
+        $project->template_id = trim($request->template_id) !== '' ? $request->template_id : null;
+        $project->nb_products = trim($request->nb_products) !== '' ? $request->nb_products : null;
+        $project->priority = trim($request->priority) !== '' ? $request->priority : null;
+        $project->start_date = trim($request->start_date) !== '' ? $request->start_date : null;
+        $project->end_date = trim($request->end_date) !== '' ? $request->end_date : null;
+
+        // ---------------------------------------------------
+        // \Log::debug('update : $project = ' . print_r($project, true));
+        // ---------------------------------------------------
+
+        $project->save();
+
+        return response()->json([
+                    'message' => 'Project updated succesfully',
+                    'data' => $project
+                        ], 200);
     }
 
     /**
