@@ -445,10 +445,10 @@ app.controller(
                             $scope.toUpdateNbProducts = projectToUpdate.nb_products;
                             $scope.toUpdateOldNbProducts = projectToUpdate.nb_products;
                             $scope.priorityChoices = priorityChoices;
-                            
-                                // ==================================================
-                    // - date picker 
-                    // ==================================================
+
+                            // ==================================================
+                            // - date picker 
+                            // ==================================================
 //                    $scope.today();
 //                    $scope.clear = function () {
 //                        $scope.newProject.start_date = null;
@@ -490,8 +490,8 @@ app.controller(
 //                    $scope.format = $scope.formats[0];
 //                    $scope.hstep = 1;
 //                    $scope.mstep = 15;
-                    // ==================================================
-                    
+                            // ==================================================
+
                             $scope.cancel = function () {
                                 $uibModalInstance.dismiss('cancel');
                             };

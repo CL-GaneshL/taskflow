@@ -14,6 +14,6 @@ public interface Version {
     public final String APP_NAME = "TaskGenerator";
     public final String APP_AUTHOR = "William Desheulles";
     public final String APP_COPYRIGHT = "©2016, Caratlane";
-    public final String APP_VERSION = "1.0.2";
+    public final String APP_VERSION = "1.0.3";
 
 }

@@ -11,6 +11,7 @@ import com.caratlane.taskflow.taskgenerator.generator.dao.Task;
 import com.caratlane.taskflow.taskgenerator.generator.dao.TaskAllocation;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
+import java.util.Optional;
 
 /**
  *
@@ -40,14 +41,21 @@ public class ProjectUpdator {
             });
 
             // find the latest allocation
-            final LocalDateTime latest = allAllocations.stream()
+            final Optional<LocalDateTime> latest = allAllocations.stream()
                     .map(TaskAllocation::getStartDate)
                     .max((d1, d2) -> {
                         return d1.compareTo(d2);
-                    }).get();
+                    });
 
-            // update the project's end date
-            projectData.getProject().setEndDate(latest);
+            if (latest.isPresent()) {
+
+                // latest allocation
+                final LocalDateTime latestDataTime = latest.get();
+
+                // update the project's end date
+                projectData.getProject().setEndDate(latestDataTime);
+            }
+
         });
 
     }

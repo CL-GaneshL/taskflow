@@ -56,11 +56,21 @@ public class Generator {
 
             for (int priority = 10; priority >= 1; priority--) {
 
+                // ---------------------------------------------------------------------
+                final String msg = "Projects with priority : " + priority;
+                LogManager.getLogger().log(Level.FINE, msg);
+                // ---------------------------------------------------------------------
+
                 final LinkedList<ProjectData> projects
                         = Projects.getInstance().getSortedProjectsData(priority);
 
                 // for each project ...
                 projects.stream().forEach((ProjectData projectData) -> {
+
+                    // ---------------------------------------------------------------------
+                    final String msg2 = "Open project : " + projectData.getProject().toString();
+                    LogManager.getLogger().log(Level.FINE, msg2);
+                    // ---------------------------------------------------------------------
 
                     try {
                         taskAllocator.allocate(projectData);

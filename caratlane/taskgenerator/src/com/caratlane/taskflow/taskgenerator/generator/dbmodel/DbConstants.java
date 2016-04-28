@@ -16,7 +16,7 @@ public interface DbConstants {
     // =====================================================
     String PROJECT_ENTITY_NAME = "project";
 
-    String PROJECT_TABLE_NAME = "v_projects";
+    String PROJECT_TABLE_NAME = "projects";
 
     String PROJECT_ID_COL_NAME = "id";
     String PROJECT_REFERENCE_COL_NAME = "reference";

@@ -11,7 +11,8 @@ VIEW `v_projects` AS
         `projects`.`priority` AS `priority`,
         `projects`.`start_date` AS `start_date`,
         `projects`.`end_date` AS `end_date`,
-        `projects`.`open` AS `open`
+        `projects`.`open` AS `open`,
+        getNbProductsCompleted(`projects`.`id`) AS `nb_products_completed`
     FROM
         `projects`
     ORDER BY `projects`.`priority` DESC , `projects`.`start_date` ASC

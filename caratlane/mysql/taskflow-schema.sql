@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
--- Host: 192.168.10.10    Database: homestead
+-- Host: 127.0.0.1    Database: caratlane_taskflow
 -- ------------------------------------------------------
--- Server version	5.7.9
+-- Server version	5.5.45
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -117,7 +117,7 @@ CREATE TABLE `project_templates` (
   `designation` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `open` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -151,7 +151,7 @@ CREATE TABLE `projects` (
   `end_date` date DEFAULT NULL,
   `open` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -222,7 +222,7 @@ CREATE TABLE `task_allocations` (
   KEY `task_allocations_employee_id_foreign` (`employee_id`),
   CONSTRAINT `task_allocations_employee_id_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`),
   CONSTRAINT `task_allocations_task_id_foreign` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=437 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -241,7 +241,7 @@ CREATE TABLE `tasks` (
   KEY `tasks_project_id_foreign` (`project_id`),
   CONSTRAINT `tasks_project_id_foreign` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`),
   CONSTRAINT `tasks_skill_id_foreign` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -343,7 +343,8 @@ SET character_set_client = utf8;
  1 AS `priority`,
  1 AS `start_date`,
  1 AS `end_date`,
- 1 AS `open`*/;
+ 1 AS `open`,
+ 1 AS `nb_products_completed`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -386,8 +387,36 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
--- Dumping routines for database 'homestead'
+-- Dumping routines for database 'testschema'
 --
+/*!50003 DROP FUNCTION IF EXISTS `getNbProductsCompleted` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER = CURRENT_USER FUNCTION `getNbProductsCompleted`(project_id INT) RETURNS text CHARSET utf8
+    READS SQL DATA
+    DETERMINISTIC
+BEGIN
+        DECLARE result INT;
+
+        SELECT IFNULL(SUM(`task_allocations`.`nb_products_completed`), 0) INTO result
+                FROM `tasks`, `task_allocations`
+                WHERE `tasks`.`project_id` = project_id
+                    AND `task_allocations`.`task_id` = `tasks`.`id`;
+    
+        RETURN (result);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP FUNCTION IF EXISTS `getTitle` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -470,10 +499,10 @@ DELIMITER ;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
 /*!50001 SET character_set_client      = utf8 */;
 /*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_unicode_ci */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER = CURRENT_USER SQL SECURITY DEFINER */
-/*!50001 VIEW `v_projects` AS select `projects`.`id` AS `id`,`projects`.`reference` AS `reference`,`projects`.`template_id` AS `template_id`,`projects`.`nb_products` AS `nb_products`,`projects`.`priority` AS `priority`,`projects`.`start_date` AS `start_date`,`projects`.`end_date` AS `end_date`,`projects`.`open` AS `open` from `projects` order by `projects`.`priority` desc,`projects`.`start_date` */;
+/*!50001 VIEW `v_projects` AS select `projects`.`id` AS `id`,`projects`.`reference` AS `reference`,`projects`.`template_id` AS `template_id`,`projects`.`nb_products` AS `nb_products`,`projects`.`priority` AS `priority`,`projects`.`start_date` AS `start_date`,`projects`.`end_date` AS `end_date`,`projects`.`open` AS `open`,`GETNBPRODUCTSCOMPLETED`(`projects`.`id`) AS `nb_products_completed` from `projects` order by `projects`.`priority` desc,`projects`.`start_date` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -523,4 +552,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-03-03 13:33:14
+-- Dump completed on 2016-04-28 13:59:24

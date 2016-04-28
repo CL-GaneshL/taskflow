@@ -20,7 +20,7 @@
 <!-- ================================================== -->
 <div class="container-fluid container-fullw bg-white no-border">
 
-    <div ng-controller="projectsCtrl"> 
+    <div ng-controller="projectsCtrl">
 
         <div class="row col-md-12">
 
@@ -180,7 +180,8 @@
                             <th class="col-md-4">Reference</th>
                             <th class="col-md-1 text-center">PRY</th>
                             <th class="col-md-1 text-center">NBP</th>
-                            <th class="col-md-2 text-center">Start</th>
+                            <th class="col-md-1 text-center">NBPC</th>
+                            <th class="col-md-1 text-center">Start</th>
                             <th class="col-md-2 text-center">End</th>
                             <td>
                         </tr>
@@ -193,7 +194,8 @@
                             <td class="col-md-4"> <% project.reference %> </td>
                             <td class="col-md-1 text-center"> <% project.priority %> </td>
                             <td class="col-md-1 text-center"> <% project.nb_products %> </td>
-                            <td class="col-md-2 text-center"> <% project.start_date %> </td>
+                            <td class="col-md-1 text-center"> <% project.nb_products_completed %> </td>
+                            <td class="col-md-1 text-center"> <% project.start_date %> </td>
                             <td class="col-md-2 text-center"> <% project.end_date %> </td>
 
                             <!-- ================================================== -->

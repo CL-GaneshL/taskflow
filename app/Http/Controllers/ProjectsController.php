@@ -38,12 +38,7 @@ class ProjectsController extends Controller {
         //      -- sorted by priority from high to low
         // ---------------------------------------------------
 
-        $projects = \DB::table('projects')
-                ->select('projects.*')
-                ->where('projects.open', '=', true)
-                ->orderBy('projects.priority', 'desc')
-                ->orderBy('projects.start_date', 'asc')
-                ->get();
+        $projects = ProjectsController::getAllOpenProjects();
 
         // ---------------------------------------------------
         // - list of all project templates available
