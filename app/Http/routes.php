@@ -113,6 +113,7 @@ Route::group(['prefix' => CARATLANE_APIS_V1_PATH], function() {
     Route::resource('holidays', 'HolidaysController', ['only' => ['show', 'store', 'update', 'destroy']]);
     Route::resource('projects-tasks', 'ProjectsTasksController', ['only' => ['index']]);
     Route::resource('task-allocations', 'TaskAllocationsController', ['only' => ['store', 'destroy']]);
+    Route::resource('metrics', 'MetricsController', ['only' => ['show']]);
 
     // -------------------------------------------------------------------------------
     // - allocation routes

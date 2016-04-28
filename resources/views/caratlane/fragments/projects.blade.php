@@ -20,7 +20,7 @@
 <!-- ================================================== -->
 <div class="container-fluid container-fullw bg-white no-border">
 
-    <div ng-controller="projectsCtrl">
+    <div ng-controller="projectsCtrl"> 
 
         <div class="row col-md-12">
 

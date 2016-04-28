@@ -81,6 +81,7 @@ app.constant('JS_REQUIRES', {
         'taskAllocationCtrl': '../../js/caratlane/controllers/taskAllocationCtrl.js',
         'settingsNonWorkingDaysCtrl': '../../js/caratlane/controllers/settingsNonWorkingDaysCtrl.js',
         'settingsTaskGeneratorCtrl': '../../js/caratlane/controllers/settingsTaskGeneratorCtrl.js',
+        'metricsCtrl': '../../js/caratlane/controllers/metricsCtrl.js',
         // ----
         //*** Services
         'teamsSrvc': '../../js/caratlane/services/teamsSrvc.js',
@@ -101,6 +102,7 @@ app.constant('JS_REQUIRES', {
         'holidaysSrvc': '../../js/caratlane/services/holidaysSrvc.js',
         'tasksSrvc': '../../js/caratlane/services/tasksSrvc.js',
         'projectsTasksSrvc': '../../js/caratlane/services/projectsTasksSrvc.js',
+        'metricsSrvc': '../../js/caratlane/services/metricsSrvc.js',
         // ----
         //*** Other Controllers
         'htmlToPlaintext': '../../js/caratlane/filters/htmlToPlaintext.js',
@@ -518,6 +520,12 @@ app.config([
                 .state('app.metrics', {
                     url: '/metrics',
                     templateUrl: "taskflow/fragments/metrics",
+                    resolve: loadSequence(
+                            'modalSrvc',
+                            'projectsSrvc',
+                            'metricsSrvc',
+                            'metricsCtrl'
+                            ),
                     title: 'Metrics'
                 })
                 // -----------------------------------------
@@ -562,7 +570,6 @@ app.config([
         }
     }
 ]);
-
 // ------------------------------------------
 // Angular-Loading-Bar 
 // ------------------------------------------
@@ -672,7 +679,7 @@ app.run([
             name: 'TaskFlow',
             author: 'Caratlane',
             description: 'Caratlane - Task Allocation Tool',
-            version: '1.0.2',
+            version: '1.0.3',
             year: ((new Date()).getFullYear()), // automatic current year (for copyright information)
             isMobile: (function () {// true if the browser is a mobile device
                 var check = false;

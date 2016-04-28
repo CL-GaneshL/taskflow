@@ -1,11 +1,4 @@
 
-<!-- ================================================================ -->
-<!-- authenticated user role and privileges                           -->
-<!-- ================================================================ -->
-
-@inject('authUser', 'App\Helpers\AuthenticatedUser')
-
-
 <!-- ================================================== -->
 <!-- - page headers                                     -->
 <!-- ================================================== -->
@@ -184,28 +177,6 @@
                             Allocate
                         </button>
                     </div>
-
-                    <!-- -- --------------------------------------------------- --> 
-                    <!-- -- - editable only by Project Manager                  -->
-                    <!-- -- --------------------------------------------------- --> 
-                    @if ( $authUser->hasRole('ADMIN_ROLE') || $authUser->hasRole('PROJECT_MANAGER_ROLE') )
-
-                    <!-- ================================================== -->
-                    <!-- - create new task button                           -->
-                    <!-- ================================================== --> 
-                    <!--                    <div class="col-md-5 padding-0">
-                    
-                                            <div class="pull-right">
-                                                <button class="btn btn-primary btn-o" 
-                                                        ng-click="createTask()" >
-                                                    Create Task
-                                                </button>
-                                            </div>
-                    
-                                        </div>-->
-
-                    @endif
-                    <!-- -- --------------------------------------------------- --> 
 
                 </div>
 
