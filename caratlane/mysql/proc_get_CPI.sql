@@ -45,7 +45,7 @@ BEGIN
         SELECT CPIi, sum_products_completed from (   -- select only CPIi s
 
         -- arithmetic progression --------
-        SELECT  ROUND((@sum / @total_products_planned), @TWO_DECIMALS) AS CPIi
+        SELECT  ROUND((@sum / @total_products_planned), @TWO_DECIMALS) AS CPIi,
 
                 @sum_products_completed := @sum_products_completed + daily_nb_products_completed 
                     AS sum_products_completed                

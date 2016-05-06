@@ -38,7 +38,7 @@ CREATE TABLE `employees` (
   `employementType` enum('Intern','FTE') COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `employees_employeeid_unique` (`employeeId`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,7 +129,7 @@ CREATE TABLE `project_templates` (
   `designation` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `open` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -163,7 +163,7 @@ CREATE TABLE `projects` (
   `end_date` date DEFAULT NULL,
   `open` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -210,7 +210,7 @@ CREATE TABLE `skills` (
   `duration` int(11) NOT NULL DEFAULT '0',
   `open` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -235,7 +235,7 @@ CREATE TABLE `task_allocations` (
   KEY `task_allocations_employee_id_foreign` (`employee_id`),
   CONSTRAINT `task_allocations_employee_id_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`),
   CONSTRAINT `task_allocations_task_id_foreign` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1280 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=228 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -254,7 +254,7 @@ CREATE TABLE `tasks` (
   KEY `tasks_project_id_foreign` (`project_id`),
   CONSTRAINT `tasks_project_id_foreign` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`),
   CONSTRAINT `tasks_skill_id_foreign` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -499,38 +499,30 @@ BEGIN
 
         -- calculate the Cost Performance Index (CPI)
         -- http://pmstudycircle.com/2012/05/schedule-performance-index-spi-and-cost-performance-index-cpi/
-        -- CPIi = EVi / BAC
-
-        SET @BAC := 0.00;        
-        SET @total_products := 0;    
+        -- CPIi = EVi / ACi.
+        -- ACi = Actual Cost at the ith day
+      
+        SET @total_products_planned := 0;    
 
         -- retrieve the hourly cost
         SELECT `hourly_cost`.`cost`
         INTO @hourly_cost
         FROM `hourly_cost` LIMIT 1;
-
-        -- calculate the Budget at Completion (BAC)
-        -- it is the total number of labour hours for that project
-        -- multiplied by the hourly cost.
-
-        SELECT ROUND(SUM(`task_allocations`.`duration`) / 60 * @hourly_cost, @FOUR_DECIMALS)
-        INTO @BAC
-        FROM `tasks`, `task_allocations`
-        WHERE `tasks`.`project_id` = project_id
-            AND `task_allocations`.`task_id` = `tasks`.`id`;
        
         -- calculate the nb of planned products
         SELECT SUM(`projects`.`nb_products`)
-        INTO @total_products
+        INTO @total_products_planned
         FROM `projects`
         WHERE `projects`.`id` = project_id;
             
         -- serialize the result set
-        SELECT CPIi from (   -- select only CPIi s
+        SELECT CPIi, sum_products_completed from (   -- select only CPIi s
 
         -- arithmetic progression --------
-        SELECT  @sum := daily_nb_products_completed + @sum ,
-                ROUND((@sum / @total_products), @TWO_DECIMALS) AS CPIi
+        SELECT  ROUND((@sum / @total_products_planned), @TWO_DECIMALS) AS CPIi,
+
+                @sum_products_completed := @sum_products_completed + daily_nb_products_completed 
+                    AS sum_products_completed                
         -- -------------------------------
 
             FROM (
@@ -628,12 +620,13 @@ BEGIN
         -- Take the actual percentage of the completed work and multiply it by 
         -- the project budget and you will get the Earned Value.
         -- Earned Value = % of completed work X BAC
+        -- EVi = NBPCi / NBPP * BAC
         -- BAC : Budget At Completion
-        -- COMPL% = % of completed work
-        -- EVi = COMPL% * BAC
-
+        -- NBPCi : Total Nb Products completed at the ith day
+        -- NBPP : Total Nb Products planned
+                
         SET @BAC := 0.00;        
-        SET @total_products := 0;    
+        SET @total_products_planned := 0;    
 
         -- retrieve the hourly cost
         SELECT `hourly_cost`.`cost`
@@ -643,7 +636,6 @@ BEGIN
         -- calculate the Budget at Completion (BAC)
         -- it is the total number of labour hours for that project
         -- multiplied by the hourly cost.
-
         SELECT ROUND(SUM(`task_allocations`.`duration`) / 60 * @hourly_cost, @FOUR_DECIMALS)
         INTO @BAC
         FROM `tasks`, `task_allocations`
@@ -652,16 +644,18 @@ BEGIN
        
         -- calculate the nb of planned products
         SELECT SUM(`projects`.`nb_products`)
-        INTO @total_products
+        INTO @total_products_planned
         FROM `projects`
         WHERE `projects`.`id` = project_id;
             
         -- serialize the result set
-        SELECT EVi from (   -- select only EVi s
+        SELECT EVi, sum_products_completed from (   -- select only EVi s
 
         -- arithmetic progression --------
-        SELECT  @sum := daily_nb_products_completed + @sum ,
-                ROUND((@sum / @total_products) * @BAC, @TWO_DECIMALS) AS EVi
+        SELECT  ROUND((@sum_products_completed / @total_products_planned) * @BAC, @TWO_DECIMALS) AS EVi,
+
+                @sum_products_completed := @sum_products_completed + daily_nb_products_completed 
+                    AS sum_products_completed                
         -- -------------------------------
 
             FROM (
@@ -709,7 +703,7 @@ BEGIN
 
         -- arithmetic progression --------
         CROSS JOIN
-            (SELECT @sum := 0) AS var
+            (SELECT @sum_products_completed := 0) AS var
         -- -------------------------------
 
         ) AS `evis`;    -- result set
@@ -797,14 +791,13 @@ BEGIN
         -- http://pmstudycircle.com/2012/05/planned-value-pv-earned-value-ev-actual-cost-ac-analysis-in-project-cost-management-2/
         -- it is for each planned day, the planned percentage of the 
         -- completed work multiplied by the project budget or BAC
-        -- NBPP : Nb Products planned - total time planned
-        -- NBPCi : Total Nb Products completed at the ith day - total time spend at the ith day
+        -- PVi = NBPPi / NBPP * BAC
         -- BAC : Budget At Completion
-        -- PVi : Planned Value at the ith day
-        -- PVi = (NBPCi / NBPP) * BAC
-
+        -- NBPPi : Total Nb Products planned at the ith day
+        -- NBPP : Total Nb Products planned
+        
         SET @BAC := 0.00;        
-        SET @total_products := 0;    
+        SET @total_products_planned := 0;    
 
         -- retrieve the hourly cost
         SELECT `hourly_cost`.`cost`
@@ -814,7 +807,6 @@ BEGIN
         -- calculate the Budget at Completion (BAC)
         -- it is the total number of labour hours for that project
         -- multiplied by the hourly cost.
-
         SELECT ROUND(SUM(`task_allocations`.`duration`) / 60 * @hourly_cost, @FOUR_DECIMALS)
         INTO @BAC
         FROM `tasks`, `task_allocations`
@@ -823,16 +815,18 @@ BEGIN
        
         -- calculate the nb of planned products
         SELECT SUM(`projects`.`nb_products`)
-        INTO @total_products
+        INTO @total_products_planned
         FROM `projects`
         WHERE `projects`.`id` = project_id;
             
         -- serialize the result set
-        SELECT PVi from (   -- select only PVi s
+        SELECT PVi, sum_products_planned from (   -- select only PVi s
 
         -- arithmetic progression --------
-        SELECT  @sum := daily_nb_products_planned + @sum ,
-                ROUND((@sum / @total_products) * @BAC, @TWO_DECIMALS) AS PVi
+        SELECT  ROUND((@sum_products_planned / @total_products_planned) * @BAC, @TWO_DECIMALS) AS PVi,
+
+                @sum_products_planned := @sum_products_planned + daily_nb_products_planned 
+                    AS sum_products_planned                
         -- -------------------------------
 
             FROM (
@@ -880,7 +874,7 @@ BEGIN
 
         -- arithmetic progression --------
         CROSS JOIN
-            (SELECT @sum := 0) AS var
+            (SELECT @sum_products_planned := 0) AS var
         -- -------------------------------
 
         ) AS `pvis`;    -- result set
@@ -927,38 +921,25 @@ BEGIN
         -- calculate the Schedule Performance Index (SPI)
         -- http://pmstudycircle.com/2012/05/schedule-performance-index-spi-and-cost-performance-index-cpi/
         -- SPIi = EVi / PVi
-
-        SET @BAC := 0.00;        
-        SET @total_products := 0;    
-
-        -- retrieve the hourly cost
-        SELECT `hourly_cost`.`cost`
-        INTO @hourly_cost
-        FROM `hourly_cost` LIMIT 1;
-
-        -- calculate the Budget at Completion (BAC)
-        -- it is the total number of labour hours for that project
-        -- multiplied by the hourly cost.
-
-        SELECT ROUND(SUM(`task_allocations`.`duration`) / 60 * @hourly_cost, @FOUR_DECIMALS)
-        INTO @BAC
-        FROM `tasks`, `task_allocations`
-        WHERE `tasks`.`project_id` = project_id
-            AND `task_allocations`.`task_id` = `tasks`.`id`;
-       
-        -- calculate the nb of planned products
-        SELECT SUM(`projects`.`nb_products`)
-        INTO @total_products
-        FROM `projects`
-        WHERE `projects`.`id` = project_id;
+        -- EVi = NBPCi / NBPP * BAC
+        -- PVi = NBPPi / NBPP * BAC
+        -- BAC : Budget At Completion
+        -- NBPPi : Total Nb Products planned at the ith day
+        -- NBPCi : Total Nb Products completed at the ith day
+        -- NBPP : Total Nb Products planned
+        -- => SPIi = NBPCi / NBPPi
             
         -- serialize the result set
-        SELECT SPIi, products_completed, products_planned from (   -- select only SPIi s
+        SELECT SPIi, sum_products_completed, sum_products_planned from (   -- select only SPIi s
 
         -- arithmetic progression --------
-        SELECT  @products_completed := daily_nb_products_completed + @products_completed  AS products_completed,
-                @products_planned := daily_nb_products_planned + @products_planned AS products_planned,
-                ROUND((@products_completed / @products_planned) * @BAC, @TWO_DECIMALS) AS SPIi
+        SELECT  ROUND((@sum_products_completed / @sum_products_planned), @TWO_DECIMALS) AS SPIi,
+
+                @sum_products_completed := @sum_products_completed + daily_nb_products_completed  
+                    AS sum_products_completed,
+
+                @sum_products_planned := @sum_products_planned + daily_nb_products_planned 
+                    AS sum_products_planned                
         -- -------------------------------
 
             FROM (
@@ -1008,7 +989,7 @@ BEGIN
 
         -- arithmetic progression --------
         CROSS JOIN
-            (SELECT @products_completed := 0, @products_planned := 0) AS var
+            (SELECT @sum_products_completed := 0, @sum_products_planned := 0) AS var
         -- -------------------------------
 
         ) AS `spiis`;    -- result set
@@ -1121,4 +1102,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-04 12:57:11
+-- Dump completed on 2016-05-06 10:08:07
