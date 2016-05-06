@@ -66,13 +66,51 @@
                             <!-- ================================================== -->
                             <!-- - warning messages                                 -->
                             <!-- ================================================== --> 
-                            <div class="padding-left-20"> 
+<!--                            <div class="padding-left-20"> 
                                 <p>warning message</p>
-                            </div> 
+                            </div> -->
 
                         </div> 
 
                     </fieldset>
+                    
+                    
+                    
+                    <fieldset>
+
+                        <legend>
+                            Hourly Cost
+                        </legend>
+
+                        <!-- ================================================== -->
+                        <!-- - hourly cost                                      -->
+                        <!-- ================================================== -->
+                        <div class="row col-md-12 form-group">
+
+                            <div class="col-md-7">
+
+                                <span class="input-icon">
+
+                                    <i class="fa fa-rupee"></i>
+
+                                    <input type="text" 
+                                           class="form-control"
+                                           name="hourlyCost"
+                                           ng-value ="hourlyCost"
+                                           ng-readonly="true"
+                                           disabled=""
+                                           />
+                                </span> 
+                                
+                            </div>
+
+                        </div>
+
+                    </fieldset>
+                    
+                    
+                    
+                    
 
                 </form> 
 
@@ -92,10 +130,13 @@
                         <div uib-collapse="visits" ng-init="visits = false" class="panel-wrapper">
                             <div class="panel-body">
                                 <div class="height-350">
-                                    <canvas class="tc-chart" tc-chartjs-line chart-options="options" chart-data="data" chart-legend="chart1" width="100%"></canvas>
-                                    <div class="margin-top-20">
-                                        <div tc-chartjs-legend chart-legend="chart1" class="inline pull-left"></div>
-                                    </div>
+                                    <canvas class="tc-chart" 
+                                            tc-chartjs-line 
+                                            chart-options="options" 
+                                            chart-data="PV_data_set"
+                                            width="100%"
+                                            auto-legend>                                                 
+                                    </canvas>
                                 </div>
                             </div>
                         </div>
@@ -118,10 +159,13 @@
                         <div uib-collapse="visits" ng-init="visits = false" class="panel-wrapper">
                             <div class="panel-body">
                                 <div class="height-350">
-                                    <canvas class="tc-chart" tc-chartjs-line chart-options="options" chart-data="data" chart-legend="chart1" width="100%"></canvas>
-                                    <div class="margin-top-20">
-                                        <div tc-chartjs-legend chart-legend="chart1" class="inline pull-left"></div>
-                                    </div>
+                                    <canvas class="tc-chart" 
+                                            tc-chartjs-line 
+                                            chart-options="options" 
+                                            chart-data="CPI_data_set" 
+                                            width="100%"
+                                            auto-legend>                                                
+                                    </canvas>
                                 </div>
                             </div>
                         </div>
@@ -144,10 +188,13 @@
                         <div uib-collapse="visits" ng-init="visits = false" class="panel-wrapper">
                             <div class="panel-body">
                                 <div class="height-350">
-                                    <canvas class="tc-chart" tc-chartjs-line chart-options="options" chart-data="data" chart-legend="chart1" width="100%"></canvas>
-                                    <div class="margin-top-20">
-                                        <div tc-chartjs-legend chart-legend="chart1" class="inline pull-left"></div>
-                                    </div>
+                                    <canvas class="tc-chart"
+                                            tc-chartjs-line
+                                            chart-options="options"
+                                            chart-data="SPI_data_set"
+                                            width="100%"
+                                            auto-legend>                                                
+                                    </canvas>
                                 </div>
                             </div>
                         </div>

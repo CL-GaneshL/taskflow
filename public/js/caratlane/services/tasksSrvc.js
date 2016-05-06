@@ -153,7 +153,7 @@ app.factory("tasksSrvc", function ($log, $http) {
     // - 
     // ==================================================
 
-    var getTimeline = function (start_date, completion, duration, completed) {
+    var getTimeline = function (start_date, completion, duration, completed, planned) {
 
         var _DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         var _MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -182,23 +182,22 @@ app.factory("tasksSrvc", function ($log, $http) {
         var duration_hours = Math.floor(duration / 60);
         var duration_minutes = duration % 60;
 
-        var durationStr = ' (duration:' + duration_hours + ' h';
+        var durationStr = ', duration:' + duration_hours + ' h';
         if (duration_minutes === 0) {
-            durationStr = durationStr + ') ';
+            durationStr = durationStr + ' ';
+        } else {
+            durationStr = durationStr + ' ' + duration_minutes + ' mins ';
         }
-        else {
-            durationStr = durationStr + ' ' + duration_minutes + ' mins) ';
-        }
+
+        var plannedStr = ' ' + planned + ' products ';
 
         if (completed === 0) {
             var completionStr = null;
             if (completion === duration) {
                 completionStr = ' - completion 100%.';
-            }
-            else if (completion === 0) {
+            } else if (completion === 0) {
                 completionStr = '';
-            }
-            else if (completion < duration) {
+            } else if (completion < duration) {
 
                 var completion_hours = Math.floor(completion / 60);
                 var completion_minutes = completion % 60;
@@ -207,17 +206,15 @@ app.factory("tasksSrvc", function ($log, $http) {
 
                 if (completion_minutes === 0) {
                     completionStr = completionStr + '.';
-                }
-                else {
+                } else {
                     completionStr = completionStr + ' ' + completion_minutes + ' mins';
                 }
             }
-        }
-        else {
+        } else {
             completionStr = ' - completion 100%.';
         }
 
-        var timeline = date + durationStr + completionStr;
+        var timeline = date + durationStr + plannedStr + completionStr;
         return timeline;
     };
 

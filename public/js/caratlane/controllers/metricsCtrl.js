@@ -143,32 +143,62 @@ app.controller(
                         metricsPromise.then(
                                 function (response) {
 
-                                    var labels = response.data1;
-                                    var data1 = response.data1;
-                                    var data2 = response.data2;
+                                    var labels = response.labels;
+                                    var PV_data = response.PV;
+                                    var EV_data = response.EV;
+                                    var CPI_data = response.CPI;
+                                    var SPI_data = response.SPI;
 
                                     // --------------------------------------------------------
                                     $log.debug(CONTROLLER_NAME + " : response = " + JSON.stringify(response));
                                     // --------------------------------------------------------
 
-                                    $scope.data = {
+                                    $scope.PV_data_set = {
                                         labels: labels,
                                         datasets: [
                                             {
-                                                label: 'My First dataset',
+                                                label: 'Planned Value (PV)',
                                                 fillColor: 'rgba(220,220,220,0.5)',
                                                 strokeColor: 'rgba(220,220,220,0.8)',
                                                 highlightFill: 'rgba(220,220,220,0.75)',
                                                 highlightStroke: 'rgba(220,220,220,1)',
-                                                data: data1
+                                                data: PV_data
                                             },
                                             {
-                                                label: 'My Second dataset',
+                                                label: 'Earned Value (EV)',
                                                 fillColor: 'rgba(151,187,205,0.5)',
                                                 strokeColor: 'rgba(151,187,205,0.8)',
                                                 highlightFill: 'rgba(151,187,205,0.75)',
                                                 highlightStroke: 'rgba(151,187,205,1)',
-                                                data: data2
+                                                data: EV_data
+                                            }
+                                        ]
+                                    };
+                                   
+                                    $scope.CPI_data_set = {
+                                        labels: labels,
+                                        datasets: [
+                                            {
+                                                label: 'Cost Performance Index (CPI)',
+                                                fillColor: 'rgba(220,220,220,0.5)',
+                                                strokeColor: 'rgba(220,220,220,0.8)',
+                                                highlightFill: 'rgba(220,220,220,0.75)',
+                                                highlightStroke: 'rgba(220,220,220,1)',
+                                                data: CPI_data
+                                            }
+                                        ]
+                                    };
+
+                                    $scope.SPI_data_set = {
+                                        labels: labels,
+                                        datasets: [
+                                            {
+                                                label: 'Schedule Performance Index (SPI)',
+                                                fillColor: 'rgba(220,220,220,0.5)',
+                                                strokeColor: 'rgba(220,220,220,0.8)',
+                                                highlightFill: 'rgba(220,220,220,0.75)',
+                                                highlightStroke: 'rgba(220,220,220,1)',
+                                                data: SPI_data
                                             }
                                         ]
                                     };
@@ -193,7 +223,6 @@ app.controller(
 
                                 }
                         );
-
 
                     }
 

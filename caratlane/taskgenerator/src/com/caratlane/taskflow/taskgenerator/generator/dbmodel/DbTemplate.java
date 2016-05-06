@@ -32,6 +32,8 @@ import javax.validation.constraints.NotNull;
 @SuppressWarnings("ValidAttributes")
 public class DbTemplate implements Serializable {
 
+    private static final long serialVersionUID = -3756823678114106052L;
+
     /**
      * Index of the task in its database table.
      */

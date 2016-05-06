@@ -99,9 +99,9 @@ class ProjectsController extends Controller {
 
         $newProjectId = $newProject->id;
 
-        $project = \DB::table('projects')
-                ->select('projects.*')
-                ->where('projects.id', '=', $newProjectId)
+        $project = \DB::table('v_projects')
+                ->select('v_projects.*')
+                ->where('v_projects.id', '=', $newProjectId)
                 ->get();
 
         // ---------------------------------------------------

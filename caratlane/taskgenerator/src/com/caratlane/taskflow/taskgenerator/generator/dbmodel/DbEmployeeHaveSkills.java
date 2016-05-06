@@ -26,6 +26,8 @@ import javax.validation.constraints.NotNull;
 @Table(name = EMPLOYEE_HAVE_SKILLS_TABLE_NAME)
 public class DbEmployeeHaveSkills implements Serializable {
 
+    private static final long serialVersionUID = 5598298539897382250L;
+
     /**
      * employee id
      */

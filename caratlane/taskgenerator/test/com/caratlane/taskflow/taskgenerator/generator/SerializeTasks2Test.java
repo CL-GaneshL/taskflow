@@ -13,14 +13,14 @@ import com.caratlane.taskflow.taskgenerator.generator.dao.Skill;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Task;
 import com.caratlane.taskflow.taskgenerator.generator.dao.TaskAllocation;
 import com.caratlane.taskflow.taskgenerator.generator.rules.TaskAllocator;
-import static helpers.TestDBConstants.DURATION_SKILL_3_3DMS;
-import static helpers.TestDBConstants.EMPLOYEE_CL0004;
-import static helpers.TestDBConstants.NB_PRODUCTS_PROJECT_JADAU_6;
-import static helpers.TestDBConstants.PROJECT_JADAU_6;
-import static helpers.TestDBConstants.SKILL_3_3DMS;
-import static helpers.TestDBConstants.TOMORROW;
-import helpers.TestDBCrud;
-import helpers.TestTaskGeneratorException;
+import static utils.TestDBConstants.DURATION_SKILL_3_3DMS;
+import static utils.TestDBConstants.EMPLOYEE_CL0004;
+import static utils.TestDBConstants.NB_PRODUCTS_PROJECT_JADAU_6;
+import static utils.TestDBConstants.PROJECT_JADAU_6;
+import static utils.TestDBConstants.SKILL_3_3DMS;
+import static utils.TestDBConstants.TOMORROW;
+import utils.TestDBCrud;
+import utils.TestTaskGeneratorException;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -147,7 +147,7 @@ public class SerializeTasks2Test {
 
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_6;    // nb probucts = 2
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, employeeData, ID_SKILL, nb_products);
+        (new TaskAllocator(TOMORROW)).allocate(test, projectData, ID_SKILL, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();

@@ -40,6 +40,8 @@ import javax.validation.constraints.NotNull;
 @SuppressWarnings("ValidAttributes")
 public class DbTask implements Serializable {
 
+    private static final long serialVersionUID = -4867050967289035676L;
+
     /**
      * Index of the task in its database table.
      */

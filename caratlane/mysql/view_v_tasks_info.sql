@@ -65,6 +65,11 @@ VIEW `v_tasks_info` AS
         `task_allocations`.`nb_products_completed` AS `nb_products_completed`,
 
         -- ----------------------------------------------
+        -- the number of products planned
+        -- ----------------------------------------------
+        `task_allocations`.`nb_products_planned` AS `nb_products_planned`,
+
+        -- ----------------------------------------------
         -- the project's number of products
         -- ----------------------------------------------
         (SELECT 

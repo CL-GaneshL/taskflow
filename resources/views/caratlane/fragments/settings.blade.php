@@ -32,6 +32,13 @@
                 </uib-tab>
 
                 <!-- ================================================== -->
+                <!-- - hourly cost tab                             -->
+                <!-- ================================================== --> 
+                <uib-tab heading="Hourly Cost" >
+                    <div ng-include="'taskflow/fragments/settings_hourly_cost'"></div>
+                </uib-tab>
+
+                <!-- ================================================== -->
                 <!-- - task generator                                   -->
                 <!-- ================================================== --> 
                 <uib-tab heading="Task Generator" >

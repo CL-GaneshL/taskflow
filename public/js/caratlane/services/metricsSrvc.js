@@ -3,7 +3,6 @@
 app.factory("metricsSrvc", function ($log, $http) {
 
     var FACTORY_NAME = 'metricsSrvc';
-
     // --------------------------------------------------------
     // - allocate tasks
     // --------------------------------------------------------
@@ -18,12 +17,13 @@ app.factory("metricsSrvc", function ($log, $http) {
 
             return {
                 labels: response.data.data[0],
-                data1: response.data.data[1],
-                data2: response.data.data[2]
+                PV: response.data.data[1],
+                EV: response.data.data[2],
+                CPI: response.data.data[3],
+                SPI: response.data.data[4]
             };
         });
     };
-
     // --------------------------------------------------------
     // - return functions
     // --------------------------------------------------------

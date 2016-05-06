@@ -161,6 +161,7 @@ public interface DbConstants {
     String TASK_ALLOCATION_START_DATE_COL_NAME = "start_date";
     String TASK_ALLOCATION_COMPLETION_COL_NAME = "completion";
     String TASK_ALLOCATION_NB_PRODUCTS_COMPLETED_COL_NAME = "nb_products_completed";
+    String TASK_ALLOCATION_NB_PRODUCTS_PLANNED_COL_NAME = "nb_products_planned";
     String TASK_ALLOCATION_COMPLETED_COL_NAME = "completed";
     String TASK_ALLOCATION_DURATION_COL_NAME = "duration";
 

@@ -38,6 +38,8 @@ import javax.validation.constraints.NotNull;
 @SuppressWarnings("ValidAttributes")
 public class DbHoliday implements Serializable {
 
+    private static final long serialVersionUID = -8126746374294452506L;
+
     /**
      * Index of the task in its database table.
      */

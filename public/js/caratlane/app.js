@@ -82,6 +82,7 @@ app.constant('JS_REQUIRES', {
         'settingsNonWorkingDaysCtrl': '../../js/caratlane/controllers/settingsNonWorkingDaysCtrl.js',
         'settingsTaskGeneratorCtrl': '../../js/caratlane/controllers/settingsTaskGeneratorCtrl.js',
         'metricsCtrl': '../../js/caratlane/controllers/metricsCtrl.js',
+        'settingsHourlyCostCtrl': '../../js/caratlane/controllers/settingsHourlyCostCtrl.js',
         // ----
         //*** Services
         'teamsSrvc': '../../js/caratlane/services/teamsSrvc.js',
@@ -509,7 +510,8 @@ app.config([
                             'nonWorkingDaysSrvc',
                             'settingsSrvc',
                             'settingsNonWorkingDaysCtrl',
-                            'settingsTaskGeneratorCtrl'
+                            'settingsTaskGeneratorCtrl',
+                            'settingsHourlyCostCtrl'
                             ),
                     title: 'Templates'
                 })
@@ -679,7 +681,7 @@ app.run([
             name: 'TaskFlow',
             author: 'Caratlane',
             description: 'Caratlane - Task Allocation Tool',
-            version: '1.0.4',
+            version: '1.0.5',
             year: ((new Date()).getFullYear()), // automatic current year (for copyright information)
             isMobile: (function () {// true if the browser is a mobile device
                 var check = false;

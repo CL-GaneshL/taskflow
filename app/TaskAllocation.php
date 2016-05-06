@@ -13,6 +13,7 @@ class TaskAllocation extends Model {
         'start_date',
         'completion',
         'nb_products_completed',
+        'nb_products_planned',
         'completed',
         'duration'
     ];
@@ -40,6 +41,10 @@ class TaskAllocation extends Model {
 
     function getNbProductsCompleted() {
         return $this->fillable->nb_products_completed;
+    }
+
+    function getNbProductsPlanned() {
+        return $this->fillable->nb_products_planned;
     }
 
     function getCompleted() {

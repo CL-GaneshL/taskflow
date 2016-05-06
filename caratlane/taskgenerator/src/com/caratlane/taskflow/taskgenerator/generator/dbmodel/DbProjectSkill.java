@@ -37,6 +37,8 @@ import javax.validation.constraints.NotNull;
 })
 public class DbProjectSkill implements Serializable {
 
+    private static final long serialVersionUID = 8056771753760415576L;
+
     /**
      * skill id
      */

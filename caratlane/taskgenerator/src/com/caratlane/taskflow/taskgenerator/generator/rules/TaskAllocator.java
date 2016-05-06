@@ -17,6 +17,8 @@ import com.caratlane.taskflow.taskgenerator.generator.dao.Task;
 import com.caratlane.taskflow.taskgenerator.generator.dao.TaskAllocation;
 import com.caratlane.taskflow.taskgenerator.logging.LogManager;
 import static java.lang.Math.toIntExact;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,6 +36,7 @@ import java.util.logging.Level;
 public class TaskAllocator {
 
     final private LocalDateTime allocation_from;
+    final static int TWO_DECIMALS = 2;
 
     /**
      *
@@ -61,21 +64,17 @@ public class TaskAllocator {
                             return t.getSkillId().equals(skill_id);
                         }).findFirst();
 
-                final EmployeeData employeeData
-                        = EmployeeSkillSuitability.findMostSuitableEmployeeWithSkill(
-                                skill_id, this.allocation_from);
-
                 final Project project = projectData.getProject();
                 final Integer nb_products = project.getNbProducts();
 
                 if (taskOptional.isPresent()) {
-                    // if the task already exists, we only need to reallocate
+                    // if the task already exists, we only have to reallocate
                     // the allocations that are not completed or partially completed.
                     final Task task = taskOptional.get();
-                    this.reallocateTask(task, employeeData, nb_products);
+                    this.reallocateTask(task, nb_products);
                 } else {
                     // the task has to be created as well as its allocations.
-                    this.allocateNewTask(projectData, employeeData, skill_id, nb_products);
+                    this.allocateTask(projectData, skill_id, nb_products);
                 }
 
             } catch (TaskGeneratorException ex) {
@@ -95,7 +94,6 @@ public class TaskAllocator {
      */
     private void reallocateTask(
             final Task task,
-            final EmployeeData employeeData,
             final Integer nb_products
     ) throws TaskGeneratorException {
 
@@ -120,7 +118,9 @@ public class TaskAllocator {
         // re-allocate 
         do {
             final int allocated
-                    = this.allocateNewTaskAllocation(task, employeeData, remainder);
+                    = this.allocateTaskAllocation(
+                            task,
+                            remainder);
 
             remainder = remainder - allocated;
 
@@ -135,9 +135,8 @@ public class TaskAllocator {
      * @param nb_products
      * @throws TaskGeneratorException
      */
-    private void allocateNewTask(
+    private void allocateTask(
             final ProjectData projectData,
-            final EmployeeData employeeData,
             final Integer skill_id,
             final Integer nb_products
     ) throws TaskGeneratorException {
@@ -162,7 +161,9 @@ public class TaskAllocator {
 
         do {
             final int allocated
-                    = this.allocateNewTaskAllocation(task, employeeData, remainder);
+                    = this.allocateTaskAllocation(
+                            task,
+                            remainder);
 
             remainder = remainder - allocated;
 
@@ -176,60 +177,101 @@ public class TaskAllocator {
      * @param nb_products
      * @throws TaskGeneratorException
      */
-    private Integer allocateNewTaskAllocation(
+    private Integer allocateTaskAllocation(
             final Task task,
-            final EmployeeData employeeData,
             final Integer duration
     ) throws TaskGeneratorException {
 
         Integer allocated;
         TaskAllocation taskAllocation;
 
+        final Integer skill_id = task.getSkillId();
+
+        final EmployeeData employeeData
+                = EmployeeSkillSuitability.findMostSuitableEmployeeWithSkill(
+                        skill_id, this.allocation_from);
+
         LocalDateTime av_start_date
                 = EmployeeAvailability.getNextAvailability(employeeData, this.allocation_from);
 
-        // how many minutes available in that shift
+        // minutes available in that shift
         final LocalDateTime endShift = getDateAt8am(av_start_date);
         final Integer available = getLocalDateTimeDiff(av_start_date, endShift);
 
         final Integer employee_id = employeeData.getEmployee().getId();
 
-        // corrected duration depends of the employee productivity
+        // corrected duration; depends on the employee productivity
         final Integer correctedDuration
                 = EmployeeProductivity.getCorrectedDuration(employeeData, duration);
 
+        // skill duration in order to calculate the nb planned products        
+        final Skill skill = Skills.getInstance().getSkill(skill_id);
+        final Integer skill_duration = skill.getDuration();
+
+        // task id
+        final Integer task_id = task.getId();
+
         // ---------------------------------------------------------------------
-        // LogManager.getLogger().log(Level.FINE, " duration = {0}, corrected => {1}", new Object[]{duration, correctedDuration});
+        LogManager.getLogger().log(Level.FINE,
+                " duration = {0}, corrected Duration => {1}",
+                new Object[]{duration, correctedDuration});
         // ---------------------------------------------------------------------
+
         if (correctedDuration <= available) {
 
-            // the task is allocated for this employee for a correctedDuration amount of time
-            taskAllocation
-                    = TaskAllocation.createNewTaskAllocation(employee_id, av_start_date, correctedDuration);
-
-            addTaskAllocation(employeeData, task, taskAllocation);
-
-            // the actual allocated time was the duration (before correction)
-            // that will be substract this.allocation_from the task's totalDuration,
-            // irrespectively of the employees' productivity.
+            // actual allocated time irrespectively of the employees' productivity.
             allocated = duration;
+
+            // nb planned products, rounded to 2 decimals
+            double nb_products_planned = this.round(
+                    (double) duration / skill_duration, TWO_DECIMALS);
+
+            // task allocated for this employee for a correctedDuration amount of time
+            taskAllocation = TaskAllocation.createNewTaskAllocation(
+                    employee_id,
+                    task_id,
+                    av_start_date,
+                    nb_products_planned,
+                    correctedDuration);
+
+            this.addTaskAllocation(employeeData, task, taskAllocation);
+
+            // ---------------------------------------------------------------------
+            final Double productivity = employeeData.getEmployee().getProductivity();
+            LogManager.getLogger().log(Level.FINE,
+                    "**** Allocation : duration = {0}, skill_duration = {1}, nb_products_planned => {2}, productivity = {3}",
+                    new Object[]{duration, skill_duration, nb_products_planned, productivity});
+            // ---------------------------------------------------------------------
+
         } else {
-            // create an allocation whith the whole available time for that shift
-            // we allocate the remainder time available in that shift.
-            taskAllocation
-                    = TaskAllocation.createNewTaskAllocation(employee_id, av_start_date, available);
 
-            addTaskAllocation(employeeData, task, taskAllocation);
-
-            // however it has to be down scaled in order to take into accont
-            // the employee's productivity.
+            // actual allocated time irrespectively of the employees' productivity.
             final Integer downscaledDuration
                     = EmployeeProductivity.getDownscaledDuration(employeeData, available);
 
-            // ---------------------------------------------------------------------
-            // LogManager.getLogger().log(Level.FINE, " available = {0}, downscaled => {1}", new Object[]{available, downscaledDuration});
-            // ---------------------------------------------------------------------
             allocated = downscaledDuration;
+
+            // nb planned products, rounded to 2 decimals
+            double nb_products_planned = this.round(
+                    (double) available / skill_duration, TWO_DECIMALS);
+
+            // create an allocation whith the whole available time for that shift
+            // we allocate the remainder time available in that shift.
+            taskAllocation = TaskAllocation.createNewTaskAllocation(
+                    employee_id,
+                    task_id,
+                    av_start_date,
+                    nb_products_planned,
+                    available);
+
+            this.addTaskAllocation(employeeData, task, taskAllocation);
+
+            // ---------------------------------------------------------------------
+            final Double productivity = employeeData.getEmployee().getProductivity();
+            LogManager.getLogger().log(Level.FINE,
+                    "**** Allocation : available = {0}, skill_duration = {1}, nb_products_planned => {2}, productivity = {3}",
+                    new Object[]{available, skill_duration, nb_products_planned, productivity});
+            // ---------------------------------------------------------------------
         }
 
         return allocated;
@@ -243,7 +285,7 @@ public class TaskAllocator {
      * @param taskAllocation
      * @throws TaskGeneratorException
      */
-    private static void addTaskAllocation(
+    private void addTaskAllocation(
             final EmployeeData employeeData,
             final Task task,
             final TaskAllocation taskAllocation
@@ -280,27 +322,6 @@ public class TaskAllocator {
     }
 
     /**
-     * For testing purpose
-     *
-     * @param test
-     * @param projectData
-     * @param employeeData
-     * @param skill_id
-     * @param nb_products
-     * @throws TaskGeneratorException
-     */
-    public void allocate(
-            final Boolean test,
-            final ProjectData projectData,
-            final EmployeeData employeeData,
-            final Integer skill_id,
-            final Integer nb_products
-    ) throws TaskGeneratorException {
-
-        this.allocateNewTask(projectData, employeeData, skill_id, nb_products);
-    }
-
-    /**
      *
      * @param date
      * @return
@@ -314,6 +335,12 @@ public class TaskAllocator {
         return at8am;
     }
 
+    /**
+     *
+     * @param fromDateTime
+     * @param toDateTime
+     * @return
+     */
     private static Integer getLocalDateTimeDiff(final LocalDateTime fromDateTime, final LocalDateTime toDateTime) {
 
         final LocalDateTime diffDateTime = LocalDateTime.from(fromDateTime);
@@ -321,4 +348,41 @@ public class TaskAllocator {
 
         return diff;
     }
+
+    /**
+     * For testing purpose
+     *
+     * @param test
+     * @param projectData
+     * @param skill_id
+     * @param nb_products
+     * @throws TaskGeneratorException
+     */
+    public void allocate(
+            final Boolean test,
+            final ProjectData projectData,
+            final Integer skill_id,
+            final Integer nb_products
+    ) throws TaskGeneratorException {
+
+        this.allocateTask(projectData, skill_id, nb_products);
+    }
+
+    /**
+     *
+     * @param value
+     * @param places
+     * @return
+     */
+    public double round(double value, int places) {
+
+        if (places < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
 }

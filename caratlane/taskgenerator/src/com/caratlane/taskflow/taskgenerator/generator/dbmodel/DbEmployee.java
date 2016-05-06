@@ -48,6 +48,8 @@ import javax.validation.constraints.NotNull;
 )
 public class DbEmployee implements Serializable {
 
+    private static final long serialVersionUID = 2915690397413366540L;
+
     /**
      * Index of the task in its database table.
      */

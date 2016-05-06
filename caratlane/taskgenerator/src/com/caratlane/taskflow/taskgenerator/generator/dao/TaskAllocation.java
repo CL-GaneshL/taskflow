@@ -22,7 +22,9 @@ public class TaskAllocation {
 
     public TaskAllocation(
             final Integer employee_id,
+            final Integer task_id,
             final LocalDateTime start_date,
+            final Double nb_products_planned,
             final Integer duration
     ) {
 
@@ -31,9 +33,11 @@ public class TaskAllocation {
 
         this.dbTaskAllocation = new DbTaskAllocation(
                 employee_id,
+                task_id,
                 d_start_date,
                 0, //completion,
                 0, //nb_products_completed,
+                nb_products_planned,
                 (byte) 0, // completed,
                 duration
         );
@@ -41,12 +45,16 @@ public class TaskAllocation {
 
     public static TaskAllocation createNewTaskAllocation(
             final Integer employee_id,
+            final Integer task_id,
             final LocalDateTime start_date,
+            final Double nb_products_planned,
             final Integer duration) {
 
         final TaskAllocation taskAllocation = new TaskAllocation(
                 employee_id,
+                task_id,
                 start_date,
+                nb_products_planned,
                 duration
         );
 
@@ -88,6 +96,10 @@ public class TaskAllocation {
 
     public Integer getNbProductsCompleted() {
         return dbTaskAllocation.getNb_products_completed();
+    }
+
+    public Double getNbProductsPlanned() {
+        return dbTaskAllocation.getNb_products_planned();
     }
 
     public Boolean isCompleted() {

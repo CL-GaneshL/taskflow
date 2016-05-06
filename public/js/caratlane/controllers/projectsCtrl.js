@@ -446,52 +446,6 @@ app.controller(
                             $scope.toUpdateOldNbProducts = projectToUpdate.nb_products;
                             $scope.priorityChoices = priorityChoices;
 
-                            // ==================================================
-                            // - date picker 
-                            // ==================================================
-//                    $scope.today();
-//                    $scope.clear = function () {
-//                        $scope.newProject.start_date = null;
-//                    };
-//                    // do we allow week selection ?
-//                    // or only weekdays and saturday morning ?
-//                    // Disable weekend selection
-////                $scope.disabled = function (date, mode) {
-////                    return (mode === 'day' && (date.getDay() === 0 || date.getDay() === 6));
-////                };
-//
-//                    $scope.toggleMin = function () {
-//                        $scope.minDate = $scope.minDate ? null : new Date();
-//                    };
-//                    $scope.toggleMin();
-//                    $scope.maxDate = new Date(2020, 5, 22);
-//                    $scope.open = function ($event) {
-//                        $event.preventDefault();
-//                        $event.stopPropagation();
-//                        $scope.opened = !$scope.opened;
-//                    };
-//                    $scope.endOpen = function ($event) {
-//                        $event.preventDefault();
-//                        $event.stopPropagation();
-//                        $scope.startOpened = false;
-//                        $scope.endOpened = !$scope.endOpened;
-//                    };
-//                    $scope.startOpen = function ($event) {
-//                        $event.preventDefault();
-//                        $event.stopPropagation();
-//                        $scope.endOpened = false;
-//                        $scope.startOpened = !$scope.startOpened;
-//                    };
-//                    $scope.dateOptions = {
-//                        formatYear: 'yy',
-//                        startingDay: 1
-//                    };
-//                    $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-//                    $scope.format = $scope.formats[0];
-//                    $scope.hstep = 1;
-//                    $scope.mstep = 15;
-                            // ==================================================
-
                             $scope.cancel = function () {
                                 $uibModalInstance.dismiss('cancel');
                             };

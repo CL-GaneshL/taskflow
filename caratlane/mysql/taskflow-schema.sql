@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: caratlane_taskflow
+-- Host: 127.0.0.1    Database: testschema
 -- ------------------------------------------------------
 -- Server version	5.5.45
 
@@ -38,7 +38,7 @@ CREATE TABLE `employees` (
   `employementType` enum('Intern','FTE') COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `employees_employeeid_unique` (`employeeId`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -69,7 +69,19 @@ CREATE TABLE `holidays` (
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `hourly_cost`
+--
+
+DROP TABLE IF EXISTS `hourly_cost`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `hourly_cost` (
+  `cost` decimal(11,2) NOT NULL DEFAULT '0.00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -85,7 +97,7 @@ CREATE TABLE `non_working_days` (
   `type` enum('WEEKEND','NON-WORKING') COLLATE utf8_unicode_ci NOT NULL,
   `date` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=567 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=566 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -117,7 +129,7 @@ CREATE TABLE `project_templates` (
   `designation` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `open` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -151,7 +163,7 @@ CREATE TABLE `projects` (
   `end_date` date DEFAULT NULL,
   `open` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,7 +210,7 @@ CREATE TABLE `skills` (
   `duration` int(11) NOT NULL DEFAULT '0',
   `open` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,6 +227,7 @@ CREATE TABLE `task_allocations` (
   `start_date` datetime NOT NULL,
   `completion` int(11) NOT NULL DEFAULT '0',
   `nb_products_completed` int(11) NOT NULL DEFAULT '0',
+  `nb_products_planned` decimal(4,2) NOT NULL DEFAULT '0.00',
   `completed` tinyint(1) NOT NULL DEFAULT '0',
   `duration` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -222,7 +235,7 @@ CREATE TABLE `task_allocations` (
   KEY `task_allocations_employee_id_foreign` (`employee_id`),
   CONSTRAINT `task_allocations_employee_id_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`),
   CONSTRAINT `task_allocations_task_id_foreign` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=437 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1280 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -241,7 +254,7 @@ CREATE TABLE `tasks` (
   KEY `tasks_project_id_foreign` (`project_id`),
   CONSTRAINT `tasks_project_id_foreign` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`),
   CONSTRAINT `tasks_skill_id_foreign` FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -380,6 +393,7 @@ SET character_set_client = utf8;
  1 AS `completion`,
  1 AS `completed`,
  1 AS `nb_products_completed`,
+ 1 AS `nb_products_planned`,
  1 AS `project_nb_products`,
  1 AS `task_duration`,
  1 AS `open`,
@@ -452,6 +466,561 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `getCPI` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER = CURRENT_USER PROCEDURE `getCPI`(project_id INT(11))
+BEGIN
+
+    SET @TWO_DECIMALs := 2;
+    SET @FOUR_DECIMALS := 4;
+
+    SET @max := 0;
+    SET @min := 0;
+
+    -- the first allocation start_date (min) and the last (max)
+    SELECT 
+            CAST(MAX(`task_allocations`.`start_date`) AS DATE),
+            CAST(MIN(`task_allocations`.`start_date`) AS DATE)
+            INTO @max, @min 
+            FROM `tasks`, `task_allocations`
+            WHERE `tasks`.`project_id` = project_id
+                AND `task_allocations`.`task_id` = `tasks`.`id`;
+
+    -- make sure that tasks and allocations have been generated for that project
+    IF @max IS NOT NULL THEN
+
+        -- calculate the Cost Performance Index (CPI)
+        -- http://pmstudycircle.com/2012/05/schedule-performance-index-spi-and-cost-performance-index-cpi/
+        -- CPIi = EVi / BAC
+
+        SET @BAC := 0.00;        
+        SET @total_products := 0;    
+
+        -- retrieve the hourly cost
+        SELECT `hourly_cost`.`cost`
+        INTO @hourly_cost
+        FROM `hourly_cost` LIMIT 1;
+
+        -- calculate the Budget at Completion (BAC)
+        -- it is the total number of labour hours for that project
+        -- multiplied by the hourly cost.
+
+        SELECT ROUND(SUM(`task_allocations`.`duration`) / 60 * @hourly_cost, @FOUR_DECIMALS)
+        INTO @BAC
+        FROM `tasks`, `task_allocations`
+        WHERE `tasks`.`project_id` = project_id
+            AND `task_allocations`.`task_id` = `tasks`.`id`;
+       
+        -- calculate the nb of planned products
+        SELECT SUM(`projects`.`nb_products`)
+        INTO @total_products
+        FROM `projects`
+        WHERE `projects`.`id` = project_id;
+            
+        -- serialize the result set
+        SELECT CPIi from (   -- select only CPIi s
+
+        -- arithmetic progression --------
+        SELECT  @sum := daily_nb_products_completed + @sum ,
+                ROUND((@sum / @total_products), @TWO_DECIMALS) AS CPIi
+        -- -------------------------------
+
+            FROM (
+                SELECT  -- daily completed products
+                    `interval`.`date` AS `date`, 
+                    IFNULL(`products_planned`.`daily_nb_products_completed`, 0) AS `daily_nb_products_completed`
+
+                FROM (
+                    SELECT  -- total nb of completed products per day
+                        -- cast is needed to as start date is a DATETIME
+                        CAST(`task_allocations`.`start_date` AS DATE) AS `date`,
+                        SUM(`task_allocations`.`nb_products_completed`) AS `daily_nb_products_completed`
+                    FROM `task_allocations`
+                    RIGHT JOIN
+                        (   -- list of taks ids for that project
+                            SELECT `tasks`.`id` AS `taskId`
+                            FROM `tasks`
+                            WHERE `tasks`.`project_id` = project_id
+                        ) as `task_ids`
+
+                    ON `task_allocations`.`task_id` = `taskId`
+                    GROUP BY CAST(`task_allocations`.`start_date` AS DATE)
+                ) AS `products_planned`
+
+                RIGHT JOIN
+  
+                (   -- list of all dates within the interval [min,max]
+                    -- @min and @max are DATE, so the result set is a set of DATE
+                    SELECT ADDDATE(@min, INTERVAL @i:=@i+1 DAY) AS `date`
+                    FROM (
+                        SELECT a.a
+                            FROM (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS a
+                            CROSS JOIN (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS b
+                            CROSS JOIN (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS c
+                        ) a
+                        JOIN (SELECT @i := -1) AS `alias`
+                        WHERE @i < DATEDIFF(@max, @min)
+                ) AS `interval`
+
+                -- compare DATEs columns
+                ON `products_planned`.`date` = `interval`.`date`
+                ORDER BY `date` -- to prevent an un-sorted interval
+
+            ) AS `daily_completed_work`
+
+        -- arithmetic progression --------
+        CROSS JOIN
+            (SELECT @sum := 0) AS var
+        -- -------------------------------
+
+        ) AS `cpis`;    -- result set
+
+    END IF;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `getEV` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER = CURRENT_USER PROCEDURE `getEV`(project_id INT(11))
+BEGIN
+
+    SET @TWO_DECIMALs := 2;
+    SET @FOUR_DECIMALS := 4;
+
+    SET @max := 0;
+    SET @min := 0;
+
+    -- the first allocation start_date (min) and the last (max)
+    SELECT 
+            CAST(MAX(`task_allocations`.`start_date`) AS DATE),
+            CAST(MIN(`task_allocations`.`start_date`) AS DATE)
+            INTO @max, @min 
+            FROM `tasks`, `task_allocations`
+            WHERE `tasks`.`project_id` = project_id
+                AND `task_allocations`.`task_id` = `tasks`.`id`;
+
+    -- make sure that tasks and allocations have been generated for that project
+    IF @max IS NOT NULL THEN
+
+        -- calculate the Planned Value (PV)
+        -- http://pmstudycircle.com/2012/05/planned-value-pv-earned-value-ev-actual-cost-ac-analysis-in-project-cost-management-2/
+        -- Earned Value is the value of the work actually completed to date
+        -- Take the actual percentage of the completed work and multiply it by 
+        -- the project budget and you will get the Earned Value.
+        -- Earned Value = % of completed work X BAC
+        -- BAC : Budget At Completion
+        -- COMPL% = % of completed work
+        -- EVi = COMPL% * BAC
+
+        SET @BAC := 0.00;        
+        SET @total_products := 0;    
+
+        -- retrieve the hourly cost
+        SELECT `hourly_cost`.`cost`
+        INTO @hourly_cost
+        FROM `hourly_cost` LIMIT 1;
+
+        -- calculate the Budget at Completion (BAC)
+        -- it is the total number of labour hours for that project
+        -- multiplied by the hourly cost.
+
+        SELECT ROUND(SUM(`task_allocations`.`duration`) / 60 * @hourly_cost, @FOUR_DECIMALS)
+        INTO @BAC
+        FROM `tasks`, `task_allocations`
+        WHERE `tasks`.`project_id` = project_id
+            AND `task_allocations`.`task_id` = `tasks`.`id`;
+       
+        -- calculate the nb of planned products
+        SELECT SUM(`projects`.`nb_products`)
+        INTO @total_products
+        FROM `projects`
+        WHERE `projects`.`id` = project_id;
+            
+        -- serialize the result set
+        SELECT EVi from (   -- select only EVi s
+
+        -- arithmetic progression --------
+        SELECT  @sum := daily_nb_products_completed + @sum ,
+                ROUND((@sum / @total_products) * @BAC, @TWO_DECIMALS) AS EVi
+        -- -------------------------------
+
+            FROM (
+                SELECT  -- daily completed products
+                    `interval`.`date` AS `date`, 
+                    IFNULL(`products_planned`.`daily_nb_products_completed`, 0) AS `daily_nb_products_completed`
+
+                FROM (
+                    SELECT  -- total nb of completed products per day
+                        -- cast is needed to as start date is a DATETIME
+                        CAST(`task_allocations`.`start_date` AS DATE) AS `date`,
+                        SUM(`task_allocations`.`nb_products_completed`) AS `daily_nb_products_completed`
+                    FROM `task_allocations`
+                    RIGHT JOIN
+                        (   -- list of taks ids for that project
+                            SELECT `tasks`.`id` AS `taskId`
+                            FROM `tasks`
+                            WHERE `tasks`.`project_id` = project_id
+                        ) as `task_ids`
+
+                    ON `task_allocations`.`task_id` = `taskId`
+                    GROUP BY CAST(`task_allocations`.`start_date` AS DATE)
+                ) AS `products_planned`
+
+                RIGHT JOIN
+  
+                (   -- list of all dates within the interval [min,max]
+                    -- @min and @max are DATE, so the result set is a set of DATE
+                    SELECT ADDDATE(@min, INTERVAL @i:=@i+1 DAY) AS `date`
+                    FROM (
+                        SELECT a.a
+                            FROM (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS a
+                            CROSS JOIN (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS b
+                            CROSS JOIN (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS c
+                        ) a
+                        JOIN (SELECT @i := -1) AS `alias`
+                        WHERE @i < DATEDIFF(@max, @min)
+                ) AS `interval`
+
+                -- compare DATEs columns
+                ON `products_planned`.`date` = `interval`.`date`
+                ORDER BY `date` -- to prevent an un-sorted interval
+
+            ) AS `daily_completed_work`
+
+        -- arithmetic progression --------
+        CROSS JOIN
+            (SELECT @sum := 0) AS var
+        -- -------------------------------
+
+        ) AS `evis`;    -- result set
+
+    END IF;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `getLabels` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER = CURRENT_USER PROCEDURE `getLabels`(project_id INT(11))
+BEGIN
+
+    DECLARE max DATETIME;
+    DECLARE min DATETIME;
+
+    -- the first allocation start_date (min) and the last (max)
+    SELECT MAX(`task_allocations`.`start_date`), MIN(`task_allocations`.`start_date`) 
+            INTO max, min 
+            FROM `tasks`, `task_allocations`
+            WHERE `tasks`.`project_id` = project_id
+                AND `task_allocations`.`task_id` = `tasks`.`id`;
+
+    -- list of all dates within the interval [min,max]
+    SELECT DATE_FORMAT(ADDDATE(min, INTERVAL @i:=@i+1 DAY), '%d/%m') AS `label`
+        FROM (
+            SELECT a.a
+                FROM (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS a
+                CROSS JOIN (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS b
+                CROSS JOIN (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS c
+        ) a
+        JOIN (SELECT @i := -1) r1
+        WHERE @i < DATEDIFF(max, min);
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `getPV` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER = CURRENT_USER PROCEDURE `getPV`(project_id INT(11))
+BEGIN
+
+    SET @TWO_DECIMALs := 2;
+    SET @FOUR_DECIMALS := 4;
+
+    SET @max := 0;
+    SET @min := 0;
+
+    -- the first allocation start_date (min) and the last (max)
+    SELECT 
+            CAST(MAX(`task_allocations`.`start_date`) AS DATE),
+            CAST(MIN(`task_allocations`.`start_date`) AS DATE)
+            INTO @max, @min 
+            FROM `tasks`, `task_allocations`
+            WHERE `tasks`.`project_id` = project_id
+                AND `task_allocations`.`task_id` = `tasks`.`id`;
+
+    -- make sure that tasks and allocations have been generated for that project
+    IF @max IS NOT NULL THEN
+
+        -- calculate the Planned Value (PV)
+        -- http://pmstudycircle.com/2012/05/planned-value-pv-earned-value-ev-actual-cost-ac-analysis-in-project-cost-management-2/
+        -- it is for each planned day, the planned percentage of the 
+        -- completed work multiplied by the project budget or BAC
+        -- NBPP : Nb Products planned - total time planned
+        -- NBPCi : Total Nb Products completed at the ith day - total time spend at the ith day
+        -- BAC : Budget At Completion
+        -- PVi : Planned Value at the ith day
+        -- PVi = (NBPCi / NBPP) * BAC
+
+        SET @BAC := 0.00;        
+        SET @total_products := 0;    
+
+        -- retrieve the hourly cost
+        SELECT `hourly_cost`.`cost`
+        INTO @hourly_cost
+        FROM `hourly_cost` LIMIT 1;
+
+        -- calculate the Budget at Completion (BAC)
+        -- it is the total number of labour hours for that project
+        -- multiplied by the hourly cost.
+
+        SELECT ROUND(SUM(`task_allocations`.`duration`) / 60 * @hourly_cost, @FOUR_DECIMALS)
+        INTO @BAC
+        FROM `tasks`, `task_allocations`
+        WHERE `tasks`.`project_id` = project_id
+            AND `task_allocations`.`task_id` = `tasks`.`id`;
+       
+        -- calculate the nb of planned products
+        SELECT SUM(`projects`.`nb_products`)
+        INTO @total_products
+        FROM `projects`
+        WHERE `projects`.`id` = project_id;
+            
+        -- serialize the result set
+        SELECT PVi from (   -- select only PVi s
+
+        -- arithmetic progression --------
+        SELECT  @sum := daily_nb_products_planned + @sum ,
+                ROUND((@sum / @total_products) * @BAC, @TWO_DECIMALS) AS PVi
+        -- -------------------------------
+
+            FROM (
+                SELECT  -- daily planned products                    
+                    `interval`.`date` AS `date`, 
+                    IFNULL(`products_planned`.`daily_nb_products_planned`, 0) AS `daily_nb_products_planned`
+
+                FROM (
+                    SELECT  -- total nb of planned products per day
+                        -- cast is needed to as start date is a DATETIME
+                        CAST(`task_allocations`.`start_date` AS DATE) AS `date`,
+                        SUM(`task_allocations`.`nb_products_planned`) AS `daily_nb_products_planned`
+                    FROM `task_allocations`
+                    RIGHT JOIN
+                        (   -- list of taks ids for that project
+                            SELECT `tasks`.`id` AS `taskId`
+                            FROM `tasks`
+                            WHERE `tasks`.`project_id` = project_id
+                        ) as `task_ids`
+
+                    ON `task_allocations`.`task_id` = `taskId`
+                    GROUP BY CAST(`task_allocations`.`start_date` AS DATE)
+                ) AS `products_planned`
+
+                RIGHT JOIN
+  
+                (   -- list of all dates within the interval [min,max]
+                    -- @min and @max are DATE, so the result set is a set of DATE
+                    SELECT ADDDATE(@min, INTERVAL @i:=@i+1 DAY) AS `date`
+                    FROM (
+                        SELECT a.a
+                            FROM (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS a
+                            CROSS JOIN (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS b
+                            CROSS JOIN (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS c
+                        ) a
+                        JOIN (SELECT @i := -1) AS `alias`
+                        WHERE @i < DATEDIFF(@max, @min)
+                ) AS `interval`
+
+                -- compare DATEs columns
+                ON `products_planned`.`date` = `interval`.`date`
+                ORDER BY `date` -- to prevent an un-sorted interval
+
+            ) AS `daily_completed_work`
+
+        -- arithmetic progression --------
+        CROSS JOIN
+            (SELECT @sum := 0) AS var
+        -- -------------------------------
+
+        ) AS `pvis`;    -- result set
+
+    END IF;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `getSPI` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER = CURRENT_USER PROCEDURE `getSPI`(project_id INT(11))
+BEGIN
+
+    SET @TWO_DECIMALs := 2;
+    SET @FOUR_DECIMALS := 4;
+
+    SET @max := 0;
+    SET @min := 0;
+
+    -- the first allocation start_date (min) and the last (max)
+    SELECT 
+            CAST(MAX(`task_allocations`.`start_date`) AS DATE),
+            CAST(MIN(`task_allocations`.`start_date`) AS DATE)
+            INTO @max, @min 
+            FROM `tasks`, `task_allocations`
+            WHERE `tasks`.`project_id` = project_id
+                AND `task_allocations`.`task_id` = `tasks`.`id`;
+
+    -- make sure that tasks and allocations have been generated for that project
+    IF @max IS NOT NULL THEN
+
+        -- calculate the Schedule Performance Index (SPI)
+        -- http://pmstudycircle.com/2012/05/schedule-performance-index-spi-and-cost-performance-index-cpi/
+        -- SPIi = EVi / PVi
+
+        SET @BAC := 0.00;        
+        SET @total_products := 0;    
+
+        -- retrieve the hourly cost
+        SELECT `hourly_cost`.`cost`
+        INTO @hourly_cost
+        FROM `hourly_cost` LIMIT 1;
+
+        -- calculate the Budget at Completion (BAC)
+        -- it is the total number of labour hours for that project
+        -- multiplied by the hourly cost.
+
+        SELECT ROUND(SUM(`task_allocations`.`duration`) / 60 * @hourly_cost, @FOUR_DECIMALS)
+        INTO @BAC
+        FROM `tasks`, `task_allocations`
+        WHERE `tasks`.`project_id` = project_id
+            AND `task_allocations`.`task_id` = `tasks`.`id`;
+       
+        -- calculate the nb of planned products
+        SELECT SUM(`projects`.`nb_products`)
+        INTO @total_products
+        FROM `projects`
+        WHERE `projects`.`id` = project_id;
+            
+        -- serialize the result set
+        SELECT SPIi, products_completed, products_planned from (   -- select only SPIi s
+
+        -- arithmetic progression --------
+        SELECT  @products_completed := daily_nb_products_completed + @products_completed  AS products_completed,
+                @products_planned := daily_nb_products_planned + @products_planned AS products_planned,
+                ROUND((@products_completed / @products_planned) * @BAC, @TWO_DECIMALS) AS SPIi
+        -- -------------------------------
+
+            FROM (
+                SELECT
+                    `interval`.`date` AS `date`, 
+                    IFNULL(`products_planned`.`daily_nb_products_completed`, 0) AS `daily_nb_products_completed`,
+                    IFNULL(`products_planned`.`daily_nb_products_planned`, 0) AS `daily_nb_products_planned`
+
+                FROM (
+                    SELECT  -- total nb of completed products per day
+                        -- cast is needed to as start date is a DATETIME
+                        CAST(`task_allocations`.`start_date` AS DATE) AS `date`,
+                        SUM(`task_allocations`.`nb_products_completed`) AS `daily_nb_products_completed`,
+                        SUM(`task_allocations`.`nb_products_planned`) AS `daily_nb_products_planned`
+                    FROM `task_allocations`
+                    RIGHT JOIN
+                        (   -- list of taks ids for that project
+                            SELECT `tasks`.`id` AS `taskId`
+                            FROM `tasks`
+                            WHERE `tasks`.`project_id` = project_id
+                        ) as `task_ids`
+
+                    ON `task_allocations`.`task_id` = `taskId`
+                    GROUP BY CAST(`task_allocations`.`start_date` AS DATE)
+                ) AS `products_planned`
+
+                RIGHT JOIN
+  
+                (   -- list of all dates within the interval [min,max]
+                    -- @min and @max are DATE, so the result set is a set of DATE
+                    SELECT ADDDATE(@min, INTERVAL @i:=@i+1 DAY) AS `date`
+                    FROM (
+                        SELECT a.a
+                            FROM (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS a
+                            CROSS JOIN (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS b
+                            CROSS JOIN (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS c
+                        ) a
+                        JOIN (SELECT @i := -1) AS `alias`
+                        WHERE @i < DATEDIFF(@max, @min)
+                ) AS `interval`
+
+                -- compare DATEs columns
+                ON `products_planned`.`date` = `interval`.`date`
+                ORDER BY `date` -- to prevent an un-sorted interval
+
+            ) AS `daily_activity`
+
+        -- arithmetic progression --------
+        CROSS JOIN
+            (SELECT @products_completed := 0, @products_planned := 0) AS var
+        -- -------------------------------
+
+        ) AS `spiis`;    -- result set
+
+    END IF;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Final view structure for view `v_holidays_info`
@@ -502,7 +1071,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER = CURRENT_USER SQL SECURITY DEFINER */
-/*!50001 VIEW `v_projects` AS select `projects`.`id` AS `id`,`projects`.`reference` AS `reference`,`projects`.`template_id` AS `template_id`,`projects`.`nb_products` AS `nb_products`,`projects`.`priority` AS `priority`,`projects`.`start_date` AS `start_date`,`projects`.`end_date` AS `end_date`,`projects`.`open` AS `open`,`GETNBPRODUCTSCOMPLETED`(`projects`.`id`) AS `nb_products_completed` from `projects` order by `projects`.`priority` desc,`projects`.`start_date` */;
+/*!50001 VIEW `v_projects` AS select `projects`.`id` AS `id`,`projects`.`reference` AS `reference`,`projects`.`template_id` AS `template_id`,`projects`.`nb_products` AS `nb_products`,`projects`.`priority` AS `priority`,`projects`.`start_date` AS `start_date`,`projects`.`end_date` AS `end_date`,`projects`.`open` AS `open`,`getNbProductsCompleted`(`projects`.`id`) AS `nb_products_completed` from `projects` order by `projects`.`priority` desc,`projects`.`start_date` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -535,10 +1104,10 @@ DELIMITER ;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
 /*!50001 SET character_set_client      = utf8 */;
 /*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_unicode_ci */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER = CURRENT_USER SQL SECURITY DEFINER */
-/*!50001 VIEW `v_tasks_info` AS select `task_allocations`.`id` AS `id`,`task_allocations`.`task_id` AS `task_id`,`getTitle`(`tasks`.`project_id`,`tasks`.`skill_id`) AS `title`,`task_allocations`.`employee_id` AS `employee_id`,(select `employees`.`fullName` from `employees` where (`employees`.`id` = `task_allocations`.`employee_id`)) AS `employee_full_name`,`tasks`.`skill_id` AS `skill_id`,`tasks`.`project_id` AS `project_id`,`task_allocations`.`duration` AS `duration`,`task_allocations`.`completion` AS `completion`,`task_allocations`.`completed` AS `completed`,`task_allocations`.`nb_products_completed` AS `nb_products_completed`,(select `projects`.`nb_products` from `projects` where (`projects`.`id` = `tasks`.`project_id`)) AS `project_nb_products`,(select `skills`.`duration` from `skills` where (`skills`.`id` = `tasks`.`skill_id`)) AS `task_duration`,(select `projects`.`open` from `projects` where (`projects`.`id` = `tasks`.`project_id`)) AS `open`,`task_allocations`.`start_date` AS `start_date` from (`tasks` join `task_allocations`) where (`tasks`.`id` = `task_allocations`.`task_id`) */;
+/*!50001 VIEW `v_tasks_info` AS select `task_allocations`.`id` AS `id`,`task_allocations`.`task_id` AS `task_id`,`getTitle`(`tasks`.`project_id`,`tasks`.`skill_id`) AS `title`,`task_allocations`.`employee_id` AS `employee_id`,(select `employees`.`fullName` from `employees` where (`employees`.`id` = `task_allocations`.`employee_id`)) AS `employee_full_name`,`tasks`.`skill_id` AS `skill_id`,`tasks`.`project_id` AS `project_id`,`task_allocations`.`duration` AS `duration`,`task_allocations`.`completion` AS `completion`,`task_allocations`.`completed` AS `completed`,`task_allocations`.`nb_products_completed` AS `nb_products_completed`,`task_allocations`.`nb_products_planned` AS `nb_products_planned`,(select `projects`.`nb_products` from `projects` where (`projects`.`id` = `tasks`.`project_id`)) AS `project_nb_products`,(select `skills`.`duration` from `skills` where (`skills`.`id` = `tasks`.`skill_id`)) AS `task_duration`,(select `projects`.`open` from `projects` where (`projects`.`id` = `tasks`.`project_id`)) AS `open`,`task_allocations`.`start_date` AS `start_date` from (`tasks` join `task_allocations`) where (`tasks`.`id` = `task_allocations`.`task_id`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -552,4 +1121,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-04-28 13:59:24
+-- Dump completed on 2016-05-04 12:57:11

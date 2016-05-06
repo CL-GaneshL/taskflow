@@ -38,6 +38,8 @@ import javax.validation.constraints.NotNull;
 @SuppressWarnings("ValidAttributes")
 public class DbNonWorkingDays implements Serializable {
 
+    private static final long serialVersionUID = -1774954795765324961L;
+
     /**
      * Index of the task in its database table.
      */

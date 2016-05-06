@@ -602,7 +602,7 @@ app.controller(
                     var index = 0;
 
                     // --------------------------------------------------------
-                    // $log.debug(CONTROLLER_NAME + " : tasks = " + JSON.stringify(tasks));
+                    $log.debug(CONTROLLER_NAME + " : tasks = " + JSON.stringify(tasks));
                     // --------------------------------------------------------
 
                     for (index = 0; index < tasks.length; index++) {
@@ -642,7 +642,8 @@ app.controller(
                                 tasks[index].start_date,
                                 tasks[index].completion,
                                 tasks[index].duration,
-                                tasks[index].completed
+                                tasks[index].completed,
+                                tasks[index].nb_products_planned
                                 );
 
                         var title = '<span class="text-muted text-small">';

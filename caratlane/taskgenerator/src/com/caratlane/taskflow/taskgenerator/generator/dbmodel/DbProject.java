@@ -49,6 +49,8 @@ import javax.validation.constraints.NotNull;
 @SuppressWarnings("ValidAttributes")
 public class DbProject implements Serializable {
 
+    private static final long serialVersionUID = 4941122295366601345L;
+
     /**
      * Index of the task in its database table.
      */

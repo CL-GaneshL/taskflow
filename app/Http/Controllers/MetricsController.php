@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Config;
-use App\User;
-use App\Employee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -62,14 +60,68 @@ class MetricsController extends Controller {
      */
     public function show($project_id) {
 
-        $labels = array('January', 'February', 'March', 'April', 'May', 'June', 'July');
-        $data1 = array(65, 59, 80, 81, 56, 55, 40, 84, 64, 120, 132, 87);
-        $data2 = array(28, 48, 40, 19, 86, 27, 90, 102, 123, 145, 60, 161);
+        // ---------------------------------------------------
+        // - get the diagram's labels
+        // ---------------------------------------------------
+        $labels = array();
+        $data = \DB::select("CALL getLabels(" . $project_id . ")");
 
-        $metrics = array($labels, $data1, $data2);
+        foreach ($data as $object) {
+            $arr = (array) $object;
+            $labels[] = $arr['label'];
+        }
 
         // ---------------------------------------------------
-        \Log::debug('metrics : $metrics = ' . print_r($metrics, true));
+        // - get the Planned Value (PV) data
+        // ---------------------------------------------------
+        $PV = array();
+        $data = \DB::select("CALL getPV(" . $project_id . ")");
+
+        foreach ($data as $object) {
+            $arr = (array) $object;
+            $PV[] = $arr['PVi'];
+        }
+
+        // ---------------------------------------------------
+        // - get the Earned Value (EV) data.
+        // ---------------------------------------------------
+        $EV = array();
+        $data = \DB::select("CALL getEV(" . $project_id . ")");
+
+        foreach ($data as $object) {
+            $arr = (array) $object;
+            $EV[] = $arr['EVi'];
+        }
+
+        // ---------------------------------------------------
+        // - get the Cost Performance Index (CPI) data.
+        // ---------------------------------------------------
+        $CPI = array();
+        $data = \DB::select("CALL getCPI(" . $project_id . ")");
+
+        foreach ($data as $object) {
+            $arr = (array) $object;
+            $CPI[] = $arr['CPIi'];
+        }
+
+        // ---------------------------------------------------
+        // - get the Schedule Performance Index (SPI) data.
+        // ---------------------------------------------------
+        $SPI = array();
+        $data = \DB::select("CALL getSPI(" . $project_id . ")");
+
+        foreach ($data as $object) {
+            $arr = (array) $object;
+            $SPI[] = $arr['SPIi'];
+        }
+
+        // ---------------------------------------------------
+        // - create the response 
+        // ---------------------------------------------------
+        $metrics = array($labels, $PV, $EV, $CPI, $SPI);
+
+        // ---------------------------------------------------
+        // \Log::debug('metrics : $metrics = ' . print_r($metrics, true));
         // ---------------------------------------------------
         // ---------------------------------------------------
         // - the response

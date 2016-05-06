@@ -26,6 +26,8 @@ import javax.validation.constraints.NotNull;
 @Table(name = TEMPLATE_HAVE_SKILLS_TABLE_NAME)
 public class DbTemplateHaveSkills implements Serializable {
 
+    private static final long serialVersionUID = -4055199339046083932L;
+
     /**
      * Index of the task in its database table.
      */

@@ -5,7 +5,7 @@
  */
 package com.caratlane.taskflow.taskgenerator.generator;
 
-import helpers.TestDBManager;
+import utils.TestDBManager;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

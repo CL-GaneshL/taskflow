@@ -126,6 +126,7 @@ Route::group(['prefix' => CARATLANE_APIS_V1_PATH], function() {
     // -------------------------------------------------------------------------------
     Route::get('settings/taskflow-configuration', 'SettingsController@getTaskflowConfiguration');
     Route::get('settings/java-configuration', 'SettingsController@getJavaConfiguration');
+    Route::resource('hourly-cost', 'HourlyCostController', ['only' => ['index', 'update']]);
 });
 
 /*

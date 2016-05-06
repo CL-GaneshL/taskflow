@@ -20,12 +20,12 @@ public class EmployeeSkillSuitability {
 
     /**
      *
-     * @param skill
+     * @param skill_id
      * @param from
      * @return
      */
     public static EmployeeData findMostSuitableEmployeeWithSkill(
-            final Integer skill,
+            final Integer skill_id,
             final LocalDateTime from
     ) {
 
@@ -37,7 +37,7 @@ public class EmployeeSkillSuitability {
         // get the list of all employees that have that skill
         final Stream<EmployeeData> skilledEmployees
                 = employees.stream().filter((EmployeeData ed) -> {
-                    return ed.hasSkill(skill);
+                    return ed.hasSkill(skill_id);
                 });
 
         // sort employees by their earliest availability

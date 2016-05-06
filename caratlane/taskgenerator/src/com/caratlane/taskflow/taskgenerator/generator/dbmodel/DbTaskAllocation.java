@@ -12,6 +12,7 @@ import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_ALLOCATION_ENTITY_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_ALLOCATION_ID_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_ALLOCATION_NB_PRODUCTS_COMPLETED_COL_NAME;
+import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_ALLOCATION_NB_PRODUCTS_PLANNED_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_ALLOCATION_START_DATE_COL_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_ALLOCATION_TABLE_NAME;
 import static com.caratlane.taskflow.taskgenerator.generator.dbmodel.DbConstants.TASK_ALLOCATION_TASK_ID_COL_NAME;
@@ -59,6 +60,8 @@ import javax.validation.constraints.NotNull;
 })
 @SuppressWarnings("ValidAttributes")
 public class DbTaskAllocation implements Serializable {
+
+    private static final long serialVersionUID = 3185083304707253883L;
 
     /**
      * Index of the task in its database table.
@@ -115,6 +118,14 @@ public class DbTaskAllocation implements Serializable {
     private Integer nb_products_completed;
 
     /**
+     * nb planned products
+     */
+    @NotNull
+    @Min(value = 0)
+    @Column(name = TASK_ALLOCATION_NB_PRODUCTS_PLANNED_COL_NAME, insertable = true, updatable = false)
+    private Double nb_products_planned;
+
+    /**
      * completed
      */
     @NotNull
@@ -136,16 +147,20 @@ public class DbTaskAllocation implements Serializable {
 
     public DbTaskAllocation(
             final Integer employee_id,
+            final Integer task_id,
             final Date start_date,
             final Integer completion,
             final Integer nb_products_completed,
+            final Double nb_products_planned,
             final Byte completed,
             final Integer duration
     ) {
         this.employee_id = employee_id;
+        this.task_id = task_id;
         this.start_date = start_date;
         this.completion = completion;
         this.nb_products_completed = nb_products_completed;
+        this.nb_products_planned = nb_products_planned;
         this.completed = completed;
         this.duration = duration;
 
@@ -175,6 +190,10 @@ public class DbTaskAllocation implements Serializable {
         return nb_products_completed;
     }
 
+    public Double getNb_products_planned() {
+        return nb_products_planned;
+    }
+
     public Byte getCompleted() {
         return completed;
     }
@@ -189,19 +208,24 @@ public class DbTaskAllocation implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 97 * hash + Objects.hashCode(this.task_id);
-        hash = 97 * hash + Objects.hashCode(this.employee_id);
-        hash = 97 * hash + Objects.hashCode(this.start_date);
-        hash = 97 * hash + Objects.hashCode(this.completion);
-        hash = 97 * hash + Objects.hashCode(this.nb_products_completed);
-        hash = 97 * hash + Objects.hashCode(this.completed);
-        hash = 97 * hash + Objects.hashCode(this.duration);
+        int hash = 5;
+        hash = 23 * hash + Objects.hashCode(this.task_id);
+        hash = 23 * hash + Objects.hashCode(this.employee_id);
+        hash = 23 * hash + Objects.hashCode(this.task_id);
+        hash = 23 * hash + Objects.hashCode(this.start_date);
+        hash = 23 * hash + Objects.hashCode(this.completion);
+        hash = 23 * hash + Objects.hashCode(this.nb_products_completed);
+        hash = 23 * hash + Objects.hashCode(this.nb_products_planned);
+        hash = 23 * hash + Objects.hashCode(this.completed);
+        hash = 23 * hash + Objects.hashCode(this.duration);
         return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj == null) {
             return false;
         }
@@ -215,25 +239,30 @@ public class DbTaskAllocation implements Serializable {
         if (!Objects.equals(this.employee_id, other.employee_id)) {
             return false;
         }
+        if (!Objects.equals(this.employee_id, other.task_id)) {
+            return false;
+        }
         if (!Objects.equals(this.start_date, other.start_date)) {
             return false;
         }
-
         if (!Objects.equals(this.completion, other.completion)) {
             return false;
         }
         if (!Objects.equals(this.nb_products_completed, other.nb_products_completed)) {
             return false;
         }
-        if (!Objects.equals(this.duration, other.duration)) {
+        if (!Objects.equals(this.nb_products_planned, other.nb_products_planned)) {
             return false;
         }
-        return Objects.equals(this.completed, other.completed);
+        if (!Objects.equals(this.completed, other.completed)) {
+            return false;
+        }
+        return Objects.equals(this.duration, other.duration);
     }
 
     @Override
     public String toString() {
-        return "DbTaskAllocation{" + "task_id=" + task_id + ", employee_id=" + employee_id + ", start_date=" + start_date + ", completion=" + completion + ", nb_products_completed=" + nb_products_completed + ", completed=" + completed + ", duration=" + duration + '}';
+        return "DbTaskAllocation{" + "id=" + id + ", task_id=" + task_id + ", employee_id=" + employee_id + ", start_date=" + start_date + ", completion=" + completion + ", nb_products_completed=" + nb_products_completed + ", nb_products_planned=" + nb_products_planned + ", completed=" + completed + ", duration=" + duration + '}';
     }
 
 }

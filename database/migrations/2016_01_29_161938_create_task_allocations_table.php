@@ -24,6 +24,8 @@ class CreateTaskAllocationsTable extends Migration {
             $table->integer('completion')->default(0);
             // number of products done
             $table->integer('nb_products_completed')->default(0);
+            // number of planned products 
+            $table->decimal('nb_products_planned', 4, 2)->default(0.00);
             // when the allocation is completed
             $table->boolean('completed')->default(0);
             $table->integer('duration')->default(0);

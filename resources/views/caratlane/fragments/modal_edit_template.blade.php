@@ -16,7 +16,7 @@
         <!-- ================================================== -->
         <!-- - new Template form                                -->
         <!-- ================================================== -->
-        <form class="form-horizontal padding-bottom-20" 
+        <form class="form-horizontal padding-bottom-0" 
               role="form"
               name="templateForm" >
 
@@ -106,7 +106,7 @@
                     <!-- ================================================== -->
                     <!-- - add a new skill button                           -->
                     <!-- ================================================== -->
-                    <div class="form-group padding-15">
+                    <div class="form-group padding-15 padding-bottom-0">
                         <input type="submit"
                                value="Add Skill"
                                class="btn btn-primary btn-o pull-right"
