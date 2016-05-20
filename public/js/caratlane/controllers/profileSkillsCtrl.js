@@ -27,7 +27,7 @@ app.controller(
 
                 $scope.skills = null;
                 $scope.allSkills = null;
-                $scope.newSkillDesignation = null;
+                $scope.addedSkill = null;
 
                 // check if this controller is used for the User 
                 // Profile page or for the Employee page
@@ -80,8 +80,7 @@ app.controller(
                     // $log.debug(CONTROLLER_NAME + " : $scope.skills = " + JSON.stringify($scope.skills));
                     // --------------------------------------------------------
 
-                }
-                else {
+                } else {
                     var dataPromise = employeesSrvc.getEmployee();
                     dataPromise.then(
                             function (response) {
@@ -131,41 +130,49 @@ app.controller(
 
                 $scope.addSkill = function () {
 
-                    var skillId = $scope.newSkillDesignation.id;
-                    var employeeId = employeesSrvc.getEmployeeId();
+                    // check if a new skill has been selected
+                    if ($scope.addedSkill !== null) {
 
-                    var skillsPromise = skillsSrvc.addSkill(employeeId, skillId);
-                    skillsPromise.then(
-                            function (response) {
+                        // check if the skill is not already in the skill's list
+                        if (!contains($scope.skills, $scope.addedSkill)) {
 
-                                $scope.skills.push(
-                                        {
-                                            'id': $scope.newSkillDesignation.id,
-                                            'reference': $scope.newSkillDesignation.reference,
-                                            'designation': $scope.newSkillDesignation.designation,
-                                            'duration': skillsSrvc.formatDuration2Mins($scope.newSkillDesignation.duration)
-                                        }
-                                );
+                            var skillId = $scope.addedSkill.id;
+                            var employeeId = employeesSrvc.getEmployeeId();
 
-                                var message = 'Skill successfully added !';
-                                modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
+                            var skillsPromise = skillsSrvc.addSkill(employeeId, skillId);
+                            skillsPromise.then(
+                                    function (response) {
 
-                            },
-                            function (response) {
+                                        $scope.skills.push(
+                                                {
+                                                    'id': $scope.addedSkill.id,
+                                                    'reference': $scope.addedSkill.reference,
+                                                    'designation': $scope.addedSkill.designation,
+                                                    'duration': skillsSrvc.formatDuration($scope.addedSkill.duration)
+                                                }
+                                        );
 
-                                // --------------------------------------------------------
-                                // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
-                                // --------------------------------------------------------
+                                        var message = 'Skill successfully added !';
+                                        modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
 
-                                // ==================================================
-                                // - adding a Skill failed
-                                // ==================================================
+                                    },
+                                    function (response) {
 
-                                var status = response.status;
-                                var message = response.statusText;
-                                modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
-                            }
-                    );
+                                        // --------------------------------------------------------
+                                        // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
+                                        // --------------------------------------------------------
+
+                                        // ==================================================
+                                        // - adding a Skill failed
+                                        // ==================================================
+
+                                        var status = response.status;
+                                        var message = response.statusText;
+                                        modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
+                                    }
+                            );
+                        }
+                    }
                 };
 
                 // ==================================================
@@ -205,6 +212,22 @@ app.controller(
                             }
                     );
 
+                };
+
+                // ==================================================
+                // - fond out if a Skill is in the list stack
+                // ==================================================
+                var contains = function (stack, skill) {
+
+                    var found = false;
+
+                    angular.forEach(stack, function (sk, key) {
+                        if (skill.id === sk.id) {
+                            found = true;
+                        }
+                    });
+
+                    return found;
                 };
 
             }]);

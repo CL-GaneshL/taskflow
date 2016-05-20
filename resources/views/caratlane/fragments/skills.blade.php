@@ -16,7 +16,6 @@
 
 </section>
 
-
 <!-- ================================================== -->
 <!-- - page body                                        -->
 <!-- ================================================== -->
@@ -198,8 +197,8 @@
                         </tr>
 
                     </tbody>
-                </table>
-                
+                    
+                </table>                
                 
                 <div class="row col-md-12 text-muted text-small"
                      ng-show="skills.length === 0"

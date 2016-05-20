@@ -7,6 +7,8 @@
 
 app.factory("skillsSrvc", function ($http, $log) {
 
+    var SERVICE_NAME = 'profileSkillsCtrl';
+
     var getSkills = function () {
 
         return $http(
@@ -88,7 +90,13 @@ app.factory("skillsSrvc", function ($http, $log) {
 
         var splits = duration.split("h");
         var hours = Number(splits[0].trim());
-        var mins = Number(splits[1].replace(' mins', '').trim());
+
+        var mins = null;
+        if (splits.length > 1) {
+            mins = Number(splits[1].replace(' mins', '').trim());
+        } else {
+            mins = '';
+        }
 
         return hours * 60 + mins;
     };
@@ -99,7 +107,7 @@ app.factory("skillsSrvc", function ($http, $log) {
         addSkill: addSkill,
         deleteSkill: deleteSkill,
         formatDuration: formatDuration,
-        formatDuration2Mins: formatDuration2Mins,
+        formatDuration2Mins: formatDuration2Mins
     };
 
 

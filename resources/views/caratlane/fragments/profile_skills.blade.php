@@ -80,7 +80,7 @@
 
                         <div class="form-group">
                             <select class="form-control cs-select cs-skin-elastic" 
-                                    ng-model="newSkillDesignation"
+                                    ng-model="addedSkill"
                                     ng-options="skill.designation for skill in allSkills"
                                     >
                                 <option value="" disabled="">Select a Skill</option>
