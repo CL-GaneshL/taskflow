@@ -141,7 +141,7 @@ public class Employees {
 
                                 // ---------------------------------------------------------------------
                                 if (LogManager.isTestLoggable()) {
-                                    LogManager.logTestMsg(Level.SEVERE, "   Skill Id = {0} not found in the database" + skill_id);
+                                    LogManager.logTestMsg(Level.SEVERE, "   Skill Id = " + skill_id + " not found in the database" );
                                 } // ---------------------------------------------------------------------
                             } 
                             else {
