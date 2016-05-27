@@ -78,7 +78,7 @@ public class Skills {
         // ---------------------------------------------------------------------
         Skills.skills.stream().forEach((skill) -> {
 
-            LogManager.getLogger().log(Level.FINE, "  + Skill = {0}", skill.toString());
+            LogManager.getLogger().log(Level.FINE, "  {0}", skill.toString());
 
             if (LogManager.isTestLoggable()) {
                 LogManager.logTestMsg(Level.INFO, "  " + skill);
