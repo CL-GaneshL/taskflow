@@ -74,8 +74,7 @@ public interface DbQueries {
     // - skills
     // =====================================================
     String FIND_SKILLS_QUERY
-            = "SELECT s FROM " + SKILL_ENTITY_NAME + " s "
-            + "WHERE s.open = :open";
+            = "SELECT s FROM " + SKILL_ENTITY_NAME + " s ";
 
     // =====================================================
     // - employee's skills

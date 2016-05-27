@@ -55,7 +55,7 @@ public class Skills {
         // ---------------------------------------------------------------------
 
         Skills.skills = SkillsDbExtractor.getAllSkills();
-        
+
         // ---------------------------------------------------------------------
         if (LogManager.isTestLoggable()) {
             LogManager.logTestMsg(Level.INFO, "Skills created : ");
@@ -78,11 +78,22 @@ public class Skills {
         // ---------------------------------------------------------------------
         Skills.skills.stream().forEach((skill) -> {
 
-            LogManager.getLogger().log(Level.FINE, "  {0}", skill.toString());
+            final boolean open = skill.getOpen() == (byte) 1;
 
-            if (LogManager.isTestLoggable()) {
-                LogManager.logTestMsg(Level.INFO, "  " + skill);
+            if (open) {
+                LogManager.getLogger().log(Level.FINE, "  {0}", skill.toString());
+
+                if (LogManager.isTestLoggable()) {
+                    LogManager.logTestMsg(Level.INFO, "  " + skill);
+                }
+            } else {
+                LogManager.getLogger().log(Level.FINE, "  CLOSED : {0}", skill.toString());
+
+                if (LogManager.isTestLoggable()) {
+                    LogManager.logTestMsg(Level.INFO, "  CLOSED :" + skill);
+                }
             }
+
         }); // ---------------------------------------------------------------------
 
     }

@@ -26,8 +26,6 @@ import java.util.logging.Level;
  */
 public class SkillsDbExtractor {
 
-    private static final Byte OPEN_SKILL = 1;
-
     public static List<Skill> getAllSkills() throws TaskGeneratorException {
 
         final List<Skill> skills = new LinkedList<>();
@@ -40,7 +38,7 @@ public class SkillsDbExtractor {
             con = DBManager.getDatabaseInstance().getConnection().open();
 
             // query the database
-            dbSkills = con.query(queryName, DbSkill.class, "open", OPEN_SKILL);
+            dbSkills = con.query(queryName, DbSkill.class);
 
             // create a Task fom a DbTask
             final Function<DbSkill, Skill> mapper = (DbSkill t) -> new Skill(t);
@@ -55,7 +53,7 @@ public class SkillsDbExtractor {
         } catch (DBException ex) {
 
             // ---------------------------------------------------------------------
-            final String msg = "Failed to retrieve opened Skills from the database.";
+            final String msg = "Failed to retrieve Skills from the database.";
             LogManager.getLogger().log(Level.SEVERE, msg);
             // ---------------------------------------------------------------------
 
@@ -71,5 +69,4 @@ public class SkillsDbExtractor {
         return skills;
     }
 
-   
 }

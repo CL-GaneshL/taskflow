@@ -12,6 +12,8 @@ import data :
 dump data only :
 "C:\Program Files\MySQL\MySQL Workbench 6.3 CE\mysqldump.exe" --host=130.211.240.165 --password=9AeSrjLH5hj --user=taskflow_user --port=3306 --no-create-info=TRUE --skip-triggers "taskflowdb" > dump.sql
 
+migration : 
+"C:\Program Files\MySQL\MySQL Workbench 6.3 CE\mysql.exe" --host=130.211.240.165 --password=9AeSrjLH5hj --user=taskflow_user --port=3306 --database=taskflowdb --verbose < ./taskflow-schema-1.0.4_1.1.0.sql
 
 =========================
 local : 

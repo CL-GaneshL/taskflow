@@ -88,19 +88,17 @@ class AllocateController extends Controller {
                     $clean_buffer = utf8_encode($bufferLog);
                     $log = str_replace("TEST_MGS ", "", $clean_buffer);
 
-                    // \Log::debug('[' . $bufferLog . ']');
-
                     $warning_count += (strpos($log, "WARNING") === 0) ? 1 : 0;
                     $error_count += (strpos($log, "SEVERE") === 0 ) ? 1 : 0;
-
-                    \Log::debug('$warning_count = ' . $warning_count);
-                    \Log::debug('$error_count = ' . $error_count);
 
                     // will be sent to the front end
                     $messages->log($log);
                 }
             }
-        });        
+        });
+
+        \Log::debug('$warning_count = ' . $warning_count);
+        \Log::debug('$error_count = ' . $error_count);
 
         $messages->log('RESULTS_WARNINGS : ' . $warning_count);
         $messages->log('RESULTS_ERRORS : ' . $error_count);

@@ -178,10 +178,7 @@ public class DbSkill implements Serializable {
         if (!Objects.equals(this.duration, other.duration)) {
             return false;
         }
-        if (!Objects.equals(this.open, other.open)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.open, other.open);
     }
 
     @Override

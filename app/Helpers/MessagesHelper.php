@@ -49,9 +49,8 @@ class MessagesHelper {
         // trace the msg in the log file
         $max = sizeof($this->buffer);
         for ($i = 0; $i < $max; $i++) {
+            
             $str = utf8_encode($this->buffer[$i]);
-
-            \Log::debug($str);
 
             // fill a temporary buffer with the message
             $response_buffer[] = $str;

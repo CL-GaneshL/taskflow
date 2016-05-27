@@ -71,7 +71,7 @@ public class Projects {
             // extract all open projects
             final List<Project> openProjects
                     = ProjectsDbExtractor.getOpenProjects();
-            
+
             // ---------------------------------------------------------------------
             if (LogManager.isTestLoggable()) {
                 LogManager.logTestMsg(Level.INFO, "Projects created : ");
@@ -95,7 +95,7 @@ public class Projects {
                 // ---------------------------------------------------------------------
                 LogManager.getLogger().log(Level.FINE, " {0}", project.toString());
                 // --------------------------------------------------------------------- 
-                
+
                 // ---------------------------------------------------------------------
                 if (LogManager.isTestLoggable()) {
                     LogManager.logTestMsg(Level.INFO, "  " + project);
@@ -115,17 +115,17 @@ public class Projects {
                     if (LogManager.isTestLoggable()) {
                         LogManager.logTestMsg(Level.INFO, "  Skills associated to Projects : ");
                     } // ---------------------------------------------------------------------  
-                        
+
                     if (projectSkills.isEmpty()) {
                         // ---------------------------------------------------------------------
                         LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
                         LogManager.getLogger().log(Level.FINE, " Project has no Skills !!!!!!!!!!!!!");
                         LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
                         // ---------------------------------------------------------------------
-                        
+
                         // ---------------------------------------------------------------------
                         if (LogManager.isTestLoggable()) {
-                            LogManager.logTestMsg(Level.SEVERE, "  Project has no associated Skills.");
+                            LogManager.logTestMsg(Level.WARNING, "  Project has no associated Skills.");
                         } // ---------------------------------------------------------------------  
                     }
 
@@ -142,10 +142,36 @@ public class Projects {
                             LogManager.getLogger().log(Level.FINE, " Skill = {0} does not exist in the database !!!!!!!!!!!", skill_id);
                             LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
                             // ---------------------------------------------------------------------  
-                        } else {
+                            
                             // ---------------------------------------------------------------------
-                            LogManager.getLogger().log(Level.FINE, "   {0}", skill);
-                            // --------------------------------------------------------------------- 
+                            if (LogManager.isTestLoggable()) {
+                                LogManager.logTestMsg(Level.SEVERE, "   Skill Id = " + skill_id + " not in the database. Check with DB Administrator.");
+                            } // ---------------------------------------------------------------------
+                            
+                        } else {
+
+                            final boolean open = skill.getOpen() == (byte) 1;
+
+                            if (open) {
+                                // ---------------------------------------------------------------------
+                                LogManager.getLogger().log(Level.FINE, "  {0}", skill.toString());
+                                // ---------------------------------------------------------------------
+
+                                // ---------------------------------------------------------------------
+                                if (LogManager.isTestLoggable()) {
+                                    LogManager.logTestMsg(Level.INFO, "  " + skill);
+                                }  // ---------------------------------------------------------------------
+                            } else {
+
+                                // ---------------------------------------------------------------------
+                                LogManager.getLogger().log(Level.FINE, "  CLOSED SKILL : {0}", skill.toString());
+                                // ---------------------------------------------------------------------
+
+                                // ---------------------------------------------------------------------
+                                if (LogManager.isTestLoggable()) {
+                                    LogManager.logTestMsg(Level.INFO, "  CLOSED SKILL - REMOVE SKILL FROM EMPLOYEE : " + skill);
+                                } // ---------------------------------------------------------------------
+                            }
                         }
 
                         // add the skill to the project

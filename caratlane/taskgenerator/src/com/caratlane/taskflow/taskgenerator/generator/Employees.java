@@ -135,22 +135,39 @@ public class Employees {
                             if (skill == null) {
                                 // ---------------------------------------------------------------------
                                 LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
-                                LogManager.getLogger().log(Level.FINE, " Skill = {0} does not exist in the database !!!!!!!!!!!", skill_id);
+                                LogManager.getLogger().log(Level.FINE, " Skill = {0} not exist in the database !!!!!!!!!!!", skill_id);
                                 LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
                                 // ---------------------------------------------------------------------  
 
                                 // ---------------------------------------------------------------------
                                 if (LogManager.isTestLoggable()) {
-                                    LogManager.logTestMsg(Level.SEVERE, "   Skill Id = " + skill_id + " not found in the database" );
+                                    LogManager.logTestMsg(Level.SEVERE, "   Skill Id = " + skill_id + " not in the database. Check with DB Administrator.");
                                 } // ---------------------------------------------------------------------
-                            } 
-                            else {
-                                // ---------------------------------------------------------------------
-                                if (LogManager.isTestLoggable()) {
-                                    LogManager.logTestMsg(Level.INFO, "  " + skill);
-                                } // ---------------------------------------------------------------------                          
-                            }
                             
+                            } else {
+                                final boolean open = skill.getOpen() == (byte) 1;
+
+                                if (open) {
+                                    // ---------------------------------------------------------------------
+                                    LogManager.getLogger().log(Level.FINE, "  {0}", skill);
+                                    // ---------------------------------------------------------------------
+
+                                    // ---------------------------------------------------------------------
+                                    if (LogManager.isTestLoggable()) {
+                                        LogManager.logTestMsg(Level.INFO, "  " + skill);
+                                    } // ---------------------------------------------------------------------  
+                                } else {
+                                    // ---------------------------------------------------------------------
+                                    LogManager.getLogger().log(Level.FINE, "  CLOSED SKILL : {0}", skill);
+                                    // ---------------------------------------------------------------------
+
+                                    // ---------------------------------------------------------------------
+                                    if (LogManager.isTestLoggable()) {
+                                        LogManager.logTestMsg(Level.SEVERE, "  CLOSED SKILL - REMOVE SKILL FROM EMPLOYEE : " + skill);
+                                    } // ---------------------------------------------------------------------     
+                                }
+                            }
+
                             employeeData.addSkill(skill_id);
                         });
                     }
