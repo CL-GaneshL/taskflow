@@ -52,7 +52,7 @@ public class EmployeeSkill {
 
     @Override
     public String toString() {
-        return "EmployeeSkill{" + "dbEmployeeSkill=" + dbEmployeeSkill + '}';
+        return "EmployeeSkill = {" + dbEmployeeSkill + '}';
     }
 
 }

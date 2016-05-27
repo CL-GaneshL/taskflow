@@ -10,6 +10,7 @@ import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorRuntimeExcep
 import com.caratlane.taskflow.taskgenerator.generator.crud.ProjectsDbExtractor;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Project;
 import com.caratlane.taskflow.taskgenerator.generator.dao.ProjectSkill;
+import com.caratlane.taskflow.taskgenerator.generator.dao.Skill;
 import com.caratlane.taskflow.taskgenerator.logging.LogManager;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
@@ -58,15 +59,47 @@ public class Projects {
      */
     public static void initialize() throws TaskGeneratorException {
 
-        // extract all open projects
-        final List<Project> openProjects
-                = ProjectsDbExtractor.getOpenProjects();
+        // ---------------------------------------------------------------------
+        LogManager.getLogger().log(Level.FINE, "-----------------------------------------");
+        LogManager.getLogger().log(Level.FINE, "Initializing projects ...");
+        LogManager.getLogger().log(Level.FINE, "-----------------------------------------");
+        // ---------------------------------------------------------------------
 
         projects = new LinkedList<>();
 
         try {
+            // extract all open projects
+            final List<Project> openProjects
+                    = ProjectsDbExtractor.getOpenProjects();
+            
+            // ---------------------------------------------------------------------
+            if (LogManager.isTestLoggable()) {
+                LogManager.logTestMsg(Level.INFO, "Projects created : ");
+            } // ---------------------------------------------------------------------     
+
+            if (openProjects.isEmpty()) {
+                // ---------------------------------------------------------------------
+                LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
+                LogManager.getLogger().log(Level.FINE, " No open Project !!!!!!!!!!!!!");
+                LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
+                // ---------------------------------------------------------------------  
+
+                // ---------------------------------------------------------------------
+                if (LogManager.isTestLoggable()) {
+                    LogManager.logTestMsg(Level.SEVERE, " - No Projects found in the Database !");
+                } // ---------------------------------------------------------------------     
+            }
 
             openProjects.forEach((Project project) -> {
+
+                // ---------------------------------------------------------------------
+                LogManager.getLogger().log(Level.FINE, " {0}", project.toString());
+                // --------------------------------------------------------------------- 
+                
+                // ---------------------------------------------------------------------
+                if (LogManager.isTestLoggable()) {
+                    LogManager.logTestMsg(Level.INFO, "  " + project);
+                } // ---------------------------------------------------------------------         
 
                 try {
                     final ProjectData projectData = new ProjectData(project);
@@ -78,8 +111,45 @@ public class Projects {
                     final List<ProjectSkill> projectSkills
                             = ProjectsDbExtractor.getProjectSkills(project_id);
 
-                    projectSkills.stream().forEach((ProjectSkill skill) -> {
-                        projectData.addSkill(skill.getSkillId());
+                    // ---------------------------------------------------------------------
+                    if (LogManager.isTestLoggable()) {
+                        LogManager.logTestMsg(Level.INFO, "  Skills associated to Projects : ");
+                    } // ---------------------------------------------------------------------  
+                        
+                    if (projectSkills.isEmpty()) {
+                        // ---------------------------------------------------------------------
+                        LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
+                        LogManager.getLogger().log(Level.FINE, " Project has no Skills !!!!!!!!!!!!!");
+                        LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
+                        // ---------------------------------------------------------------------
+                        
+                        // ---------------------------------------------------------------------
+                        if (LogManager.isTestLoggable()) {
+                            LogManager.logTestMsg(Level.SEVERE, "  Project has no associated Skills.");
+                        } // ---------------------------------------------------------------------  
+                    }
+
+                    projectSkills.stream().forEach((ProjectSkill projectSkill) -> {
+
+                        final Integer skill_id = projectSkill.getSkillId();
+
+                        // check that the skill exists in the db
+                        final Skill skill = Skills.getInstance().getSkill(skill_id);
+
+                        if (skill == null) {
+                            // ---------------------------------------------------------------------
+                            LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
+                            LogManager.getLogger().log(Level.FINE, " Skill = {0} does not exist in the database !!!!!!!!!!!", skill_id);
+                            LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
+                            // ---------------------------------------------------------------------  
+                        } else {
+                            // ---------------------------------------------------------------------
+                            LogManager.getLogger().log(Level.FINE, "   {0}", skill);
+                            // --------------------------------------------------------------------- 
+                        }
+
+                        // add the skill to the project
+                        projectData.addSkill(skill_id);
                     });
 
                 } catch (TaskGeneratorException ex) {
@@ -98,7 +168,6 @@ public class Projects {
 
             throw new TaskGeneratorException(ex);
         }
-
     }
 
     /**

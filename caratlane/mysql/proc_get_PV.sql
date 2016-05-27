@@ -5,7 +5,7 @@ PROCEDURE `getPV` (project_id INT(11))
 
 BEGIN
 
-    SET @TWO_DECIMALs := 2;
+    SET @TWO_DECIMALS := 2;
     SET @FOUR_DECIMALS := 4;
 
     SET @max := 0;

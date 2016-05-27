@@ -10,8 +10,10 @@ import com.caratlane.taskflow.taskgenerator.generator.dao.Task;
 import com.caratlane.taskflow.taskgenerator.generator.dao.TaskAllocation;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.IN_THREE_DAYS;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.IN_TWO_DAYS;
-import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.TOMORROW;
+
+import static com.caratlane.taskflow.taskgenerator.generator.rules.Constants.PRODUCT_BASED;
 import com.caratlane.taskflow.taskgenerator.generator.rules.TaskAllocator;
+import com.caratlane.taskflow.taskgenerator.generator.rules.TaskAllocatorFactory;
 import utils.TestTaskGeneratorException;
 import static utils.TestDBConstants.DURATION_SKILL_5_3RenC;
 import static utils.TestDBConstants.EMPLOYEE_CL0004;
@@ -32,10 +34,11 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import static utils.TestDBConstants.TOMORROW;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -43,7 +46,7 @@ import org.junit.Test;
  */
 public class EmployeeDataAllocateTask2Test {
 
-    final static boolean test = true;
+    final static boolean TEST = true;
 
     private static EmployeeData employeeData = null;
     private static ProjectData projectData = null;
@@ -56,8 +59,7 @@ public class EmployeeDataAllocateTask2Test {
 
         // company's non working days
 //        final NonWorkingDays nwdsInstance = NonWorkingDays.getInstance();
-//        nwdsInstance.addNwd(test, NWD_1);       // tomorrow
-
+//        nwdsInstance.addNwd(TEST, NWD_1);       // tomorrow
         final Skills skills = Skills.getInstance();
         skills.addSkill(SKILL_3_3DMS);      // id = 3
         skills.addSkill(SKILL_5_3RenC);     // id = 5
@@ -67,7 +69,7 @@ public class EmployeeDataAllocateTask2Test {
         employeeData.addSkill(ID_SKILL_5_3RenC);     // id = 5
 
         final Employees employeesInstance = Employees.getInstance();
-        employeesInstance.addEmployeeData(test, employeeData);
+        employeesInstance.addEmployeeData(TEST, employeeData);
 
         // set up non working days for that employee
         // non non working days, no holidays
@@ -80,26 +82,26 @@ public class EmployeeDataAllocateTask2Test {
         employeeData = null;
 
         final Skills skillsInstance = Skills.getInstance();
-        skillsInstance.clearSkills(test);
+        skillsInstance.clearSkills(TEST);
 
         final NonWorkingDays nwdsInstance = NonWorkingDays.getInstance();
-        nwdsInstance.clearNwds(test);
+        nwdsInstance.clearNwds(TEST);
 
         final Employees employeesInstance = Employees.getInstance();
-        employeesInstance.clearEmployeeData(test);
+        employeesInstance.clearEmployeeData(TEST);
     }
 
     @Before
     public void setUp() throws TestTaskGeneratorException {
 
         // clean up existing tasks from previous tests.
-        employeeData.clearTaskAllocations(test);
+        employeeData.clearTaskAllocations(TEST);
     }
 
     @After
     public void tearDown() {
 
-        // make sure a new project is used for every new test
+        // make sure a new project is used for every new TEST
         projectData = null;
     }
 
@@ -110,7 +112,7 @@ public class EmployeeDataAllocateTask2Test {
     // - respectively equals to 2, 4, 6, 8 and 10. We therefore 
     // - xpect total durations respectively equals to 240, 480, 
     // - 630, 840 and 1050 mins.
-    // - The expected result for each test is :
+    // - The expected result for each TEST is :
     // - [ ([8hours])+ [remainder] ]
     // ==================================================================
     /**
@@ -127,7 +129,11 @@ public class EmployeeDataAllocateTask2Test {
         final Integer skill_id = ID_SKILL_5_3RenC; // id = 5
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_1;    // nb probucts = 2
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
+        final TaskAllocator taskAllocator
+                = (new TaskAllocatorFactory(PRODUCT_BASED))
+                .getInstance(TOMORROW);
+
+        taskAllocator.allocate(TEST, projectData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
@@ -168,7 +174,11 @@ public class EmployeeDataAllocateTask2Test {
         final Integer skill_id = ID_SKILL_5_3RenC; // id = 5
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_2;    // nb probucts = 4
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
+        final TaskAllocator taskAllocator
+                = (new TaskAllocatorFactory(PRODUCT_BASED))
+                .getInstance(TOMORROW);
+
+        taskAllocator.allocate(TEST, projectData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
@@ -209,7 +219,11 @@ public class EmployeeDataAllocateTask2Test {
         final Integer skill_id = ID_SKILL_5_3RenC; // id = 5
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_3;    // nb probucts = 6
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
+        final TaskAllocator taskAllocator
+                = (new TaskAllocatorFactory(PRODUCT_BASED))
+                .getInstance(TOMORROW);
+
+        taskAllocator.allocate(TEST, projectData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
@@ -230,9 +244,14 @@ public class EmployeeDataAllocateTask2Test {
         final LocalDateTime expectedstartDate0 = TOMORROW;
         assertEquals(expectedstartDate0, startDate0);
 
-        // allocation expected of 8 hours ( full shift allocation )
+        // expect 4 products
+        final int nbProducts0 = allocation0.getNbProductsPlanned();
+        final int expectedNbProducts0 = 4;
+        assertEquals(expectedNbProducts0, nbProducts0);
+
+        // allocation expected of 460 mins = 4 * 1h45
         final int duration0 = allocation0.getDuration();
-        final int expectedDuration0 = 8 * 60;   // 480 mins
+        final int expectedDuration0 = 4 * (1 * 60 + 45);   // 420 mins
         assertEquals(expectedDuration0, duration0);
 
         final TaskAllocation allocation1 = allocations.get(1);
@@ -242,9 +261,14 @@ public class EmployeeDataAllocateTask2Test {
         final LocalDateTime expectedstartDate1 = IN_TWO_DAYS;
         assertEquals(expectedstartDate1, startDate1);
 
-        // allocation expected of 150 mins ( the remaining )
+        // expect 2 products
+        final int nbProducts1 = allocation1.getNbProductsPlanned();
+        final int expectedNbProducts1 = 2;
+        assertEquals(expectedNbProducts0, nbProducts0);
+
+        // allocation expected of 210 mins ( the remaining )
         final int duration1 = allocation1.getDuration();
-        final int expectedDuration1 = 150;   // 630 - 480 = 150 mins
+        final int expectedDuration1 = 210;   // 630 - 420 = 210 mins
         assertEquals(expectedDuration1, duration1);
     }
 
@@ -262,7 +286,11 @@ public class EmployeeDataAllocateTask2Test {
         final Integer skill_id = ID_SKILL_5_3RenC; // id = 5
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_4;    // nb probucts = 8
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
+        final TaskAllocator taskAllocator
+                = (new TaskAllocatorFactory(PRODUCT_BASED))
+                .getInstance(TOMORROW);
+
+        taskAllocator.allocate(TEST, projectData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
@@ -283,9 +311,14 @@ public class EmployeeDataAllocateTask2Test {
         final LocalDateTime expectedstartDate0 = TOMORROW;
         assertEquals(expectedstartDate0, startDate0);
 
-        // allocation expected of 8 hours ( full shift allocation )
+        // expect 4 products
+        final int nbProducts0 = allocation0.getNbProductsPlanned();
+        final int expectedNbProducts0 = 4;
+        assertEquals(expectedNbProducts0, nbProducts0);
+
+        // allocation expected of 460 mins = 4 * 1h45
         final int duration0 = allocation0.getDuration();
-        final int expectedDuration0 = 8 * 60;   // 480 mins
+        final int expectedDuration0 = 4 * (1 * 60 + 45);   // 420 mins
         assertEquals(expectedDuration0, duration0);
 
         final TaskAllocation allocation1 = allocations.get(1);
@@ -295,9 +328,14 @@ public class EmployeeDataAllocateTask2Test {
         final LocalDateTime expectedstartDate1 = IN_TWO_DAYS;
         assertEquals(expectedstartDate1, startDate1);
 
-        // allocation expected of 360 mins ( the remaining )
+        // expect 4 products
+        final int nbProducts1 = allocation1.getNbProductsPlanned();
+        final int expectedNbProducts1 = 4;
+        assertEquals(expectedNbProducts1, nbProducts1);
+
+        // allocation expected of 420 mins ( the remaining )
         final int duration1 = allocation1.getDuration();
-        final int expectedDuration1 = 360;   // 840 - 480 = 360 mins
+        final int expectedDuration1 = 420;   // 840 - 420 = 420 mins
         assertEquals(expectedDuration1, duration1);
     }
 
@@ -315,7 +353,11 @@ public class EmployeeDataAllocateTask2Test {
         final Integer skill_id = ID_SKILL_5_3RenC; // id = 5
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_5;    // nb probucts = 10
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
+        final TaskAllocator taskAllocator
+                = (new TaskAllocatorFactory(PRODUCT_BASED))
+                .getInstance(TOMORROW);
+
+        taskAllocator.allocate(TEST, projectData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
@@ -336,9 +378,14 @@ public class EmployeeDataAllocateTask2Test {
         final LocalDateTime expectedstartDate0 = TOMORROW;
         assertEquals(expectedstartDate0, startDate0);
 
-        // allocation expected of 8 hours ( full shift allocation )
+        // expect 4 products
+        final int nbProducts0 = allocation0.getNbProductsPlanned();
+        final int expectedNbProducts0 = 4;
+        assertEquals(expectedNbProducts0, nbProducts0);
+
+        // allocation expected of 460 mins = 4 * 1h45
         final int duration0 = allocation0.getDuration();
-        final int expectedDuration0 = 8 * 60;
+        final int expectedDuration0 = 4 * (1 * 60 + 45);   // 420 mins
         assertEquals(expectedDuration0, duration0);
 
         final TaskAllocation allocation1 = allocations.get(1);
@@ -348,9 +395,14 @@ public class EmployeeDataAllocateTask2Test {
         final LocalDateTime expectedstartDate1 = IN_TWO_DAYS;
         assertEquals(expectedstartDate1, startDate1);
 
-        // allocation expected of 8 hours
+        // expect 4 products
+        final int nbProducts1 = allocation1.getNbProductsPlanned();
+        final int expectedNbProducts1 = 4;
+        assertEquals(expectedNbProducts1, nbProducts1);
+
+        // allocation expected of 420 mins ( the remaining )
         final int duration1 = allocation1.getDuration();
-        final int expectedDuration1 = 8 * 60;
+        final int expectedDuration1 = 420;   // 840 - 420 = 420 mins
         assertEquals(expectedDuration1, duration1);
 
         final TaskAllocation allocation2 = allocations.get(2);
@@ -360,9 +412,14 @@ public class EmployeeDataAllocateTask2Test {
         final LocalDateTime expectedstartDate2 = IN_THREE_DAYS;
         assertEquals(expectedstartDate2, startDate2);
 
-        // allocation expected of 90 mins ( the remaining )
+        // expect 2 products
+        final int nbProducts2 = allocation2.getNbProductsPlanned();
+        final int expectedNbProducts2 = 2;
+        assertEquals(expectedNbProducts1, nbProducts1);
+
+        // allocation expected of 210 mins ( the remaining )
         final int duration2 = allocation2.getDuration();
-        final int expectedDuration2 = 90;   // 1050 - 480 -480 = 90 mins
+        final int expectedDuration2 = 210; 
         assertEquals(expectedDuration2, duration2);
     }
 

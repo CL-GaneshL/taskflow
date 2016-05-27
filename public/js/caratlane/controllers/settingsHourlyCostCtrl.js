@@ -13,11 +13,12 @@ angular.module('calendar', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAnimat
                     function ($log, $scope, $uibModal, settingsSrvc, modalSrvc) {
 
                         var CONTROLLER_NAME = 'settingsHourlyCostCtrl';
-                        var TWO_DECIMALS = 2;
 
                         // ==================================================
                         // initialize the controller
                         // ==================================================
+
+                        var TWO_DECIMALS = 2;
 
                         $scope.hourlyCost = '0.00';
 

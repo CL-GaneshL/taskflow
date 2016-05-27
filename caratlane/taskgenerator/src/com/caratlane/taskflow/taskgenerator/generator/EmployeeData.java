@@ -19,7 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 
 /**
@@ -46,7 +45,6 @@ public class EmployeeData {
     ) {
 
         // In order to optimize the search for non working days
-        // in the allocateTask and getNextAvailability methods,
         // we create a unique date sorted list employeeNonWorkingDays.
         final LinkedList<EmployeeNonWorkingDay> castedHolidays
                 = castToEmployeeNonWorkingDay(holidays);
@@ -65,7 +63,7 @@ public class EmployeeData {
         LogManager.getLogger().log(Level.FINE, "-------------------------------------------");
 
         this.employeeNonWorkingDays.stream().forEach((nwd) -> {
-            LogManager.getLogger().log(Level.FINE, "NWD ====> {0}", nwd);
+            LogManager.getLogger().log(Level.FINE, "{0}", nwd);
         });
         // ---------------------------------------------------------------------
 
@@ -139,93 +137,90 @@ public class EmployeeData {
 
         final LinkedList<EmployeeNonWorkingDay> castedHolidays = new LinkedList<>();
 
-        holidays.stream().forEach(new Consumer<Holiday>() {
+        holidays.stream().forEach((Holiday holiday) -> {
 
-            @Override
-            public void accept(Holiday holiday) {
-                final LocalDateTime start_date = holiday.getStartDate();
-                final LocalDateTime end_date = holiday.getEndDate();
-                // create N employee non working days, one per holiday day
-                LocalDateTime current = start_date;
-                do {
-                    final LocalDateTime day_Nth_date = LocalDateTime.from(current);
-                    final Integer employee_id = holiday.getEmployeeId();
-                    final String holiday_title = "employee holidays.";
-                    final NWDType holiday_type = HOLIDAYS;
+            final LocalDateTime start_date = holiday.getStartDate();
+            final LocalDateTime end_date = holiday.getEndDate();
+            // create N employee non working days, one per holiday day
+            LocalDateTime current = start_date;
+            do {
+                final LocalDateTime day_Nth_date = LocalDateTime.from(current);
+                final Integer employee_id = holiday.getEmployeeId();
+                final String holiday_title = "employee holidays.";
+                final NWDType holiday_type = HOLIDAYS;
 
-                    final EmployeeNonWorkingDay employeeNonWorkingDay
-                            = new EmployeeNonWorkingDay() {
+                final EmployeeNonWorkingDay employeeNonWorkingDay
+                        = new EmployeeNonWorkingDay() {
 
-                                private final Integer id = employee_id;
-                                private final String title = holiday_title;
-                                private final NWDType type = holiday_type;
-                                private final LocalDateTime date = day_Nth_date;
+                    private final Integer id = employee_id;
+                    private final String title = holiday_title;
+                    private final NWDType type = holiday_type;
+                    private final LocalDateTime date = day_Nth_date;
 
-                                @Override
-                                public Integer getId() {
-                                    return id;
-                                }
+                    @Override
+                    public Integer getId() {
+                        return id;
+                    }
 
-                                @Override
-                                public String getTitle() {
-                                    return title;
-                                }
+                    @Override
+                    public String getTitle() {
+                        return title;
+                    }
 
-                                @Override
-                                public NWDType getType() {
-                                    return type;
-                                }
+                    @Override
+                    public NWDType getType() {
+                        return type;
+                    }
 
-                                @Override
-                                public LocalDateTime getDate() {
-                                    return this.date;
-                                }
+                    @Override
+                    public LocalDateTime getDate() {
+                        return this.date;
+                    }
 
-                                @Override
-                                public boolean equals(Object obj) {
+                    @Override
+                    public boolean equals(Object obj) {
 
-                                    if (obj == null) {
-                                        return false;
-                                    }
-                                    if (getClass() != obj.getClass()) {
-                                        return false;
-                                    }
-                                    final EmployeeNonWorkingDay other = (EmployeeNonWorkingDay) obj;
-                                    if (!Objects.equals(this.id, other.getId())) {
-                                        return false;
-                                    }
-                                    if (!Objects.equals(this.title, other.getTitle())) {
-                                        return false;
-                                    }
-                                    if (!this.type.equals(other.getType())) {
-                                        return false;
-                                    }
-                                    return Objects.equals(this.date, other.getDate());
+                        if (obj == null) {
+                            return false;
+                        }
+                        if (getClass() != obj.getClass()) {
+                            return false;
+                        }
+                        final EmployeeNonWorkingDay other = (EmployeeNonWorkingDay) obj;
+                        if (!Objects.equals(this.id, other.getId())) {
+                            return false;
+                        }
+                        if (!Objects.equals(this.title, other.getTitle())) {
+                            return false;
+                        }
+                        if (!this.type.equals(other.getType())) {
+                            return false;
+                        }
+                        return Objects.equals(this.date, other.getDate());
 
-                                }
+                    }
 
-                                @Override
-                                public int hashCode() {
-                                    int hash = 7;
-                                    hash = 23 * hash + Objects.hashCode(this.id);
-                                    hash = 23 * hash + Objects.hashCode(this.title);
-                                    hash = 23 * hash + Objects.hashCode(this.type);
-                                    hash = 23 * hash + Objects.hashCode(this.date);
-                                    return hash;
-                                }
+                    @Override
+                    public int hashCode() {
+                        int hash = 7;
+                        hash = 23 * hash + Objects.hashCode(this.id);
+                        hash = 23 * hash + Objects.hashCode(this.title);
+                        hash = 23 * hash + Objects.hashCode(this.type);
+                        hash = 23 * hash + Objects.hashCode(this.date);
+                        return hash;
+                    }
 
-                                @Override
-                                public String toString() {
-                                    return "{" + "id=" + id + ", title=" + title + ", type=" + type + ", date=" + date + '}';
-                                }
+                    @Override
+                    public String toString() {
+                        return "{" + "id=" + id + ", title=" + title + ", type=" + type + ", date=" + date + '}';
+                    }
 
-                            };
+                };
 
-                    castedHolidays.add(employeeNonWorkingDay);
-                    current = current.plusDays(1);
+                castedHolidays.add(employeeNonWorkingDay);
+                current = current.plusDays(1);
 
-                } while (current.isBefore(end_date) || current.isEqual(end_date));
-            }
+            } while (current.isBefore(end_date) || current.isEqual(end_date));
         });
 
         return castedHolidays;

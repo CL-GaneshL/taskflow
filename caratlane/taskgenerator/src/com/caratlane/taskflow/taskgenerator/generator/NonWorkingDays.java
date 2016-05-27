@@ -8,8 +8,10 @@ package com.caratlane.taskflow.taskgenerator.generator;
 import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorException;
 import com.caratlane.taskflow.taskgenerator.generator.dao.NonWorkingDay;
 import com.caratlane.taskflow.taskgenerator.generator.crud.NwdsDbExtractor;
+import com.caratlane.taskflow.taskgenerator.logging.LogManager;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.logging.Level;
 
 /**
  *
@@ -31,12 +33,28 @@ public class NonWorkingDays {
         private static final NonWorkingDays INSTANCE = new NonWorkingDays();
     }
 
-//    public List<NonWorkingDays> getNonWokingDays() {
-//        return nwds;
-//    }
+    /**
+     *
+     * @param from
+     * @throws TaskGeneratorException
+     */
     public static void initialize(final Date from) throws TaskGeneratorException {
 
-        nwds = NwdsDbExtractor.getNonWorkingDays(from);
+        NonWorkingDays.nwds = NwdsDbExtractor.getNonWorkingDays(from);
+
+        // ---------------------------------------------------------------------
+        if (LogManager.isTestLoggable()) {
+
+            LogManager.logTestMsg(Level.INFO, "Non Working Days recorded : ");
+
+            if (NonWorkingDays.nwds.isEmpty()) {
+                LogManager.logTestMsg(Level.SEVERE, " - No Non Working Days found in the Database !");
+            } else {
+                NonWorkingDays.nwds.stream().forEach((NonWorkingDay nwd) -> {
+                    LogManager.logTestMsg(Level.INFO, "  " + nwd);
+                });
+            }
+        } // ---------------------------------------------------------------------
     }
 
     /**
@@ -44,7 +62,7 @@ public class NonWorkingDays {
      * @return
      */
     public LinkedList<NonWorkingDay> getNwds() {
-        return nwds;
+        return NonWorkingDays.nwds;
     }
 
     // ==========================================================
@@ -58,7 +76,7 @@ public class NonWorkingDays {
      */
     public static void initialize(boolean test) throws TaskGeneratorException {
 
-        nwds = new LinkedList<>();
+        NonWorkingDays.nwds = new LinkedList<>();
     }
 
     /**
@@ -70,7 +88,7 @@ public class NonWorkingDays {
      */
     public void addNwd(boolean test, final NonWorkingDay nwd) {
 
-        nwds.add(nwd);
+        NonWorkingDays.nwds.add(nwd);
 
         // ---------------------------------------------------------------------
 //        LogManager.getLogger().log(Level.FINE, "Added Non Working Day = {0}", nwd);
@@ -83,6 +101,6 @@ public class NonWorkingDays {
      * @param test
      */
     public void clearNwds(boolean test) {
-        nwds.clear();
+        NonWorkingDays.nwds.clear();
     }
 }

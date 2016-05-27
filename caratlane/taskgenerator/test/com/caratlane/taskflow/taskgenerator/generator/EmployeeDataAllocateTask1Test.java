@@ -10,8 +10,10 @@ import com.caratlane.taskflow.taskgenerator.generator.dao.Task;
 import com.caratlane.taskflow.taskgenerator.generator.dao.TaskAllocation;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.IN_THREE_DAYS;
 import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.IN_TWO_DAYS;
-import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.TOMORROW;
+
+import static com.caratlane.taskflow.taskgenerator.generator.rules.Constants.PRODUCT_BASED;
 import com.caratlane.taskflow.taskgenerator.generator.rules.TaskAllocator;
+import com.caratlane.taskflow.taskgenerator.generator.rules.TaskAllocatorFactory;
 import utils.TestTaskGeneratorException;
 import static utils.TestDBConstants.DURATION_SKILL_3_3DMS;
 import static utils.TestDBConstants.EMPLOYEE_CL0004;
@@ -32,10 +34,11 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import static utils.TestDBConstants.TOMORROW;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -43,7 +46,7 @@ import org.junit.Test;
  */
 public class EmployeeDataAllocateTask1Test {
 
-    final static boolean test = true;
+    final static boolean TEST = true;
 
     private static EmployeeData employeeData = null;
     private static ProjectData projectData = null;
@@ -56,8 +59,7 @@ public class EmployeeDataAllocateTask1Test {
 
         // company's non working days
 //        final NonWorkingDays nwdsInstance = NonWorkingDays.getInstance();
-//        nwdsInstance.addNwd(test, NWD_1);       // tomorrow
-
+//        nwdsInstance.addNwd(TEST, NWD_1);       // tomorrow
         final Skills skills = Skills.getInstance();
         skills.addSkill(SKILL_3_3DMS);      // id = 3
         skills.addSkill(SKILL_5_3RenC);     // id = 5
@@ -67,7 +69,7 @@ public class EmployeeDataAllocateTask1Test {
         employeeData.addSkill(ID_SKILL_3_3DMS);     // id = 3
 
         final Employees employeesInstance = Employees.getInstance();
-        employeesInstance.addEmployeeData(test, employeeData);
+        employeesInstance.addEmployeeData(TEST, employeeData);
 
         // set up non working days for that employee
         // non non working days, no holidays
@@ -80,26 +82,26 @@ public class EmployeeDataAllocateTask1Test {
         employeeData = null;
 
         final Skills skillsInstance = Skills.getInstance();
-        skillsInstance.clearSkills(test);
+        skillsInstance.clearSkills(TEST);
 
         final NonWorkingDays nwdsInstance = NonWorkingDays.getInstance();
-        nwdsInstance.clearNwds(test);
+        nwdsInstance.clearNwds(TEST);
 
         final Employees employeesInstance = Employees.getInstance();
-        employeesInstance.clearEmployeeData(test);
+        employeesInstance.clearEmployeeData(TEST);
     }
 
     @Before
     public void setUp() throws TestTaskGeneratorException {
 
         // clean up existing tasks from previous tests.
-        employeeData.clearTaskAllocations(test);
+        employeeData.clearTaskAllocations(TEST);
     }
 
     @After
     public void tearDown() {
 
-        // make sure a new project is used for every new test
+        // make sure a new project is used for every new TEST
         projectData = null;
     }
 
@@ -111,7 +113,7 @@ public class EmployeeDataAllocateTask1Test {
     // - respectively equals to 4, 8, 12, 16 and 20 hours. These
     // - durations are multiple of 4 ( half a shift of 8 hours ),
     // - so we exercice the allocation of full shift ( 8 hours ).
-    // - The expected result for each test is :
+    // - The expected result for each TEST is :
     // - [ ([4 hours] | [8hours])+ ]
     // ==================================================================
     /**
@@ -128,7 +130,11 @@ public class EmployeeDataAllocateTask1Test {
         final Integer skill_id = ID_SKILL_3_3DMS;   // id = 3
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_1;    // nb probucts = 2
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
+        final TaskAllocator taskAllocator
+                = (new TaskAllocatorFactory(PRODUCT_BASED))
+                .getInstance(TOMORROW);
+
+        taskAllocator.allocate(TEST, projectData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
@@ -169,7 +175,11 @@ public class EmployeeDataAllocateTask1Test {
         final Integer skill_id = ID_SKILL_3_3DMS;   // id = 3
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_2;    // nb probucts = 4
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
+        final TaskAllocator taskAllocator
+                = (new TaskAllocatorFactory(PRODUCT_BASED))
+                .getInstance(TOMORROW);
+
+        taskAllocator.allocate(TEST, projectData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
@@ -210,7 +220,11 @@ public class EmployeeDataAllocateTask1Test {
         final Integer skill_id = ID_SKILL_3_3DMS;   // id = 3
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_3;    // nb probucts = 6
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
+        final TaskAllocator taskAllocator
+                = (new TaskAllocatorFactory(PRODUCT_BASED))
+                .getInstance(TOMORROW);
+
+        taskAllocator.allocate(TEST, projectData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
@@ -263,7 +277,11 @@ public class EmployeeDataAllocateTask1Test {
         final Integer skill_id = ID_SKILL_3_3DMS;   // id = 3
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_4;    // nb probucts = 8
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
+        final TaskAllocator taskAllocator
+                = (new TaskAllocatorFactory(PRODUCT_BASED))
+                .getInstance(TOMORROW);
+
+        taskAllocator.allocate(TEST, projectData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
@@ -318,7 +336,11 @@ public class EmployeeDataAllocateTask1Test {
         final Integer skill_id = ID_SKILL_3_3DMS;   // id = 3
         final Integer nb_products = NB_PRODUCTS_PROJECT_JADAU_5;    // nb probucts = 10
 
-        (new TaskAllocator(TOMORROW)).allocate(test, projectData, skill_id, nb_products);
+        final TaskAllocator taskAllocator
+                = (new TaskAllocatorFactory(PRODUCT_BASED))
+                .getInstance(TOMORROW);
+
+        taskAllocator.allocate(TEST, projectData, skill_id, nb_products);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();

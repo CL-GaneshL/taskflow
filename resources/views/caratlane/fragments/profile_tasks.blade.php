@@ -95,28 +95,6 @@
 
                     </div>
 
-                    <!-- -- --------------------------------------------------- --> 
-                    <!-- -- - editable only by Project Manager                  -->
-                    <!-- -- --------------------------------------------------- --> 
-                    <!--@if ( $authUser->hasRole('ADMIN_ROLE') || $authUser->hasRole('PROJECT_MANAGER_ROLE') )-->
-
-                    <!-- ================================================== -->
-                    <!-- - create new task and holiday button               -->
-                    <!-- ================================================== --> 
-<!--                    <div class="col-md-5 padding-0">
-
-                        <div class="pull-right">
-                            <button class="btn btn-primary btn-o"
-                                    ng-click="createTask()" >
-                                Create Task
-                            </button>
-                        </div>
-
-                    </div>-->
-
-                    <!--@endif-->
-                    <!-- -- --------------------------------------------------- --> 
-
                 </div>
 
                 <div class="row col-md-12 padding-15">

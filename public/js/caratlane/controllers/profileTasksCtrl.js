@@ -62,8 +62,7 @@ angular.module('profileTasks', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAn
 
                             buildEventList(nwds, holidays, tasks);
 
-                        }
-                        else {
+                        } else {
                             // ==================================================
                             // - employee page
                             // ==================================================
@@ -128,110 +127,7 @@ angular.module('profileTasks', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAn
 
                             return;
                         };
-
-                        // ==================================================
-                        // - when user click on the create new task button
-                        // ==================================================
-//                        $scope.createTask = function () {
-//
-//                            var project_nb_products = calendarEvent.project_nb_products;
-//                            var durationInMins = calendarEvent.duration;
-//
-//                            var original_id = calendarEvent.original_id;
-//                            var task_id = calendarEvent.task_id;
-//                            var title = calendarEvent.original_title;
-//                            var duration = tasksSrvc.formatDuration(calendarEvent.duration);
-//                            var completion = tasksSrvc.formatCompletion(calendarEvent.completion);
-//                            var employee_id = calendarEvent.employee_id;
-//                            var completed = calendarEvent.completed;
-//                            var start_date = calendarEvent.start_date;
-//                            var nb_products_completed = calendarEvent.nb_products_completed;
-//                            var completion_choices = tasksSrvc.getCompletionChoices(durationInMins);
-//                            var nb_products_choices = tasksSrvc.getNbProductsChoices(project_nb_products);
-//
-//                            $uibModal.open({
-//                                templateUrl: 'taskflow/fragments/modal_task_create',
-//                                controller: function ($scope, $uibModalInstance) {
-//                                    $scope.$modalInstance = $uibModalInstance;
-//                                    $scope.title = title;
-//                                    $scope.duration = duration;
-//                                    $scope.task_id = task_id;
-//                                    $scope.employee_id = employee_id;
-//                                    $scope.start_date = start_date;
-//                                    $scope.completion = completion;
-//                                    $scope.completed = completed;
-//                                    $scope.nb_products_completed = nb_products_completed;
-//                                    $scope.completion_choices = completion_choices;
-//                                    $scope.nb_products_choices = nb_products_choices;
-//
-//                                    $scope.cancel = function () {
-//                                        $uibModalInstance.dismiss('cancel');
-//                                    };
-//
-//                                    // ==================================================
-//                                    // - create a new non working day
-//                                    // ==================================================
-//                                    $scope.create = function () {
-//                                        
-//                                        var duration_in_mins = xxxxxx($scope.duration);
-//
-//                                        var taskToCreate = {
-//                                            task_id: $scope.task_id,
-//                                            employee_id: $scope.employee_id,
-//                                            start_date: $scope.start_date,
-//                                            completion: 0,
-//                                            nb_products_completed: 0,
-//                                            completed: 0,
-//                                            duration: duration_in_mins
-//                                        };
-//
-//                                        // --------------------------------------------------------                                     
-//                                        // $log.debug(CONTROLLER_NAME + " : taskToCreate = " + JSON.stringify(taskToCreate));
-//                                        // --------------------------------------------------------
-//
-//                                        var taskPromise = tasksSrvc.createTaskAllocation(taskToCreate);
-//                                        taskPromise.then(
-//                                                function (response) {
-//
-////                                                    var updatedTask = response.task;
-////
-////                                                    // --------------------------------------------------------                                     
-////                                                    // $log.debug(CONTROLLER_NAME + " : updatedTask = " + JSON.stringify(updatedTask));
-////                                                    // --------------------------------------------------------
-////
-////                                                    // remove the event from the calendar's list of events 
-////                                                    tasks = tasks.filter(function (task) {
-////                                                        return task.id !== updatedTask.id;
-////                                                    });
-////
-////                                                    // replace by the new updated holiday event
-////                                                    tasks.push(updatedTask);
-////
-////                                                    // and rebuild the list
-////                                                    buildEventList(nwds, holidays, tasks, getFilterProject(), getFilterEmployee());
-////
-////                                                    var message = 'Task : ' + title + ', was successfuly updated!';
-////                                                    modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
-//
-//                                                },
-//                                                function (response) {
-//                                                    // --------------------------------------------------------
-//                                                    // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
-//                                                    // --------------------------------------------------------
-//
-//                                                    var status = response.status;
-//                                                    var message = response.statusText;
-//                                                    modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
-//                                                }
-//                                        );
-//
-//                                        $uibModalInstance.dismiss('cancel');
-//                                    };
-//                                }
-//                            });
-//
-//                        };
-
+                        
                         // ==================================================
                         // - when user click on the event's delete icon
                         // ==================================================
@@ -263,8 +159,7 @@ angular.module('profileTasks', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAn
 
                                 if (isProjectManger) {
                                     $scope.deleteTask(calendarEvent);
-                                }
-                                else {
+                                } else {
                                     var message = 'You do not have the rights to delete Tasks.';
                                     modalSrvc.showInformationMessageModal2(CONTROLLER_NAME, message);
                                     return;
@@ -294,6 +189,7 @@ angular.module('profileTasks', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAn
                             var employee_id = calendarEvent.employee_id;
                             var start_date = calendarEvent.start_date;
                             var nb_products_completed = calendarEvent.nb_products_completed;
+                            var nb_products_planned = calendarEvent.nb_products_planned;
                             var completion_choices = tasksSrvc.getCompletionChoices(durationInMins);
                             var nb_products_choices = tasksSrvc.getNbProductsChoices(project_nb_products);
 
@@ -313,6 +209,7 @@ angular.module('profileTasks', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAn
                                     $scope.completion = completion;
                                     $scope.completed = completed;
                                     $scope.nb_products_completed = nb_products_completed;
+                                    $scope.nb_products_planned= nb_products_planned;
                                     $scope.completion_choices = completion_choices;
                                     $scope.nb_products_choices = nb_products_choices;
 
@@ -342,6 +239,7 @@ angular.module('profileTasks', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAn
                                             start_date: $scope.start_date,
                                             completion: tasksSrvc.formatCompletion2Mins($scope.completion),
                                             nb_products_completed: $scope.nb_products_completed,
+                                            nb_products_planned: $scope.nb_products_planned,
                                             completed: $scope.completed,
                                             duration: $scope.duration_in_mins
                                         };
@@ -412,6 +310,7 @@ angular.module('profileTasks', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAn
                             var completed = calendarEvent.completed;
                             var start_date = calendarEvent.start_date;
                             var nb_products_completed = calendarEvent.nb_products_completed;
+                            var nb_products_planned = calendarEvent.nb_products_planned;
                             var completion_choices = tasksSrvc.getCompletionChoices(durationInMins);
                             var nb_products_choices = tasksSrvc.getNbProductsChoices(project_nb_products);
 
@@ -430,6 +329,7 @@ angular.module('profileTasks', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAn
                                     $scope.completion = completion;
                                     $scope.completed = completed;
                                     $scope.nb_products_completed = nb_products_completed;
+                                    $scope.nb_products_planned = nb_products_planned;
                                     $scope.completion_choices = completion_choices;
                                     $scope.nb_products_choices = nb_products_choices;
 
@@ -640,22 +540,28 @@ angular.module('profileTasks', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAn
                                 var completed = tasks[index].completed;
                                 var open = tasks[index].open;
                                 var nb_products_completed = tasks[index].nb_products_completed;
+                                var nb_products_planned = tasks[index].nb_products_planned;
                                 var project_nb_products = tasks[index].project_nb_products;
                                 var startsAt = tasksSrvc.getTaskStartsAt(tasks[index].start_date);
                                 var endsAt = tasksSrvc.getTaskEndsAt(tasks[index].start_date, duration);
 
-                                var timeline = tasksSrvc.getTimeline(
-                                        tasks[index].start_date,
-                                        tasks[index].completion,
+                                var timeline1 = tasksSrvc.getTimeline1(
                                         tasks[index].duration,
-                                        tasks[index].completed
+                                        tasks[index].nb_products_planned
+                                        );
+
+                                var timeline2 = tasksSrvc.getTimeline2(
+                                        tasks[index].completion,
+                                        tasks[index].nb_products_completed
                                         );
 
                                 var title = '<span class="text-primary">';
                                 title = title + original_title;
                                 title = title + '</span>';
                                 title = title + '<br>';
-                                title = title + timeline;
+                                title = title + timeline1;
+                                title = title + '<br>';
+                                title = title + timeline2;
 
                                 var event = {
                                     'id': event_id_water_mark,
@@ -676,6 +582,7 @@ angular.module('profileTasks', ['mwl.calendar', 'ui.bootstrap', 'ngTouch', 'ngAn
                                     'completion': completion,
                                     'completed': completed,
                                     'nb_products_completed': nb_products_completed,
+                                    'nb_products_planned': nb_products_planned,
                                     'project_nb_products': project_nb_products,
                                     'open': open
                                 };

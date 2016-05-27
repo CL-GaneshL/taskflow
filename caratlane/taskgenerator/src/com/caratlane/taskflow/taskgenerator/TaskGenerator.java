@@ -6,6 +6,7 @@
 package com.caratlane.taskflow.taskgenerator;
 
 import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.ACTION;
+import static com.caratlane.taskflow.taskgenerator.CommandLineConstants.CHECK_ACTION;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -31,6 +32,8 @@ import com.caratlane.taskflow.taskgenerator.exceptions.CommandLineException;
 import com.caratlane.taskflow.taskgenerator.generator.Generator;
 import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorException;
 import com.caratlane.taskflow.taskgenerator.logging.LogManager;
+import java.text.MessageFormat;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -163,7 +166,7 @@ public class TaskGenerator {
 //                throw new CommandLineException(msg);
 //            }
             // --------------------------------------------------------------
-            // - log the parameters 
+            // - log command line parameters 
             // --------------------------------------------------------------
 //            System.out.println("TaskGenerator : Command Line : driver => " + driver);
             System.out.println("TaskGenerator : Command Line : host => " + host);
@@ -182,26 +185,27 @@ public class TaskGenerator {
             // - failed to parse the command line
             // ==============================================================
             System.out.println("TaskGenerator : Command Line : exception => " + ex.getMessage());
+
+            exitStatus = ERROR_EXIT_STATUS;
+            System.exit(exitStatus);
         }
 
-        if (action.equals(VERSION_ACTION)) {
+        // ==============================================================
+        // - start the app.
+        // ==============================================================
+        try {
 
-            System.out.println("App : " + APP_NAME);
-            System.out.println("Author : " + APP_AUTHOR);
-            System.out.println("Copyright : " + APP_COPYRIGHT);
-            System.out.println("Version : " + APP_VERSION);
+            // initialize the log manager before anything else
+            LogManager.initialize(logpath, mode, action);
 
-        } else {
-            // ==============================================================
-            // - initialize the app
-            // ==============================================================
-            try {
-                LogManager.initialize(logpath, mode);
+            // display the time the app's starting
+            displayHeader();
 
-                // ---------------------------------------------------------------------
-                LogManager.getLogger().log(Level.FINE, "Initilizing TaskGenerator ...");
-                // ---------------------------------------------------------------------
+            // ---------------------------------------------------------------------
+            LogManager.getLogger().log(Level.FINE, "Initializing TaskGenerator ...");
+            // ---------------------------------------------------------------------
 
+            if (!action.equals(VERSION_ACTION)) {
                 DBManager.initialize(
                         host,
                         port,
@@ -209,50 +213,60 @@ public class TaskGenerator {
                         username,
                         password
                 );
-
-                generator = new Generator();
-
-                switch (action) {
-
-                    case RESET_ACTION:
-                        // ==============================================================
-                        // - reset database
-                        // ==============================================================
-                        displayVersion();
-                        generator.reset();
-                        break;
-
-                    case GENERATE_ACTION:
-                        // ==============================================================
-                        // - task generation
-                        // ==============================================================
-                        displayVersion();
-                        generator.generate();
-                        break;
-
-                }
-
-            } catch (TaskGeneratorException | IOException | DBException ex) {
-
-                // ==============================================================
-                // - top level exception catch !
-                // ==============================================================
-                LogManager.getLogger().log(Level.SEVERE, null, ex);
-
-                exitStatus = ERROR_EXIT_STATUS;
-
-            } finally {
-                // ==============================================================
-                // - terminate the app
-                // ==============================================================
-                DBManager.shutdown();
-
-                // ---------------------------------------------------------------------
-                LogManager.getLogger().log(Level.FINE, "TaskGenerator shutdown.");
-                // ---------------------------------------------------------------------
-
-                LogManager.shutdown();
             }
+            generator = new Generator();
+
+            switch (action) {
+
+                case VERSION_ACTION:
+                    // ==============================================================
+                    // - display version
+                    // ==============================================================                    
+                    break;
+
+                case RESET_ACTION:
+                    // ==============================================================
+                    // - reset database
+                    // ==============================================================
+                    generator.reset();
+                    break;
+
+                case CHECK_ACTION:
+                    // ==============================================================
+                    // - check generation
+                    // ==============================================================
+                    generator.check();
+                    break;
+
+                case GENERATE_ACTION:
+                    // ==============================================================
+                    // - task generation
+                    // ==============================================================
+                    generator.generate();
+                    break;
+
+            }
+
+        } catch (TaskGeneratorException | IOException | DBException ex) {
+
+            // ==============================================================
+            // - top level exception catch !
+            // ==============================================================
+            LogManager.getLogger().log(Level.SEVERE, null, ex);
+
+            exitStatus = ERROR_EXIT_STATUS;
+
+        } finally {
+            // ==============================================================
+            // - terminate the app
+            // ==============================================================
+            DBManager.shutdown();
+
+            // ---------------------------------------------------------------------
+            LogManager.getLogger().log(Level.FINE, "TaskGenerator shutdown.");
+            // ---------------------------------------------------------------------
+
+            LogManager.shutdown();
         }
 
         System.exit(exitStatus);
@@ -261,12 +275,47 @@ public class TaskGenerator {
     /**
      *
      */
-    private static void displayVersion() {
+    private static void displayHeader() {
 
+        final LocalDateTime now = LocalDateTime.now();
+
+        // ---------------------------------------------------------------------
         LogManager.getLogger().log(Level.INFO, "App : " + APP_NAME);
         LogManager.getLogger().log(Level.INFO, "Author : " + APP_AUTHOR);
         LogManager.getLogger().log(Level.INFO, APP_COPYRIGHT);
         LogManager.getLogger().log(Level.INFO, "Version : " + APP_VERSION);
+        LogManager.getLogger().log(Level.INFO, MessageFormat.format("Date : {0}", now));
+        // ---------------------------------------------------------------------
+
+        // ---------------------------------------------------------------------
+        if (LogManager.isTestLoggable()) {
+            final String msg = APP_NAME + "Version : " + APP_VERSION;
+            LogManager.logTestMsg(Level.INFO, msg);
+            LogManager.logTestMsg(Level.INFO, MessageFormat.format("Date : {0}", now));
+        }
+        // ---------------------------------------------------------------------
+    }
+
+    /**
+     *
+     */
+    private static void displayVersion() {
+
+        // ---------------------------------------------------------------------
+        LogManager.getLogger().log(Level.INFO, "App : " + APP_NAME);
+        LogManager.getLogger().log(Level.INFO, "Author : " + APP_AUTHOR);
+        LogManager.getLogger().log(Level.INFO, APP_COPYRIGHT);
+        LogManager.getLogger().log(Level.INFO, "Version : " + APP_VERSION);
+        // ---------------------------------------------------------------------
+
+        // ---------------------------------------------------------------------
+        if (LogManager.isTestLoggable()) {
+            LogManager.logTestMsg(Level.INFO, "App : " + APP_NAME);
+            LogManager.logTestMsg(Level.INFO, "Author : " + APP_AUTHOR);
+            LogManager.logTestMsg(Level.INFO, APP_COPYRIGHT);
+            LogManager.logTestMsg(Level.INFO, "Version : " + APP_VERSION);
+        }
+        // ---------------------------------------------------------------------
     }
 
 }

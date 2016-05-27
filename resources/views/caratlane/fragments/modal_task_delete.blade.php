@@ -114,6 +114,29 @@
                 </div>
 
                 <!-- ================================================== -->
+                <!-- - Nb products planned.                           -->
+                <!-- ================================================== -->
+                <div class="form-group col-md-12">
+
+                    <label class="col-md-3 control-label text-right padding-right-5">
+                        NBP planned :
+                    </label>
+
+
+                    <div class="col-md-9">
+                        <input type="text" 
+                               class="col-md-12"
+                               name="nb_products_planned"
+                               id="nb_products_planned"
+                               ng-model="nb_products_planned"
+                               value="<% nb_products_planned %>"
+                               ng-readonly="true"
+                               disabled="" />
+                    </div>
+
+                </div>
+
+               <!-- ================================================== -->
                 <!-- - Nb products completed.                           -->
                 <!-- ================================================== -->
                 <div class="form-group col-md-12">

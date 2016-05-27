@@ -10,7 +10,7 @@
                     <!-- ================================================== -->
                     <!-- - employee's profile                               -->
                     <!-- ================================================== -->  
-                    <h4><%profile.fullName%></h4>
+                    <h4><% profile . fullName %></h4>
 
                     <!-- ================================================== -->
                     <!-- - employee's photo                                 -->
@@ -23,7 +23,7 @@
 
                                 <img src="{{ asset('../../img/caratlane/avatar-150.png')}}"
                                      alt="" ng-if="!obj.flow.files.length && noImage">
-                                <img ng-src="<%profile.avatar%>"
+                                <img ng-src="<% profile . avatar %>"
                                      alt="" ng-if="!obj.flow.files.length && !noImage">
                                 <img flow-img="obj.flow.files[0]" 
                                      ng-if="obj.flow.files.length">
@@ -45,27 +45,27 @@
                     <tbody>
                         <tr>
                             <td class="text-right col-md-3 padding-right-10">Id :</td>
-                            <td class="col-md-9"><%profile.employeeId%></td>
+                            <td class="col-md-9"><% profile . employeeId %></td>
                         </tr>
                         <tr>
                             <td class="text-right col-md-3 padding-right-10">location :</td>
-                            <td class="col-md-9"><%profile.location%></td>
+                            <td class="col-md-9"><% profile . location %></td>
                         </tr>
                         <tr>
                             <td class="text-right col-md-3 padding-right-10">email :</td>
-                            <td class="col-md-9"><%profile.email%></a></td>
+                            <td class="col-md-9"><% profile . email %></a></td>
                         </tr>
                         <tr>
                             <td class="text-right col-md-3 padding-right-10">phone :</td>
-                            <td class="col-md-9"><%profile.phone%></td>
+                            <td class="col-md-9"><% profile . phone %></td>
                         </tr>
                         <tr>
                             <td class="text-right col-md-3 padding-right-10">employment :</td>
-                            <td class="col-md-9"><%profile.employementType%></td>
+                            <td class="col-md-9"><% profile . employementType %></td>
                         </tr>
                         <tr>
                             <td class="text-right col-md-3 padding-right-10">productivity :</td>
-                            <td class="col-md-9"><%profile.productivity%></td>
+                            <td class="col-md-9"><% profile . productivity %></td>
                         </tr>
 
                     </tbody>
@@ -133,20 +133,30 @@
                         <!-- ================================================== -->  
                         <ul class="timeline-xs col-md-12" ng-repeat="task in taskAllocations">
 
-                            <li class="timeline-item"
-                                ng-class="{'success':task.completion === 0, 'warning':task.completion > 0 && task.completion < task.duration && task.completed == 0 }">
+                            <li class="timeline-item">
 
                                 <div class="margin-left-15">
 
+                                    <div class="row col-md-12 text-primary">                           
+                                        <% task . timeline0 %>
+                                    </div>
 
-                                    <div class="row col-md-12 text-muted text-small">
-                                        <% task.timeline %>
+                                    <div class="row col-md-12">                                       
+                                        <% task . timeline1 %>
                                     </div>
 
                                     <div class="row col-md-12 padding-left-0">
 
-                                        <p class="col-md-10">
-                                            <% task.title %>
+                                        <p class="col-md-10">                                            
+                                            Completed : Duration : 
+                                            <span ng-class="{'label label-success' : isDurationSuccess(<% task . completed %>,<% task . duration %>,<% task . completion %>), 'label label-warning' : isDurationWarning(<% task . completed %>,<% task . duration %>,<% task . completion %>) }">
+                                                <% task . duration_hm %>    
+                                            </span>
+                                            , Products :
+                                            <span ng-class="{'label label-warning' : isProductSuccess(<% task . nb_products_planned %>,<% task . nb_products_completed %>), 'label label-warning' : isProductWarning(<% task . nb_products_planned %>,<% task . nb_products_completed %>) }">
+                                                <% task . nb_products_completed %>
+                                            </span>
+                                            .                                                   
                                         </p>
 
                                         <!-- ================================================== -->
@@ -154,7 +164,7 @@
                                         <!-- ================================================== -->  
                                         <a href="#"
                                            class="btn btn-transparent btn-xs pull-right" 
-                                           ng-click="updateTaskAllocation( <% task.id %> )" >
+                                           ng-click="updateTaskAllocation(<% task . id %> )" >
                                             <i class="fa fa-pencil"></i>
                                         </a>
 

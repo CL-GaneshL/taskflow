@@ -148,12 +148,11 @@ app.factory("tasksSrvc", function ($log, $http) {
         return formated;
     };
 
-
-    // ==================================================
+// ==================================================
     // - 
     // ==================================================
 
-    var getTimeline = function (start_date, completion, duration, completed, planned) {
+    var getTimeline0 = function (start_date, title) {
 
         var _DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         var _MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -166,57 +165,77 @@ app.factory("tasksSrvc", function ($log, $http) {
         var dayStr = _DAYS[start.getDay()];
         var monthStr = _MONTHS[start.getMonth()];
 
-//        var hoursStr = 'hour : ' + shift_hour;
-//        var date = dayStr + ', ' + monthStr + ' ' + day + ' ' + year + ' @ ' + hoursStr;
-
         var date = dayStr + ', ' + monthStr + ' ' + day + ' ' + year;
 
-        // --------------------------------------------------------
-        // $log.debug(FACTORY_NAME + " : response task = " + JSON.stringify(task));
-        // --------------------------------------------------------
+        return  date + ", " + title + '. ';
+    };
 
-        // --------------------------------------------------------
-        // $log.debug(FACTORY_NAME + " : response task = " + JSON.stringify(task));
-        // --------------------------------------------------------
+    // ==================================================
+    // - 
+    // ==================================================
+
+    var getTimeline1 = function (duration, nb_products_planned) {
 
         var duration_hours = Math.floor(duration / 60);
         var duration_minutes = duration % 60;
 
-        var durationStr = ', duration:' + duration_hours + ' h';
+        var durationStr = 'Duration : ' + duration_hours + ' h';
         if (duration_minutes === 0) {
             durationStr = durationStr + ' ';
         } else {
             durationStr = durationStr + ' ' + duration_minutes + ' mins ';
         }
 
-        var plannedStr = ' ' + planned + ' products ';
+        var plannedStr = 'Products : ' + nb_products_planned;
 
-        if (completed === 0) {
-            var completionStr = null;
-            if (completion === duration) {
-                completionStr = ' - completion 100%.';
-            } else if (completion === 0) {
-                completionStr = '';
-            } else if (completion < duration) {
+        return  "Planned : " + durationStr + ', ' + plannedStr + '. ';
+    };
 
-                var completion_hours = Math.floor(completion / 60);
-                var completion_minutes = completion % 60;
+    // ==================================================
+    // - 
+    // ==================================================
 
-                completionStr = ' - completion : ' + completion_hours + ' h';
+    var getTimeline2 = function (completion, nb_products_completed)
+    {
 
-                if (completion_minutes === 0) {
-                    completionStr = completionStr + '.';
-                } else {
-                    completionStr = completionStr + ' ' + completion_minutes + ' mins';
-                }
-            }
+        var completionStr = null;
+        var productsStr = null;
+
+        var duration_hours = Math.floor(completion / 60);
+        var duration_minutes = completion % 60;
+
+        var completionStr = 'Duration : ' + duration_hours + ' h';
+        if (duration_minutes === 0) {
+            completionStr = completionStr + ' ';
         } else {
-            completionStr = ' - completion 100%.';
+            completionStr = completionStr + ' ' + duration_minutes + ' mins';
         }
 
-        var timeline = date + durationStr + plannedStr + completionStr;
-        return timeline;
+        var productsStr = 'Products : ' + nb_products_completed;
+
+        return "Completed : " + completionStr + ', ' + productsStr + '. ';
     };
+
+
+    // ==================================================
+    // - 
+    // ==================================================
+
+    var formatDuration2HoursMins = function (duration) {
+
+        var duration_hours = Math.floor(duration / 60);
+        var duration_minutes = duration % 60;
+
+        var durationStr = duration_hours + ' h';
+        if (duration_minutes === 0) {
+            durationStr = durationStr + ' ';
+        } else {
+            durationStr = durationStr + ' ' + duration_minutes + ' mins ';
+        }
+
+        return   durationStr;
+    };
+
 
     // ==================================================
     // - format completion from  hh:mm to minutes
@@ -368,7 +387,10 @@ app.factory("tasksSrvc", function ($log, $http) {
         updateTaskAllocation: updateTaskAllocation,
         formatCompletion: formatCompletion,
         formatDuration: formatDuration,
-        getTimeline: getTimeline,
+        getTimeline0: getTimeline0,
+        getTimeline1: getTimeline1,
+        getTimeline2: getTimeline2,
+        formatDuration2HoursMins: formatDuration2HoursMins,
         formatCompletion2Mins: formatCompletion2Mins,
         getCompletionChoices: getCompletionChoices,
         getNbProductsChoices: getNbProductsChoices,

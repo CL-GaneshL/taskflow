@@ -116,9 +116,22 @@ class MetricsController extends Controller {
         }
 
         // ---------------------------------------------------
+        // - get today's indicators.
+        // ---------------------------------------------------
+
+        $data = \DB::select("CALL getSPI(" . $project_id . ")");
+
+        $indicators = array();
+        $arr = (array) $data[0];
+        $indicators['PVi'] = $arr['PVi'];
+        $indicators['EVi'] = $arr['EVi'];
+        $indicators['CPIi'] = $arr['CPIi'];
+        $indicators['SPIi'] = $arr['SPIi'];
+
+        // ---------------------------------------------------
         // - create the response 
         // ---------------------------------------------------
-        $metrics = array($labels, $PV, $EV, $CPI, $SPI);
+        $metrics = array($labels, $PV, $EV, $CPI, $SPI, $indicators);
 
         // ---------------------------------------------------
         // \Log::debug('metrics : $metrics = ' . print_r($metrics, true));

@@ -50,6 +50,13 @@ public class DataDbSerializer {
             // start a new db transaction
             connection = DBManager.getDatabaseInstance().getConnection().open();
             transaction = connection.getTransaction();
+
+            // ---------------------------------------------------------------------
+            LogManager.getLogger().log(Level.FINE, "============================================");
+            LogManager.getLogger().log(Level.FINE, "Starting serialization ...");
+            LogManager.getLogger().log(Level.FINE, "============================================");
+            // ---------------------------------------------------------------------
+
             transaction.begin();
             serializeTasks();
             updateProjects();
@@ -72,6 +79,12 @@ public class DataDbSerializer {
             throw new TaskGeneratorException(msg, ex);
 
         } finally {
+
+            // ---------------------------------------------------------------------
+            LogManager.getLogger().log(Level.FINE, "============================================");
+            LogManager.getLogger().log(Level.FINE, "End of serialization.");
+            LogManager.getLogger().log(Level.FINE, "============================================");
+            // ---------------------------------------------------------------------
 
             if (connection != null) {
                 connection.close();
@@ -100,18 +113,18 @@ public class DataDbSerializer {
                     final Integer task_id = persistTask(task);
 
                     // ---------------------------------------------------------------------
-                    LogManager.getLogger().log(Level.FINE, "============================================");
-                    LogManager.getLogger().log(Level.FINE, "New Task = {0}", task);
-                    LogManager.getLogger().log(Level.FINE, "============================================");
+                    LogManager.getLogger().log(Level.FINE, "--------------------------------------");
+                    LogManager.getLogger().log(Level.FINE, " + New Task = {0}", task);
+                    LogManager.getLogger().log(Level.FINE, "--------------------------------------");
                     // ---------------------------------------------------------------------
 
                     persistAllocations(task, task_id);
                 } else if (isModified) {
 
                     // ---------------------------------------------------------------------
-                    LogManager.getLogger().log(Level.FINE, "============================================");
-                    LogManager.getLogger().log(Level.FINE, "Modified Task = {0}", task);
-                    LogManager.getLogger().log(Level.FINE, "============================================");
+                    LogManager.getLogger().log(Level.FINE, "--------------------------------------");
+                    LogManager.getLogger().log(Level.FINE, " * Modified Task = {0}", task);
+                    LogManager.getLogger().log(Level.FINE, "--------------------------------------");
                     // ---------------------------------------------------------------------
 
                     // the task does already exist in the database.
@@ -129,28 +142,6 @@ public class DataDbSerializer {
 
     /**
      *
-     * @throws TaskGeneratorRuntimeException
-     */
-    private static void updateProjects() throws TaskGeneratorRuntimeException {
-
-        final LinkedList<ProjectData> projects = Projects.getInstance().getProjectsData();
-
-        projects.stream().forEach(projectData -> {
-
-            final Project project = projectData.getProject();
-
-            try {
-                final DbProject dbProject = project.getDbProject();
-                transaction.update(dbProject);
-
-            } catch (DBException ex) {
-                throw new TaskGeneratorRuntimeException(ex);
-            }
-        });
-    }
-
-    /**
-     *
      * @param task
      * @param transaction
      * @throws TaskGeneratorException
@@ -160,7 +151,6 @@ public class DataDbSerializer {
         final DbTask dbTask = task.getDbTask();
         long task_id = transaction.persistGetId(dbTask);
         final Integer int_task_id = toIntExact(task_id);
-
         return int_task_id;
     }
 
@@ -183,11 +173,12 @@ public class DataDbSerializer {
                     = allocation.getDbTaskAllocation();
 
             dbTaskAllocation.setTask_id(task_id);
-            transaction.persist(dbTaskAllocation);
 
             // -------------------------------------------------
-            LogManager.getLogger().log(Level.FINE, "Allocation ===> {0}", dbTaskAllocation);
+            LogManager.getLogger().log(Level.FINE, " - Persisting Allocation : {0}", dbTaskAllocation);
             // -------------------------------------------------
+
+            transaction.persist(dbTaskAllocation);
 
         }
 
@@ -214,12 +205,39 @@ public class DataDbSerializer {
             dbTaskAllocation.setTask_id(task_id);
 
             // -------------------------------------------------
-            LogManager.getLogger().log(Level.FINE, "Allocation ===> {0}", dbTaskAllocation);
+            LogManager.getLogger().log(Level.FINE, " - Persiting Allocation : {0}", dbTaskAllocation);
             // -------------------------------------------------
 
             transaction.persist(dbTaskAllocation);
         }
 
+    }
+
+    /**
+     *
+     * @throws TaskGeneratorRuntimeException
+     */
+    private static void updateProjects() throws TaskGeneratorRuntimeException {
+
+        final LinkedList<ProjectData> projects = Projects.getInstance().getProjectsData();
+
+        projects.stream().forEach(projectData -> {
+
+            final Project project = projectData.getProject();
+
+            try {
+                final DbProject dbProject = project.getDbProject();
+
+                // -------------------------------------------------
+                LogManager.getLogger().log(Level.FINE, " - Persisting Project : {0}", dbProject);
+                // -------------------------------------------------
+
+                transaction.update(dbProject);
+
+            } catch (DBException ex) {
+                throw new TaskGeneratorRuntimeException(ex);
+            }
+        });
     }
 
 }

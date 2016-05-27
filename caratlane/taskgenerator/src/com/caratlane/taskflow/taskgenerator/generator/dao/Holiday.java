@@ -90,7 +90,7 @@ public class Holiday {
 
     @Override
     public String toString() {
-        return "Holidays{" + "dbHolidays=" + dbHolidays + '}';
+        return "Holidays = {" + dbHolidays + '}';
     }
 
 }

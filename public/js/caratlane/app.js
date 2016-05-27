@@ -526,6 +526,7 @@ app.config([
                             'modalSrvc',
                             'projectsSrvc',
                             'metricsSrvc',
+                            'settingsSrvc',
                             'metricsCtrl'
                             ),
                     title: 'Metrics'
@@ -681,7 +682,7 @@ app.run([
             name: 'TaskFlow',
             author: 'Caratlane',
             description: 'Caratlane - Task Allocation Tool',
-            version: '1.0.5',
+            version: '1.1.0',
             year: ((new Date()).getFullYear()), // automatic current year (for copyright information)
             isMobile: (function () {// true if the browser is a mobile device
                 var check = false;

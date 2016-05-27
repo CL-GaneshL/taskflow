@@ -20,7 +20,8 @@ app.factory("metricsSrvc", function ($log, $http) {
                 PV: response.data.data[1],
                 EV: response.data.data[2],
                 CPI: response.data.data[3],
-                SPI: response.data.data[4]
+                SPI: response.data.data[4],
+                indicators: response.data.data[5]
             };
         });
     };

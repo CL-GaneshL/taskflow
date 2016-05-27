@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 /* ---------------------------------------------------------------------- 
 >>> TABLE OF CONTENT
 -------------------------------------------------------------------------
@@ -1828,11 +1830,11 @@ ul.sub-menu li ul.sub-menu li ul.sub-menu li a {
   position: fixed;
   right: -260px;
   top: 64px;
-  -moz-transition: all 0.3s !important 0s;
-  -o-transition: all 0.3s !important 0s;
+  -moz-transition: all 0.3s !important;
+  -o-transition: all 0.3s !important;
   -webkit-transition: all 0.3s !important;
   -webkit-transition-delay: 0s;
-  transition: all 0.3s !important 0s;
+  transition: all 0.3s !important;
   width: 260px;
   z-index: 1091;
   background: #ffffff;

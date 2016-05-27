@@ -6,14 +6,16 @@
 package com.caratlane.taskflow.taskgenerator.generator;
 
 import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorException;
-import static com.caratlane.taskflow.taskgenerator.generator.crud.ExtractorDbHelpers.TOMORROW;
+
 import com.caratlane.taskflow.taskgenerator.generator.crud.DataDbSerializer;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Employee;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Project;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Skill;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Task;
 import com.caratlane.taskflow.taskgenerator.generator.dao.TaskAllocation;
+import static com.caratlane.taskflow.taskgenerator.generator.rules.Constants.PRODUCT_BASED;
 import com.caratlane.taskflow.taskgenerator.generator.rules.TaskAllocator;
+import com.caratlane.taskflow.taskgenerator.generator.rules.TaskAllocatorFactory;
 import static utils.TestDBConstants.DURATION_SKILL_3_3DMS;
 import static utils.TestDBConstants.EMPLOYEE_CL0004;
 import static utils.TestDBConstants.NB_PRODUCTS_PROJECT_JADAU_1;
@@ -30,6 +32,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static utils.TestDBConstants.TOMORROW;
 
 /**
  *
@@ -199,7 +202,10 @@ public class SerializeTasks3Test {
 
     public void _1st_allocation() throws TestTaskGeneratorException, TaskGeneratorException {
 
-        (new TaskAllocator(TOMORROW)).allocate(projectData);
+        final TaskAllocator taskAllocator
+                = (new TaskAllocatorFactory(PRODUCT_BASED)).getInstance(TOMORROW);
+
+        taskAllocator.allocate(projectData);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();
@@ -256,7 +262,11 @@ public class SerializeTasks3Test {
 
     public void _2nd_allocation() throws TestTaskGeneratorException, TaskGeneratorException {
 
-        (new TaskAllocator(TOMORROW)).allocate(projectData);
+        final TaskAllocator taskAllocator
+                = (new TaskAllocatorFactory(PRODUCT_BASED))
+                .getInstance(TOMORROW);
+
+        taskAllocator.allocate(projectData);
 
         // expect only one task
         final LinkedList<Task> tasks = projectData.getTasks();

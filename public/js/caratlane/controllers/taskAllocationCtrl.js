@@ -37,6 +37,8 @@ app.controller(
                 var weekend_type = 'off-site-work';
                 var non_working_type = 'to-do';
 
+                var logs = [];
+
                 // ==================================================
                 // - initialize the calendar
                 // ==================================================
@@ -82,6 +84,20 @@ app.controller(
                 // ==================================================
                 var getFilterProject = function () {
                     return $scope.filter_project;
+                };
+
+                // ==================================================
+                // - helper
+                // ==================================================
+                var startWith = function (haystack, needle) {
+                    return haystack.lastIndexOf(needle, 0) === 0;
+                };
+
+                // ==================================================
+                // - helper
+                // ==================================================
+                var toInteger = function (str) {
+                    return  parseInt(str);
                 };
 
                 // ==================================================
@@ -216,36 +232,6 @@ app.controller(
                 };
 
                 // ==================================================
-                // - when user click on the create new task button
-                // ==================================================
-//                $scope.createTask = function (calendarEvent) {
-//
-//                    var newEvent = {};
-//
-//                    $uibModal.open({
-//                        templateUrl: 'taskflow/fragments/modal_task_create',
-//                        controller: function ($scope, $uibModalInstance) {
-//                            $scope.$modalInstance = $uibModalInstance;
-//                            $scope.event = newEvent;
-//
-//                            $scope.cancel = function () {
-//                                $uibModalInstance.dismiss('cancel');
-//                            };
-//
-//                            // ==================================================
-//                            // - create a new non working day
-//                            // ==================================================
-//                            $scope.create = function () {
-//
-//
-//                                $uibModalInstance.dismiss('cancel');
-//                            };
-//                        }
-//                    });
-//
-//                };
-
-                // ==================================================
                 // - 
                 // ==================================================
                 $scope.updateTask = function (calendarEvent) {
@@ -262,6 +248,7 @@ app.controller(
                     var completed = calendarEvent.completed;
                     var start_date = calendarEvent.start_date;
                     var nb_products_completed = calendarEvent.nb_products_completed;
+                    var nb_products_planned = calendarEvent.nb_products_planned;
                     var completion_choices = tasksSrvc.getCompletionChoices(durationInMins);
                     var nb_products_choices = tasksSrvc.getNbProductsChoices(project_nb_products);
 
@@ -281,6 +268,7 @@ app.controller(
                             $scope.completion = completion;
                             $scope.completed = completed;
                             $scope.nb_products_completed = nb_products_completed;
+                            $scope.nb_products_planned = nb_products_planned;
                             $scope.completion_choices = completion_choices;
                             $scope.nb_products_choices = nb_products_choices;
 
@@ -377,6 +365,7 @@ app.controller(
                     var completed = calendarEvent.completed;
                     var start_date = calendarEvent.start_date;
                     var nb_products_completed = calendarEvent.nb_products_completed;
+                    var nb_products_planned = calendarEvent.nb_products_planned;
                     var completion_choices = tasksSrvc.getCompletionChoices(durationInMins);
                     var nb_products_choices = tasksSrvc.getNbProductsChoices(project_nb_products);
 
@@ -395,6 +384,7 @@ app.controller(
                             $scope.completion = completion;
                             $scope.completed = completed;
                             $scope.nb_products_completed = nb_products_completed;
+                            $scope.nb_products_planned = nb_products_planned;
                             $scope.completion_choices = completion_choices;
                             $scope.nb_products_choices = nb_products_choices;
 
@@ -634,16 +624,19 @@ app.controller(
                         var completed = tasks[index].completed;
                         var open = tasks[index].open;
                         var nb_products_completed = tasks[index].nb_products_completed;
+                        var nb_products_planned = tasks[index].nb_products_planned;
                         var project_nb_products = tasks[index].project_nb_products;
                         var startsAt = tasksSrvc.getTaskStartsAt(tasks[index].start_date);
                         var endsAt = tasksSrvc.getTaskEndsAt(tasks[index].start_date, duration);
 
-                        var timeline = tasksSrvc.getTimeline(
-                                tasks[index].start_date,
-                                tasks[index].completion,
+                        var timeline1 = tasksSrvc.getTimeline1(
                                 tasks[index].duration,
-                                tasks[index].completed,
                                 tasks[index].nb_products_planned
+                                );
+
+                        var timeline2 = tasksSrvc.getTimeline2(
+                                tasks[index].completion,
+                                tasks[index].nb_products_completed
                                 );
 
                         var title = '<span class="text-muted text-small">';
@@ -654,7 +647,9 @@ app.controller(
                         title = title + original_title;
                         title = title + '</span>';
                         title = title + '<br>';
-                        title = title + timeline;
+                        title = title + timeline1;
+                        title = title + '<br>';
+                        title = title + timeline2;
 
                         var event = {
                             'id': event_id_water_mark,
@@ -675,6 +670,7 @@ app.controller(
                             'completion': completion,
                             'completed': completed,
                             'nb_products_completed': nb_products_completed,
+                            'nb_products_planned': nb_products_planned,
                             'project_nb_products': project_nb_products,
                             'open': open
                         };
@@ -701,18 +697,9 @@ app.controller(
                     tasks = {};
                     buildEventList(nwds, holidays, tasks, null, null);
 
-                    // --------------------------------------------------------
-                    $log.debug(CONTROLLER_NAME + " : allocate ..... ");
-                    // --------------------------------------------------------
-
                     var allocatePromise = taskAllocationSrvc.allocate();
                     allocatePromise.then(
                             function (response) {
-
-                                // --------------------------------------------------------
-                                // $log.debug(CONTROLLER_NAME + " : xxxxxxx = " + JSON.stringify(xxxxxxx));
-                                $log.debug(CONTROLLER_NAME + " : allocate done ! ");
-                                // --------------------------------------------------------
 
                                 // ==================================================
                                 // - retrieve all tasks, non working days and holidays
@@ -749,7 +736,7 @@ app.controller(
                                             // ==================================================
                                             // - retrieving employee's profile data failed
                                             // ==================================================
-                                            // 
+
                                             // end the spinner
                                             $scope.stopSpin();
 
@@ -757,8 +744,107 @@ app.controller(
                                             var message = response.statusText;
                                             modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
                                         });
+                            },
+                            function (response) {
 
+                                // --------------------------------------------------------
+                                // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
+                                // --------------------------------------------------------
 
+                                // ==================================================
+                                // - allocation failed
+                                // ==================================================
+
+                                // end the spinner
+                                $scope.stopSpin();
+
+                                var status = response.status;
+                                var message = response.statusText;
+                                modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
+                            }
+                    );
+                };
+
+                // ==================================================
+                // - test task allocation
+                // ==================================================
+                $scope.testTasks = function () {
+
+                    // start the spinner
+                    $scope.startSpin();
+
+                    // --------------------------------------------------------
+                    // $log.debug(CONTROLLER_NAME + " : test ..... ");
+                    // --------------------------------------------------------
+
+                    var testPromise = taskAllocationSrvc.test();
+                    testPromise.then(
+                            function (response) {
+
+                                var index = 0;
+                                var results = {'msg': null, 'warning': 0, 'error': 0};
+
+                                var testmsgs = response.logs;
+                                for (index = 0; index < testmsgs.length; index++) {
+
+                                    var msg = null;
+                                    var log = testmsgs[index];
+
+                                    // --------------------------------------------------------
+                                    // $log.debug(CONTROLLER_NAME + " : log = " + log);
+                                    // --------------------------------------------------------
+
+                                    if (startWith(log, 'INFO ') === true) {
+
+                                        var msg = log.replace("INFO ", "");
+                                        logs.push({'type': 'INFO', 'msg': msg});
+
+                                    } else if (startWith(log, 'WARNING ') === true) {
+
+                                        var msg = log.replace("WARNING ", "");
+                                        logs.push({'type': 'WARNING', 'msg': msg});
+
+                                    } else if (startWith(log, 'SEVERE ') === true) {
+
+                                        var msg = log.replace("SEVERE ", "");
+                                        logs.push({'type': 'ERROR', 'msg': msg});
+
+                                    } else if (startWith(log, 'RESULTS_WARNINGS ') === true) {
+
+                                        var nb = log.replace("RESULTS_WARNINGS : ", "");
+                                        results.warning = toInteger(nb);
+
+                                    } else if (startWith(log, 'RESULTS_ERRORS ') === true) {
+
+                                        var nb = log.replace("RESULTS_ERRORS : ", "");
+                                        results.error = toInteger(nb);
+
+                                    } else {
+                                        // --------------------------------------------------------
+                                        $log.debug(CONTROLLER_NAME + " : log = " + log);
+                                        // --------------------------------------------------------
+                                    }
+                                }
+
+                                results.msg = 'Nb Errors : ' + results.error + ', Nb Warnings : ' + results.warning;
+
+                                // end the spinner
+                                $scope.stopSpin();
+
+                                $uibModal.open({
+                                    animation: $scope.animationsEnabled,
+                                    templateUrl: 'taskflow/fragments/modal_test_allocation',
+                                    placement: 'center',
+                                    size: 'lg',
+                                    controller: function ($scope, $uibModalInstance) {
+                                        $scope.$modalInstance = $uibModalInstance;
+                                        $scope.logs = logs;
+                                        $scope.results = results;
+                                        $scope.cancel = function () {
+                                            $uibModalInstance.dismiss('cancel');
+                                        };
+                                    }
+                                });
 
                             },
                             function (response) {
@@ -770,6 +856,9 @@ app.controller(
                                 // ==================================================
                                 // - allocation failed
                                 // ==================================================
+
+                                // end the spinner
+                                $scope.stopSpin();
 
                                 var status = response.status;
                                 var message = response.statusText;

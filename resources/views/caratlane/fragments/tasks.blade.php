@@ -169,9 +169,19 @@
                     </div>
 
                     <!-- ================================================== -->
+                    <!-- - test button                                  -->
+                    <!-- ================================================== -->
+                    <div class="col-md-2">
+                        <button class="btn btn-primary btn-o btn-wide pull-right" 
+                                ng-click="testTasks()" >
+                            Test
+                        </button>
+                    </div>                    
+
+                    <!-- ================================================== -->
                     <!-- - allocate button                                  -->
                     <!-- ================================================== -->
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <button class="btn btn-primary btn-o btn-wide pull-right" 
                                 ng-click="allocateTasks()" >
                             Allocate

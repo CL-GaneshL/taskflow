@@ -59,7 +59,7 @@ public class ProjectSkill {
 
     @Override
     public String toString() {
-        return "ProjectSkill{" + "dbProjectSkill=" + dbProjectSkill + '}';
+        return "ProjectSkill = {" + dbProjectSkill + '}';
     }
 
 }

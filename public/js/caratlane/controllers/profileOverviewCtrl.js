@@ -26,6 +26,42 @@ app.controller(
                 $scope.profile = null;
                 $scope.taskAllocations = [];
 
+                // ==================================================
+                // - helpers, used to highlight task duration
+                // ==================================================
+                $scope.isDurationSuccess = function (completed, expected, actual) {
+
+                    var success = false;
+
+                    if (completed === 1) {
+                        return (actual <= expected);
+                    }
+
+                    return success;
+                };
+
+                $scope.isDurationWarning = function (completed, expected, actual) {
+
+                    var success = false;
+
+                    if (completed === 1) {
+                        return (actual > expected);
+                    }
+
+                    return success;
+                };
+
+                // ==================================================
+                // - helpers, used to highlight product completion
+                // ==================================================
+                $scope.isProductSuccess = function (expected, actual) {
+                    return (actual >= expected);
+                };
+
+                $scope.isProductWarning = function (expected, actual) {
+                    return (actual < expected);
+                };
+
                 // check if this controller is used for the User 
                 // Profile page or for the Employee page
                 var isProfilePage = pageSrvc.isProfilePage();
@@ -65,26 +101,19 @@ app.controller(
                                                 'open': recentTasks[index].open,
                                                 'task_id': recentTasks[index].task_id,
                                                 'nb_products_completed': recentTasks[index].nb_products_completed,
+                                                'nb_products_planned': recentTasks[index].nb_products_planned,
                                                 'project_nb_products': recentTasks[index].project_nb_products,
-                                                'timeline': tasksSrvc.getTimeline(
-                                                        recentTasks[index].start_date,
-                                                        recentTasks[index].completion,
-                                                        recentTasks[index].duration,
-                                                        recentTasks[index].completed
-                                                        )
+                                                'timeline0': tasksSrvc.getTimeline0(recentTasks[index].start_date, recentTasks[index].title),
+                                                'timeline1': tasksSrvc.getTimeline1(recentTasks[index].duration, recentTasks[index].nb_products_planned),
+                                                'duration_hm': tasksSrvc.formatDuration2HoursMins(recentTasks[index].completion)
                                             }
                                     );
                                 }
 
-                                // --------------------------------------------------------
-                                // $log.debug(CONTROLLER_NAME + " : profileSrvc $scope.taskAllocations = " + JSON.stringify($scope.taskAllocations));
-                                // --------------------------------------------------------
-
                                 $scope.isTeamLeader = $scope.profile.isTeamLeader === 1;
                                 $scope.isProjectManager = $scope.profile.isProjectManager === 1;
                             });
-                }
-                else {
+                } else {
 
                     var dataPromise = employeesSrvc.getEmployee();
                     dataPromise.then(
@@ -111,13 +140,14 @@ app.controller(
                                                 'open': recentTasks[index].open,
                                                 'task_id': recentTasks[index].task_id,
                                                 'nb_products_completed': recentTasks[index].nb_products_completed,
+                                                'nb_products_planned': recentTasks[index].nb_products_planned,
                                                 'project_nb_products': recentTasks[index].project_nb_products,
-                                                'timeline': tasksSrvc.getTimeline(
+                                                'timeline1': tasksSrvc.getTimeline0(
                                                         recentTasks[index].start_date,
-                                                        recentTasks[index].completion,
                                                         recentTasks[index].duration,
-                                                        recentTasks[index].completed
-                                                        )
+                                                        recentTasks[index].nb_products_planned
+                                                        ),
+                                                'duration_hm': tasksSrvc.formatDuration2HoursMins(recentTasks[index].completion)
                                             }
                                     );
                                 }
@@ -157,6 +187,7 @@ app.controller(
                     var task_id = allocationToUpdate.task_id;
                     var start_date = allocationToUpdate.start_date;
                     var nb_products_completed = allocationToUpdate.nb_products_completed;
+                    var nb_products_planned = allocationToUpdate.nb_products_planned;
                     var completion_choices = tasksSrvc.getCompletionChoices(durationInMins);
                     var nb_products_choices = tasksSrvc.getNbProductsChoices(project_nb_products);
 
@@ -177,6 +208,7 @@ app.controller(
                             $scope.completion = completion;
                             $scope.completed = completed;
                             $scope.nb_products_completed = nb_products_completed;
+                            $scope.nb_products_planned = nb_products_planned;
                             $scope.completion_choices = completion_choices;
                             $scope.nb_products_choices = nb_products_choices;
 
@@ -206,6 +238,7 @@ app.controller(
                                     start_date: $scope.start_date,
                                     completion: tasksSrvc.formatCompletion2Mins($scope.completion),
                                     nb_products_completed: $scope.nb_products_completed,
+                                    nb_products_planned: $scope.nb_products_planned,
                                     completed: $scope.completed,
                                     duration: $scope.duration_in_mins
                                 };
@@ -225,7 +258,9 @@ app.controller(
                                             // --------------------------------------------------------
 
                                             removeTaskAllocation(updatedAllocation.id);
-                                            addTaskAllocation(
+
+                                            var task =
+//                                            addTaskAllocation(
                                                     {
                                                         'id': updatedAllocation.id,
                                                         'start_date': updatedAllocation.start_date,
@@ -237,15 +272,17 @@ app.controller(
                                                         'open': updatedAllocation.open,
                                                         'task_id': updatedAllocation.task_id,
                                                         'nb_products_completed': updatedAllocation.nb_products_completed,
+                                                        'nb_products_planned': updatedAllocation.nb_products_planned,
                                                         'project_nb_products': updatedAllocation.project_nb_products,
-                                                        'timeline': tasksSrvc.getTimeline(
+                                                        'timeline1': tasksSrvc.getTimeline0(
                                                                 updatedAllocation.start_date,
-                                                                updatedAllocation.completion,
                                                                 updatedAllocation.duration,
-                                                                updatedAllocation.completed
-                                                                )
-                                                    }
-                                            );
+                                                                updatedAllocation.nb_products_planned
+                                                                ),
+                                                        'duration_hm': tasksSrvc.formatDuration2HoursMins(updatedAllocation.completion)
+                                                    };
+
+                                            addTaskAllocation(task);
 
                                             var message = 'Task : ' + title + ', was successfuly updated!';
                                             modalSrvc.showSuccessMessageModal2(CONTROLLER_NAME, message);
@@ -264,8 +301,6 @@ app.controller(
 
                                 $uibModalInstance.dismiss('cancel');
                             };
-
-
                         }
                     });
                 };

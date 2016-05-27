@@ -30,7 +30,7 @@ public interface TestDBConstants {
     String TEST_DB_PORT = "3306";
     String TEST_DB_DATABASE = "testschema";
     String TEST_DB_USERNAME = "testuser";
-    String TEST_DB_PASSWORD = "secret";
+    String TEST_DB_PASSWORD = "testuser";
 
 //    String TEST_DB_HOST = "localhost";
 //    String TEST_DB_PORT = "33060";

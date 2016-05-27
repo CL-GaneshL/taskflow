@@ -113,7 +113,7 @@ public class NonWorkingDay implements EmployeeNonWorkingDay {
 
     @Override
     public String toString() {
-        return "NonWorkingDays{" + "id=" + this.getId()
+        return "NonWorkingDays = {" + "id=" + this.getId()
                 + ", title=" + this.getTitle()
                 + ", type=" + this.getType()
                 + ", date=" + this.getDate()

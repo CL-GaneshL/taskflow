@@ -5,7 +5,7 @@ PROCEDURE `getEV` (project_id INT(11))
 
 BEGIN
 
-    SET @TWO_DECIMALs := 2;
+    SET @TWO_DECIMALS := 2;
     SET @FOUR_DECIMALS := 4;
 
     SET @max := 0;
@@ -29,7 +29,7 @@ BEGIN
         -- Take the actual percentage of the completed work and multiply it by 
         -- the project budget and you will get the Earned Value.
         -- Earned Value = % of completed work X BAC
-        -- EVi = NBPCi / NBPP * BAC
+        -- EVi = NBPCi * BAC / NBPP 
         -- BAC : Budget At Completion
         -- NBPCi : Total Nb Products completed at the ith day
         -- NBPP : Total Nb Products planned

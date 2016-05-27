@@ -11,6 +11,8 @@ package utils;
  */
 public class TestTaskGeneratorException extends Exception {
 
+    private static final long serialVersionUID = -2018849364419878181L;
+
     /**
      * Creates a new instance of <code>TestTaskGeneratorException</code> without
      * detail message.

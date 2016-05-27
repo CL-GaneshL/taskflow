@@ -49,7 +49,7 @@ public class ExtractorDbHelpers {
         // Because Date is now almost depreciated, we do the magic
         // using the java 8+ LocalDate type, and finally re-ajust.
 
-        final LocalTime midnight = LocalTime.MIDNIGHT;
+        final LocalTime midnight = LocalTime.MIDNIGHT;  // MIDNIGHT = "00:00"
         final LocalDate today = LocalDate.now();
         final LocalDateTime todayMidnight = LocalDateTime.of(today, midnight);
         final LocalDateTime tomorrowMidnight = todayMidnight.plusDays(1);

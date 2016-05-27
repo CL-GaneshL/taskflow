@@ -141,7 +141,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" + "dbTask=" + dbTask + ", taskAllocations=" + taskAllocations + ", created=" + created + ", modified=" + modified + '}';
+        return "Task = {" + dbTask + ", taskAllocations=" + taskAllocations + ", created=" + created + ", modified=" + modified + '}';
     }
 
 }

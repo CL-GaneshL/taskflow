@@ -8,9 +8,12 @@ package com.caratlane.taskflow.taskgenerator.generator;
 import com.caratlane.taskflow.taskgenerator.exceptions.TaskGeneratorException;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Skill;
 import com.caratlane.taskflow.taskgenerator.generator.crud.SkillsDbExtractor;
+import com.caratlane.taskflow.taskgenerator.logging.LogManager;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.logging.Level;
 
 /**
  *
@@ -45,7 +48,43 @@ public class Skills {
      */
     public static void initialize() throws TaskGeneratorException {
 
-        skills = SkillsDbExtractor.getAllSkills();
+        // ---------------------------------------------------------------------
+        LogManager.getLogger().log(Level.FINE, "-----------------------------------------");
+        LogManager.getLogger().log(Level.FINE, "Initializing skills ...");
+        LogManager.getLogger().log(Level.FINE, "-----------------------------------------");
+        // ---------------------------------------------------------------------
+
+        Skills.skills = SkillsDbExtractor.getAllSkills();
+        
+        // ---------------------------------------------------------------------
+        if (LogManager.isTestLoggable()) {
+            LogManager.logTestMsg(Level.INFO, "Skills created : ");
+        } // ---------------------------------------------------------------------  
+
+        // ---------------------------------------------------------------------
+        if (Skills.skills.isEmpty()) {
+
+            if (LogManager.getLogger().isLoggable(Level.FINE)) {
+                LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
+                LogManager.getLogger().log(Level.FINE, " No Skills in the database !!!!!!!!!!!!!");
+                LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
+            }
+
+            if (LogManager.isTestLoggable()) {
+                LogManager.logTestMsg(Level.SEVERE, " - No Skills found in the Database !");
+            }
+        } // ---------------------------------------------------------------------
+
+        // ---------------------------------------------------------------------
+        Skills.skills.stream().forEach((skill) -> {
+
+            LogManager.getLogger().log(Level.FINE, "  + Skill = {0}", skill.toString());
+
+            if (LogManager.isTestLoggable()) {
+                LogManager.logTestMsg(Level.INFO, "  " + skill);
+            }
+        }); // ---------------------------------------------------------------------
+
     }
 
     /**
@@ -55,9 +94,17 @@ public class Skills {
      */
     public Skill getSkill(final Integer skill_id) {
 
-        final Predicate<Skill> filter = (Skill s) -> s.getId().equals(skill_id);
-        return skills.stream().filter(filter).findFirst().get();
+        Skill skill = null;
 
+        final Predicate<Skill> filter = (Skill s) -> s.getId().equals(skill_id);
+        final Optional<Skill> opt = Skills.skills.stream().filter(filter).findFirst();
+
+        if (opt.isPresent()) {
+            skill = opt.get();
+        }
+
+        // return null if not skill found
+        return skill;
     }
 
     /**
@@ -68,7 +115,7 @@ public class Skills {
      */
     public static void initialize(boolean test) throws TaskGeneratorException {
 
-        skills = new LinkedList<>();
+        Skills.skills = new LinkedList<>();
     }
 
     /**
@@ -76,7 +123,7 @@ public class Skills {
      * @param skill
      */
     public void addSkill(final Skill skill) {
-        skills.add(skill);
+        Skills.skills.add(skill);
     }
 
     /**
@@ -85,7 +132,7 @@ public class Skills {
      * @param test
      */
     public void clearSkills(boolean test) {
-        skills.clear();
+        Skills.skills.clear();
     }
 
 }

@@ -12,6 +12,7 @@ import com.caratlane.taskflow.taskgenerator.generator.dao.Employee;
 import com.caratlane.taskflow.taskgenerator.generator.dao.EmployeeSkill;
 import com.caratlane.taskflow.taskgenerator.generator.dao.Holiday;
 import com.caratlane.taskflow.taskgenerator.generator.dao.NonWorkingDay;
+import com.caratlane.taskflow.taskgenerator.generator.dao.Skill;
 import com.caratlane.taskflow.taskgenerator.logging.LogManager;
 import java.util.Date;
 import java.util.LinkedList;
@@ -47,33 +48,58 @@ public class Employees {
 
     /**
      *
+     * @param from
      * @throws TaskGeneratorException
      */
     public static void initialize(final Date from) throws TaskGeneratorException {
 
         // ---------------------------------------------------------------------
-        LogManager.getLogger().log(Level.FINE, "-+++++++++++++++++++++++++++++++++++++++++++++");
+        LogManager.getLogger().log(Level.FINE, "-----------------------------------------");
         LogManager.getLogger().log(Level.FINE, "Initializing employees ...");
-        LogManager.getLogger().log(Level.FINE, "-+++++++++++++++++++++++++++++++++++++++++++++");
+        LogManager.getLogger().log(Level.FINE, "-----------------------------------------");
         // ---------------------------------------------------------------------
 
-        employeData = new LinkedList<>();
+        Employees.employeData = new LinkedList<>();
 
         try {
 
             final List<Employee> empls = EmployeesDbExtractor.getAllEmployees();
+
+            // ---------------------------------------------------------------------
+            if (LogManager.isTestLoggable()) {
+                LogManager.logTestMsg(Level.INFO, "Employees created : ");
+            } // ---------------------------------------------------------------------  
+
+            if (empls.isEmpty()) {
+                // ---------------------------------------------------------------------
+                LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
+                LogManager.getLogger().log(Level.FINE, " No Employees in the database !!!!!!!!!!!!!");
+                LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
+                // ---------------------------------------------------------------------     
+
+                // ---------------------------------------------------------------------
+                if (LogManager.isTestLoggable()) {
+                    LogManager.logTestMsg(Level.SEVERE, " - No Employees found in the Database !");
+                } // ---------------------------------------------------------------------
+            }
+
             empls.stream().forEach((Employee employee) -> {
 
                 // ---------------------------------------------------------------------
                 LogManager.getLogger().log(Level.FINE, "-------------------------------------------");
-                LogManager.getLogger().log(Level.FINE, "Employee : {0}", employee);
+                LogManager.getLogger().log(Level.FINE, " + {0}", employee);
                 LogManager.getLogger().log(Level.FINE, "-------------------------------------------");
                 // ---------------------------------------------------------------------
+
+                // ---------------------------------------------------------------------
+                if (LogManager.isTestLoggable()) {
+                    LogManager.logTestMsg(Level.INFO, "  " + employee);
+                } // ---------------------------------------------------------------------
 
                 try {
                     // create an employee record
                     final EmployeeData employeeData = new EmployeeData(employee);
-                    employeData.add(employeeData);
+                    Employees.employeData.add(employeeData);
 
                     // the unique employee id
                     final Integer employee_id = employee.getId();
@@ -82,9 +108,53 @@ public class Employees {
                     final List<EmployeeSkill> employeeSkills
                             = EmployeesDbExtractor.getEmployeeSkills(employee_id);
 
-                    employeeSkills.stream().forEach((EmployeeSkill skill) -> {
-                        employeeData.addSkill(skill.getSkillId());
-                    });
+                    // ---------------------------------------------------------------------
+                    if (LogManager.isTestLoggable()) {
+                        LogManager.logTestMsg(Level.INFO, "  Employee s skills : ");
+                    } // ---------------------------------------------------------------------  
+
+                    if (employeeSkills.isEmpty()) {
+                        // ---------------------------------------------------------------------
+                        LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
+                        LogManager.getLogger().log(Level.FINE, " + Employee has no Skills !!!!!!!!!!!!!");
+                        LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
+                        // ---------------------------------------------------------------------
+
+                        // ---------------------------------------------------------------------
+                        if (LogManager.isTestLoggable()) {
+                            LogManager.logTestMsg(Level.WARNING, "   - Employee has no Skills associated.");
+                        } // ---------------------------------------------------------------------
+                    } else {
+                        employeeSkills.stream().forEach((EmployeeSkill employeeSkill) -> {
+
+                            final Integer skill_id = employeeSkill.getSkillId();
+
+                            // check that the skill exists in the db
+                            final Skill skill = Skills.getInstance().getSkill(skill_id);
+
+                            if (skill == null) {
+                                // ---------------------------------------------------------------------
+                                LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
+                                LogManager.getLogger().log(Level.FINE, " Skill = {0} does not exist in the database !!!!!!!!!!!", skill_id);
+                                LogManager.getLogger().log(Level.FINE, "??????????????????????????????????????????");
+                                // ---------------------------------------------------------------------  
+
+                                // ---------------------------------------------------------------------
+                                if (LogManager.isTestLoggable()) {
+                                    LogManager.logTestMsg(Level.INFO, "  + Skill ID : " + skill_id);
+                                    LogManager.logTestMsg(Level.SEVERE, "   + Skill = {0} not found in the database");
+                                } // ---------------------------------------------------------------------
+                            } else {
+
+                                // ---------------------------------------------------------------------
+                                if (LogManager.isTestLoggable()) {
+                                    LogManager.logTestMsg(Level.INFO, "  " + skill);
+                                } // ---------------------------------------------------------------------                          
+                            }
+                            
+                            employeeData.addSkill(skill_id);
+                        });
+                    }
 
                     // holidays for this employee
                     final LinkedList<Holiday> holidays
@@ -117,7 +187,7 @@ public class Employees {
      * @return
      */
     public LinkedList<EmployeeData> getEmployeeData() {
-        return employeData;
+        return Employees.employeData;
     }
 
     /**
@@ -127,8 +197,7 @@ public class Employees {
      * @throws TaskGeneratorException
      */
     public static void initialize(boolean test) throws TaskGeneratorException {
-
-        employeData = new LinkedList<>();
+        Employees.employeData = new LinkedList<>();
     }
 
     /**

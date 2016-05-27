@@ -1,11 +1,32 @@
 
+=========================
 caratlane :
+=========================
 
-schema :
+import schema :
 "C:\Program Files\MySQL\MySQL Workbench 6.3 CE\mysql.exe" --host=130.211.240.165 --user=taskflow_user --password=9AeSrjLH5hj --port=3306 --database=taskflowdb  < ./taskflow-schema.sql
 
-data :
+import data :
 "C:\Program Files\MySQL\MySQL Workbench 6.3 CE\mysql.exe" --host=130.211.240.165 --user=taskflow_user --password=9AeSrjLH5hj --port=3306 --database=taskflowdb  < ./taskflow-data.sql
 
+dump data only :
+"C:\Program Files\MySQL\MySQL Workbench 6.3 CE\mysqldump.exe" --host=130.211.240.165 --password=9AeSrjLH5hj --user=taskflow_user --port=3306 --no-create-info=TRUE --skip-triggers "taskflowdb" > dump.sql
+
+
+=========================
+local : 
+=========================
+
+dump data only :
+"C:\Program Files\MySQL\MySQL Workbench 6.3 CE\mysqldump.exe" --host=127.0.0.1 --password=testuser --user=testuser --port=3306 --no-create-info=TRUE --skip-triggers "testschema" > dump.sql
+
+import :
+"C:\Program Files\MySQL\MySQL Workbench 6.3 CE\mysql.exe" --host=127.0.0.1 --user=testuser --password=testuser --port=3306 --database=testschema  < ./dump.sql
+
+diff :
+mysqldiff --force --server1=testuser:testuser@localhost testschema:old_testschema --difftype=sql
+
+migration : 
+"C:\Program Files\MySQL\MySQL Workbench 6.3 CE\mysql.exe" --host=127.0.0.1 --password=testuser --user=testuser --port=3306 --database=testschema --verbose < ./taskflow-schema-1.0.4_1.0.5.sql
 
 

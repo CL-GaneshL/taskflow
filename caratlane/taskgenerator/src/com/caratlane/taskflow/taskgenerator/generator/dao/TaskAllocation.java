@@ -24,7 +24,7 @@ public class TaskAllocation {
             final Integer employee_id,
             final Integer task_id,
             final LocalDateTime start_date,
-            final Double nb_products_planned,
+            final Integer nb_products_planned,
             final Integer duration
     ) {
 
@@ -47,7 +47,7 @@ public class TaskAllocation {
             final Integer employee_id,
             final Integer task_id,
             final LocalDateTime start_date,
-            final Double nb_products_planned,
+            final Integer nb_products_planned,
             final Integer duration) {
 
         final TaskAllocation taskAllocation = new TaskAllocation(
@@ -98,7 +98,7 @@ public class TaskAllocation {
         return dbTaskAllocation.getNb_products_completed();
     }
 
-    public Double getNbProductsPlanned() {
+    public Integer getNbProductsPlanned() {
         return dbTaskAllocation.getNb_products_planned();
     }
 
@@ -135,7 +135,7 @@ public class TaskAllocation {
 
     @Override
     public String toString() {
-        return "TaskAllocation{" + "dbTaskAllocation=" + dbTaskAllocation + '}';
+        return "TaskAllocation = {" + dbTaskAllocation + '}';
     }
 
 }

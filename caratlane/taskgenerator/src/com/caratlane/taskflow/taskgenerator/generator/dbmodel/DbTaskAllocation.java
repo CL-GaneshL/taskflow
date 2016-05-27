@@ -123,7 +123,7 @@ public class DbTaskAllocation implements Serializable {
     @NotNull
     @Min(value = 0)
     @Column(name = TASK_ALLOCATION_NB_PRODUCTS_PLANNED_COL_NAME, insertable = true, updatable = false)
-    private Double nb_products_planned;
+    private Integer nb_products_planned;
 
     /**
      * completed
@@ -151,7 +151,7 @@ public class DbTaskAllocation implements Serializable {
             final Date start_date,
             final Integer completion,
             final Integer nb_products_completed,
-            final Double nb_products_planned,
+            final Integer nb_products_planned,
             final Byte completed,
             final Integer duration
     ) {
@@ -190,7 +190,7 @@ public class DbTaskAllocation implements Serializable {
         return nb_products_completed;
     }
 
-    public Double getNb_products_planned() {
+    public Integer getNb_products_planned() {
         return nb_products_planned;
     }
 

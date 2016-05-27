@@ -11,6 +11,7 @@ app.controller(
             'projectsSrvc',
             'metricsSrvc',
             'modalSrvc',
+            'settingsSrvc',
             'usSpinnerService',
             function (
                     $log,
@@ -19,6 +20,7 @@ app.controller(
                     projectsSrvc,
                     metricsSrvc,
                     modalSrvc,
+                    settingsSrvc,
                     usSpinnerService
                     ) {
 
@@ -28,6 +30,8 @@ app.controller(
                 // - initialization
                 // ==================================================
 
+                var TWO_DECIMALS = 2;
+
                 $scope.projects = null;
                 $scope.filter_project = null;
 
@@ -35,6 +39,44 @@ app.controller(
                 $scope.labels = null;
                 $scope.datasets = null;
                 $scope.options = null;
+
+                $scope.hourlyCost = '0.00';
+
+//                $scope.indicators.PV = '0.00';
+//                $scope.indicators.EV = '0.00';
+//                $scope.indicators.CPI = '0.00';
+//                $scope.indicators.SPI = '0.00';
+
+                $scope.indicators = {
+                    'PV': '0.00',
+                    'EV': '0.00',
+                    'CPI': '0.00',
+                    'SPI': '0.00'
+                };
+
+                var settingsPromise = settingsSrvc.getHourlyCost();
+                settingsPromise.then(
+                        function (response) {
+
+                            var hourlyCost = response.hourlyCost.cost;
+
+                            // --------------------------------------------------------
+                            // $log.debug(CONTROLLER_NAME + " : hourlyCost = " + JSON.stringify(hourlyCost));
+                            // --------------------------------------------------------
+
+                            setHourlyCost(hourlyCost);
+                        },
+                        function (response) {
+
+                            // ==================================================
+                            // - failed to change password 
+                            // ==================================================
+
+                            var status = response.status;
+                            var message = response.statusText;
+                            modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
+                        }
+                );
 
                 // ==================================================
                 // - spinner
@@ -143,15 +185,20 @@ app.controller(
                         metricsPromise.then(
                                 function (response) {
 
+                                    // --------------------------------------------------------
+                                    // $log.debug(CONTROLLER_NAME + " : response = " + JSON.stringify(response));
+                                    // --------------------------------------------------------
+
                                     var labels = response.labels;
                                     var PV_data = response.PV;
                                     var EV_data = response.EV;
                                     var CPI_data = response.CPI;
                                     var SPI_data = response.SPI;
 
-                                    // --------------------------------------------------------
-                                    $log.debug(CONTROLLER_NAME + " : response = " + JSON.stringify(response));
-                                    // --------------------------------------------------------
+                                    $scope.indicators.PV = response.indicators.PV;
+                                    $scope.indicators.EV = response.indicators.EV;
+                                    $scope.indicators.CPI = response.indicators.CPI;
+                                    $scope.indicators.SPI = response.indicators.SPI;
 
                                     $scope.PV_data_set = {
                                         labels: labels,
@@ -174,7 +221,7 @@ app.controller(
                                             }
                                         ]
                                     };
-                                   
+
                                     $scope.CPI_data_set = {
                                         labels: labels,
                                         datasets: [
@@ -227,6 +274,17 @@ app.controller(
                     }
 
                 };
+
+                // ==================================================
+                // set the hourly cost with 2 decimals
+                // expect newHourlyCost to be a string representing
+                // a valid decimal number or integer.
+                // ==================================================
+                function setHourlyCost(newHourlyCost) {
+
+                    var num = Number(newHourlyCost);
+                    $scope.hourlyCost = (num).toFixed(TWO_DECIMALS);
+                }
 
 
                 // ==================================================

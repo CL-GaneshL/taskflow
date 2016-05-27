@@ -23,6 +23,30 @@ app.factory("taskAllocationSrvc", function ($log, $http) {
     };
 
     // --------------------------------------------------------
+    // - test tasks
+    // --------------------------------------------------------
+    var test = function () {
+
+        return $http(
+                {
+                    method: "GET",
+                    url: '/taskflow/apis/v1/allocate/test/'
+                }
+        ).then(function (response) {
+
+            // --------------------------------------------------------
+            // $log.debug(FACTORY_NAME + " : response = " + JSON.stringify(response));
+            // --------------------------------------------------------
+
+            var logs = response.data.data;
+
+            return {
+                logs: logs
+            };
+        });
+    };
+
+    // --------------------------------------------------------
     // - reset allocation
     // --------------------------------------------------------
     var reset = function () {
@@ -46,6 +70,7 @@ app.factory("taskAllocationSrvc", function ($log, $http) {
 
     return {
         allocate: allocate,
+        test: test,
         reset: reset
     };
     // ==================================================

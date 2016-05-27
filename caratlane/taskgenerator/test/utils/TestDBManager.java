@@ -26,6 +26,8 @@ import static utils.TestDBConstants.TEST_DB_USERNAME;
  */
 public class TestDBManager {
 
+    final static boolean TEST = true;
+
     /**
      * Sole constructor (private). Preventing Singleton object instantiation
      * from outside
@@ -39,9 +41,8 @@ public class TestDBManager {
      * @throws TestTaskGeneratorException
      * @throws TaskGeneratorException
      */
-    public static void initialize() throws DBException, TestTaskGeneratorException, TaskGeneratorException {
-
-        final boolean test_mode = true;
+    public static void initialize() throws DBException,
+            TestTaskGeneratorException, TaskGeneratorException {
 
         DBManager.initialize(
                 TEST_DB_HOST,
@@ -54,34 +55,45 @@ public class TestDBManager {
         // ---------------------------------------------
         // non working days to come 
         // ---------------------------------------------
-        NonWorkingDays.initialize(test_mode);
+        NonWorkingDays.initialize(TEST);
 
         // ---------------------------------------------
         // skills
         // ---------------------------------------------
-        Skills.initialize(test_mode);
+        Skills.initialize(TEST);
 
         // ---------------------------------------------
         // all open projects
         // ---------------------------------------------
-        Projects.initialize(test_mode);
+        Projects.initialize(TEST);
 
         // ---------------------------------------------
         // all employees
         // ---------------------------------------------
-        Employees.initialize(test_mode);
+        Employees.initialize(TEST);
 
         // ---------------------------------------------
         // All tasks from all open projects
         // ---------------------------------------------
-        Tasks.initialize(test_mode);
+        Tasks.initialize(TEST);
+    }
+
+    /**
+     *
+     */
+    public static void clearData() {
+
+        Employees.getInstance().clearEmployeeData(TEST);
+        Skills.getInstance().clearSkills(TEST);
+        Projects.getInstance().clearProjectsData(TEST);
+        Employees.getInstance().clearEmployeeData(TEST);
+        Tasks.getInstance().clearTask(TEST);
     }
 
     /**
      *
      */
     public static void shutdown() {
-
         DBManager.shutdown();
     }
 
