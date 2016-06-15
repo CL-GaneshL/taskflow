@@ -26,6 +26,7 @@
                             <th class="hidden-xs col-md-2">Reference</th>    
                             <th class="col-md-2 text-center">Duration</th>
                             <th class="col-md-7">Designation</th>
+                            <th class="hidden-xs col-md-3"></th>
                         </tr>
                     </thead>
 

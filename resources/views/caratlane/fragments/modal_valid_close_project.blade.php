@@ -48,26 +48,6 @@
                 <div class="form-group col-md-12">
 
                     <label class="col-md-4 control-label text-right padding-left-0 padding-right-5">
-                        Designation :
-                    </label>
-
-                    <div class="col-md-8">
-
-                        <input type="text" 
-                               class="col-md-12"
-                               name="designation"
-                               id="designation"
-                               placeholder="<% toCloseProjectDesignation %>"
-                               ng-readonly="true"
-                               disabled="" />
-
-                    </div>
-
-                </div>
-
-                <div class="form-group col-md-12">
-
-                    <label class="col-md-4 control-label text-right padding-left-0 padding-right-5">
                         Priority :
                     </label>
 

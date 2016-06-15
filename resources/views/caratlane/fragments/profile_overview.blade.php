@@ -1,4 +1,3 @@
-
  
 <!-- initialize the profile controller -->
 <div ng-controller="profileOverviewCtrl">
