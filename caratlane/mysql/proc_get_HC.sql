@@ -1,7 +1,7 @@
 
 CREATE 
     DEFINER = CURRENT_USER
-PROCEDURE `getIndicators` (project_id INT(11))
+PROCEDURE `getHC` (project_id INT(11))
 
 BEGIN
 
@@ -20,78 +20,27 @@ BEGIN
             WHERE `tasks`.`project_id` = project_id
                 AND `task_allocations`.`task_id` = `tasks`.`id`;
 
-
     -- make sure that tasks and allocations have been generated for that project
     IF @max IS NOT NULL THEN
 
-        -- calculate the indicators until today
-        SET @today := null;
-        SELECT CAST(NOW() AS DATE) INTO @today;
-
-        IF @min > @today THEN
-            -- the project has not been started yet
-            SELECT 0 AS EVi, 0 AS PVi, 0 AS CPIi, 0 AS SPIi;
-        ELSE
-
-        IF @max > @today THEN
-            SET @max := @today;
-        END IF;
-                
-        SET @BAC := 0.00;        
-        SET @total_products_planned := 0;    
-
-        -- retrieve the hourly cost
-        SELECT `hourly_cost`.`cost`
-        INTO @hourly_cost
-        FROM `hourly_cost` LIMIT 1;
-
-        -- calculate the Budget at Completion (BAC)
-        -- it is the total number of labour hours for that project
-        -- multiplied by the hourly cost.
-        SELECT ROUND(SUM(`task_allocations`.`duration`) / 60 * @hourly_cost, @FOUR_DECIMALS)
-        INTO @BAC
-        FROM `tasks`, `task_allocations`
-        WHERE `tasks`.`project_id` = project_id
-            AND `task_allocations`.`task_id` = `tasks`.`id`;
-       
-        -- calculate the nb of planned products
-        SELECT SUM(`projects`.`nb_products`)
-        INTO @total_products_planned
-        FROM `projects`
-        WHERE `projects`.`id` = project_id;
+        -- number of hours consumed against time
             
-        -- SELECT EVi, PVi, CPIi, SPIi FROM ( -- serialize the result set
-        SELECT EVi, PVi, CPIi, SPIi, sum_products_completed, sum_products_planned, sum_actual_cost FROM (        
+        -- serialize the result set
+        SELECT HCi / 60  AS HCi FROM (
 
         -- arithmetic progression --------
-        SELECT  
-                @sum_products_completed := @sum_products_completed + daily_nb_products_completed 
-                    AS sum_products_completed,
-
-                @sum_products_planned := @sum_products_planned + daily_nb_products_planned 
-                    AS sum_products_planned,
-
-                @sum_actual_cost := @sum_actual_cost + daily_actual_cost AS sum_actual_cost,
-
-                ROUND((@sum_products_completed / @total_products_planned) * @BAC, @TWO_DECIMALS) AS EVi,
-                ROUND((@sum_products_planned / @total_products_planned) * @BAC, @TWO_DECIMALS) AS PVi,
-                ROUND((@sum_products_completed / @sum_products_planned), @TWO_DECIMALS) AS SPIi,
-                ROUND( IFNULL((@sum_products_completed * @BAC) / ( @total_products_planned * @sum_actual_cost), 0), @TWO_DECIMALS) AS CPIi
+        SELECT  `daily_completion`, @sum_completion := @sum_completion + `daily_completion` AS HCi
         -- -------------------------------
 
             FROM (
                 SELECT  -- daily completed products
-                    `interval`.`date` AS `date`, 
-                    IFNULL(`products_planned`.`daily_nb_products_completed`, 0) AS `daily_nb_products_completed`,
-                    IFNULL(`products_planned`.`daily_nb_products_planned`, 0) AS `daily_nb_products_planned`,
-                    IFNULL(`products_planned`.`daily_completion`, 0) AS `daily_actual_cost`
+                    `interval`.`date` AS `date`,
+                    IFNULL(`products_planned`.`daily_completion`, 0) AS `daily_completion`
 
                 FROM (
                     SELECT  -- total nb of completed products per day
                         -- cast is needed to as start date is a DATETIME
                         CAST(`task_allocations`.`start_date` AS DATE) AS `date`,
-                        SUM(`task_allocations`.`nb_products_completed`) AS `daily_nb_products_completed`,
-                        SUM(`task_allocations`.`nb_products_planned`) AS `daily_nb_products_planned`,
                         SUM(`task_allocations`.`completion`) AS `daily_completion`
                     FROM `task_allocations`
                     RIGHT JOIN
@@ -128,16 +77,11 @@ BEGIN
 
         -- arithmetic progression --------
         CROSS JOIN
-            (SELECT 
-                @sum_products_completed := 0, 
-                @sum_products_planned := 0, 
-                @sum_actual_cost := 0
-            ) AS var
+            (SELECT @sum_completion := 0) AS var
         -- -------------------------------
 
-        ) AS `indicators`;    -- result set
-
-        END IF;
+        ) AS `hpis`;    -- result set
 
     END IF;
+
 END 

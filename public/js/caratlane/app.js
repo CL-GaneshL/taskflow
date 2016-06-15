@@ -81,7 +81,9 @@ app.constant('JS_REQUIRES', {
         'taskAllocationCtrl': '../../js/caratlane/controllers/taskAllocationCtrl.js',
         'settingsNonWorkingDaysCtrl': '../../js/caratlane/controllers/settingsNonWorkingDaysCtrl.js',
         'settingsTaskGeneratorCtrl': '../../js/caratlane/controllers/settingsTaskGeneratorCtrl.js',
-        'metricsCtrl': '../../js/caratlane/controllers/metricsCtrl.js',
+        'metricsStatusCtrl': '../../js/caratlane/controllers/metricsStatusCtrl.js',
+        'metricsEmployeesCtrl': '../../js/caratlane/controllers/metricsEmployeesCtrl.js',
+        'metricsIndicatorsCtrl': '../../js/caratlane/controllers/metricsIndicatorsCtrl.js',
         'settingsHourlyCostCtrl': '../../js/caratlane/controllers/settingsHourlyCostCtrl.js',
         // ----
         //*** Services
@@ -527,7 +529,10 @@ app.config([
                             'projectsSrvc',
                             'metricsSrvc',
                             'settingsSrvc',
-                            'metricsCtrl'
+                            'employeesSrvc',
+                            'metricsIndicatorsCtrl',
+                            'metricsStatusCtrl',
+                            'metricsEmployeesCtrl'
                             ),
                     title: 'Metrics'
                 })

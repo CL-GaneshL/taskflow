@@ -28,7 +28,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.logging.Level;
+import java.util.stream.Stream;
 
 /**
  *
@@ -87,6 +90,37 @@ class TaskAllocatorProductBased implements TaskAllocator {
             }
         });
 
+        // ---------------------------------------------------------------------
+        LogManager.getLogger().log(Level.INFO, "Assert Nb of Products :");
+        // ---------------------------------------------------------------------
+
+        final Integer project_id = projectData.getProject().getId();
+
+        final Predicate<Task> project_filter
+                = (Task t) -> t.getProjectId().equals(project_id);
+
+        final Stream<Task> tasks
+                = Tasks.getInstance().getTasks().stream().filter(project_filter);
+
+        final int nb_products_allocated
+                = Tasks.getInstance().getTasks().stream()
+                .filter((Task t) -> t.getProjectId().equals(project_id))
+                .flatMap((Task t) -> t.getTaskAllocations().stream())
+                .mapToInt((TaskAllocation at) -> at.getNbProductsPlanned())
+                .sum();
+
+        final int nb_products = projectData.getProject().getNbProducts();
+
+        // ---------------------------------------------------------------------
+        LogManager.getLogger().log(Level.INFO, "  - Project Nb Products = {0}", nb_products);
+        LogManager.getLogger().log(Level.INFO, "  - Project Nb Products Allocated = {0}", nb_products_allocated);
+        // ---------------------------------------------------------------------
+
+        if (nb_products_allocated != nb_products) {
+            // ---------------------------------------------------------------------
+            LogManager.getLogger().log(Level.SEVERE, "  - Problem Nb Products Allocated !!!!");
+            // ---------------------------------------------------------------------
+        }
     }
 
     /**

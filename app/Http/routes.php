@@ -113,7 +113,6 @@ Route::group(['prefix' => CARATLANE_APIS_V1_PATH], function() {
     Route::resource('holidays', 'HolidaysController', ['only' => ['show', 'store', 'update', 'destroy']]);
     Route::resource('projects-tasks', 'ProjectsTasksController', ['only' => ['index']]);
     Route::resource('task-allocations', 'TaskAllocationsController', ['only' => ['store', 'destroy']]);
-    Route::resource('metrics', 'MetricsController', ['only' => ['show']]);
 
     // -------------------------------------------------------------------------------
     // - allocation routes
@@ -128,6 +127,14 @@ Route::group(['prefix' => CARATLANE_APIS_V1_PATH], function() {
     Route::get('settings/taskflow-configuration', 'SettingsController@getTaskflowConfiguration');
     Route::get('settings/java-configuration', 'SettingsController@getJavaConfiguration');
     Route::resource('hourly-cost', 'HourlyCostController', ['only' => ['index', 'update']]);
+
+    // -------------------------------------------------------------------------------
+    // - settings routes
+    // -------------------------------------------------------------------------------
+    //     Route::resource('metrics', 'MetricsController', ['only' => ['show']]);
+    Route::resource('metrics/projects', 'MetricsController@getProjectsMetrics');
+    Route::resource('metrics/employees', 'MetricsController@getEmployeesMetrics');
+    Route::resource('metrics/status', 'MetricsController@getProjectStatus');
 });
 
 /*

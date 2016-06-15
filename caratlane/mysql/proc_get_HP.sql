@@ -1,7 +1,7 @@
 
 CREATE 
     DEFINER = CURRENT_USER
-PROCEDURE `getSPI` (project_id INT(11))
+PROCEDURE `getHP` (project_id INT(11))
 
 BEGIN
 
@@ -23,43 +23,25 @@ BEGIN
     -- make sure that tasks and allocations have been generated for that project
     IF @max IS NOT NULL THEN
 
-        -- calculate the Schedule Performance Index (SPI)
-        -- http://pmstudycircle.com/2012/05/schedule-performance-index-spi-and-cost-performance-index-cpi/
-        -- SPIi = EVi / PVi
-        -- EVi = NBPCi / NBPP * BAC
-        -- PVi = NBPPi / NBPP * BAC
-        -- BAC : Budget At Completion
-        -- NBPPi : Total Nb Products planned at the ith day
-        -- NBPCi : Total Nb Products completed at the ith day
-        -- NBPP : Total Nb Products planned
-        -- => SPIi = NBPCi / NBPPi
-                    
-        SELECT SPIi FROM ( -- serialize the result set
-        -- SELECT SPIi, sum_products_completed, sum_products_planned FROM (
+        -- number of hours planned against time
+            
+        -- serialize the result set
+        SELECT HPi / 60  AS HPi FROM (
 
         -- arithmetic progression --------
-        SELECT  
-                @sum_products_completed := @sum_products_completed + daily_nb_products_completed  
-                    AS sum_products_completed,
-
-                @sum_products_planned := @sum_products_planned + daily_nb_products_planned 
-                    AS sum_products_planned,
-
-                ROUND((@sum_products_completed / @sum_products_planned), @TWO_DECIMALS) AS SPIi
+        SELECT  `daily_duration`, @sum_duration := @sum_duration + `daily_duration` AS HPi
         -- -------------------------------
 
             FROM (
-                SELECT
-                    `interval`.`date` AS `date`, 
-                    IFNULL(`products_planned`.`daily_nb_products_completed`, 0) AS `daily_nb_products_completed`,
-                    IFNULL(`products_planned`.`daily_nb_products_planned`, 0) AS `daily_nb_products_planned`
+                SELECT  -- daily completed products
+                    `interval`.`date` AS `date`,
+                    IFNULL(`products_planned`.`daily_duration`, 0) AS `daily_duration`
 
                 FROM (
                     SELECT  -- total nb of completed products per day
                         -- cast is needed to as start date is a DATETIME
                         CAST(`task_allocations`.`start_date` AS DATE) AS `date`,
-                        SUM(`task_allocations`.`nb_products_completed`) AS `daily_nb_products_completed`,
-                        SUM(`task_allocations`.`nb_products_planned`) AS `daily_nb_products_planned`
+                        SUM(`task_allocations`.`duration`) AS `daily_duration`
                     FROM `task_allocations`
                     RIGHT JOIN
                         (   -- list of taks ids for that project
@@ -91,14 +73,14 @@ BEGIN
                 ON `products_planned`.`date` = `interval`.`date`
                 ORDER BY `date` -- to prevent an un-sorted interval
 
-            ) AS `daily_activity`
+            ) AS `daily_completed_work`
 
         -- arithmetic progression --------
         CROSS JOIN
-            (SELECT @sum_products_completed := 0, @sum_products_planned := 0) AS var
+            (SELECT @sum_duration := 0) AS var
         -- -------------------------------
 
-        ) AS `spiis`;    -- result set
+        ) AS `hpis`;    -- result set
 
     END IF;
 

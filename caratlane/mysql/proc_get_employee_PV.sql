@@ -1,42 +1,22 @@
 
 CREATE 
     DEFINER = CURRENT_USER
-PROCEDURE `getIndicators` (project_id INT(11))
+PROCEDURE `getEmployeeEV` (employee_id INT(11), min DATE, max DATE)
 
 BEGIN
 
     SET @TWO_DECIMALS := 2;
     SET @FOUR_DECIMALS := 4;
 
-    SET @max := 0;
-    SET @min := 0;
-
-    -- the first allocation start_date (min) and the last (max)
-    SELECT 
-            CAST(MAX(`task_allocations`.`start_date`) AS DATE),
-            CAST(MIN(`task_allocations`.`start_date`) AS DATE)
-            INTO @max, @min 
-            FROM `tasks`, `task_allocations`
-            WHERE `tasks`.`project_id` = project_id
-                AND `task_allocations`.`task_id` = `tasks`.`id`;
-
-
-    -- make sure that tasks and allocations have been generated for that project
-    IF @max IS NOT NULL THEN
-
-        -- calculate the indicators until today
-        SET @today := null;
-        SELECT CAST(NOW() AS DATE) INTO @today;
-
-        IF @min > @today THEN
-            -- the project has not been started yet
-            SELECT 0 AS EVi, 0 AS PVi, 0 AS CPIi, 0 AS SPIi;
-        ELSE
-
-        IF @max > @today THEN
-            SET @max := @today;
-        END IF;
-                
+        -- calculate the Planned Value (PV)
+        -- http://pmstudycircle.com/2012/05/planned-value-pv-earned-value-ev-actual-cost-ac-analysis-in-project-cost-management-2/
+        -- it is for each planned day, the planned percentage of the 
+        -- completed work multiplied by the project budget or BAC
+        -- PVi = NBPPi / NBPP * BAC
+        -- BAC : Budget At Completion
+        -- NBPPi : Total Nb Products planned at the ith day
+        -- NBPP : Total Nb Products planned
+        
         SET @BAC := 0.00;        
         SET @total_products_planned := 0;    
 
@@ -60,39 +40,26 @@ BEGIN
         FROM `projects`
         WHERE `projects`.`id` = project_id;
             
-        -- SELECT EVi, PVi, CPIi, SPIi FROM ( -- serialize the result set
-        SELECT EVi, PVi, CPIi, SPIi, sum_products_completed, sum_products_planned, sum_actual_cost FROM (        
+        -- serialize the result set
+        SELECT PVi, sum_products_planned from (   -- select only PVi s
 
         -- arithmetic progression --------
-        SELECT  
-                @sum_products_completed := @sum_products_completed + daily_nb_products_completed 
-                    AS sum_products_completed,
+        SELECT  ROUND((@sum_products_planned / @total_products_planned) * @BAC, @TWO_DECIMALS) AS PVi,
 
                 @sum_products_planned := @sum_products_planned + daily_nb_products_planned 
-                    AS sum_products_planned,
-
-                @sum_actual_cost := @sum_actual_cost + daily_actual_cost AS sum_actual_cost,
-
-                ROUND((@sum_products_completed / @total_products_planned) * @BAC, @TWO_DECIMALS) AS EVi,
-                ROUND((@sum_products_planned / @total_products_planned) * @BAC, @TWO_DECIMALS) AS PVi,
-                ROUND((@sum_products_completed / @sum_products_planned), @TWO_DECIMALS) AS SPIi,
-                ROUND( IFNULL((@sum_products_completed * @BAC) / ( @total_products_planned * @sum_actual_cost), 0), @TWO_DECIMALS) AS CPIi
+                    AS sum_products_planned                
         -- -------------------------------
 
             FROM (
-                SELECT  -- daily completed products
+                SELECT  -- daily planned products                    
                     `interval`.`date` AS `date`, 
-                    IFNULL(`products_planned`.`daily_nb_products_completed`, 0) AS `daily_nb_products_completed`,
-                    IFNULL(`products_planned`.`daily_nb_products_planned`, 0) AS `daily_nb_products_planned`,
-                    IFNULL(`products_planned`.`daily_completion`, 0) AS `daily_actual_cost`
+                    IFNULL(`products_planned`.`daily_nb_products_planned`, 0) AS `daily_nb_products_planned`
 
                 FROM (
-                    SELECT  -- total nb of completed products per day
+                    SELECT  -- total nb of planned products per day
                         -- cast is needed to as start date is a DATETIME
                         CAST(`task_allocations`.`start_date` AS DATE) AS `date`,
-                        SUM(`task_allocations`.`nb_products_completed`) AS `daily_nb_products_completed`,
-                        SUM(`task_allocations`.`nb_products_planned`) AS `daily_nb_products_planned`,
-                        SUM(`task_allocations`.`completion`) AS `daily_completion`
+                        SUM(`task_allocations`.`nb_products_planned`) AS `daily_nb_products_planned`
                     FROM `task_allocations`
                     RIGHT JOIN
                         (   -- list of taks ids for that project
@@ -128,16 +95,11 @@ BEGIN
 
         -- arithmetic progression --------
         CROSS JOIN
-            (SELECT 
-                @sum_products_completed := 0, 
-                @sum_products_planned := 0, 
-                @sum_actual_cost := 0
-            ) AS var
+            (SELECT @sum_products_planned := 0) AS var
         -- -------------------------------
 
-        ) AS `indicators`;    -- result set
+        ) AS `pvis`;    -- result set
 
-        END IF;
 
-    END IF;
+
 END 

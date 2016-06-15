@@ -7,6 +7,30 @@ app.factory("employeesSrvc", function ($http, $log) {
     var employeeId = null;
 
     // ==================================================
+    // - get the list of all employees
+    // ==================================================
+    var getAllEmployees = function () {
+
+        return $http(
+                {
+                    method: "GET",
+                    url: '/taskflow/apis/v1/employees'
+                }
+        ).then(function (response) {
+
+            var employees = response.data.data;
+
+            // --------------------------------------------------------
+            // $log.debug(FACTORY_NAME + " : employees = " + JSON.stringify(employees));
+            // --------------------------------------------------------
+
+            return {
+                employees: employees
+            };
+        });
+    };
+
+    // ==================================================
     // - retrieve the employee's profile from the DB
     // ==================================================
     var getEmployee = function () {
@@ -105,7 +129,8 @@ app.factory("employeesSrvc", function ($http, $log) {
         getEmployee: getEmployee,
         updateEmployee: updateEmployee,
         deleteEmployee: deleteEmployee,
-        createEmployee: createEmployee
+        createEmployee: createEmployee,
+        getAllEmployees: getAllEmployees
     };
 
 

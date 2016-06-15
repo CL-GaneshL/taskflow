@@ -365,7 +365,7 @@ app.controller(
 
                     var projectToClose = $scope.findProject(project_id);
                     // --------------------------------------------------------
-                    // $log.debug(CONTROLLER_NAME + " : projectToClose = " + JSON.stringify(projectToClose));
+                    $log.debug(CONTROLLER_NAME + " : projectToClose = " + JSON.stringify(projectToClose));
                     // --------------------------------------------------------
 
                     validCloseProjectModal(projectToClose, function () {
@@ -403,7 +403,6 @@ app.controller(
                         controller: function ($scope, $uibModalInstance) {
                             $scope.$modalInstance = $uibModalInstance;
                             $scope.toCloseProjectReference = projectToClose.reference;
-                            $scope.toCloseProjectDesignation = projectToClose.designation;
                             $scope.toCloseProjectPriority = projectToClose.priority;
                             $scope.toCloseNbProducts = projectToClose.nb_products;
                             $scope.cancel = function () {

@@ -56,8 +56,9 @@ BEGIN
         FROM `projects`
         WHERE `projects`.`id` = project_id;
             
-        -- serialize the result set
-        SELECT CPIi, sum_products_completed, sum_actual_cost from (   -- select only CPIi s
+        
+        SELECT CPIi FROM (   -- serialize the result set
+        -- SELECT CPIi, sum_products_completed, sum_actual_cost from (
 
         -- arithmetic progression --------
         SELECT  
@@ -68,7 +69,7 @@ BEGIN
                 @sum_products_completed := @sum_products_completed + daily_nb_products_completed 
                     AS sum_products_completed,
                 
-                @sum_actual_cost := @sum_actual_cost + daily_actual_cost AS sum_actual_cost                
+                @sum_actual_cost := @sum_actual_cost + daily_actual_cost AS sum_actual_cost
         -- -------------------------------
 
             FROM (

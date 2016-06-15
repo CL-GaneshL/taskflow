@@ -57,8 +57,165 @@ class MetricsController extends Controller {
      *
      * @param  int  $id the employee id
      * @return \Illuminate\Http\Response
+     * 
      */
     public function show($project_id) {
+        
+    }
+
+    /**
+     * 
+     * @param Request $request
+     */
+    public function getEmployeesMetrics(Request $request) {
+
+        $id = $request->reference;
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+
+        // ---------------------------------------------------
+        \Log::debug('$id : ' . $id);
+        \Log::debug('$start_date : ' . $start_date);
+        \Log::debug('$end_date : ' . $end_date);
+        // ---------------------------------------------------
+        // ---------------------------------------------------
+        // - get the diagram's labels
+        // ---------------------------------------------------
+        $labels = array();
+        $data = \DB::select("CALL getLabels2($start_date, $end_date)");
+
+        foreach ($data as $object) {
+            $arr = (array) $object;
+            $labels[] = $arr['label'];
+        }
+
+        // ---------------------------------------------------
+        // - get the Planned Value (PV) data
+        // ---------------------------------------------------
+        $PV = array();
+        $data = \DB::select("CALL getEmployeePV($start_date, $end_date)");
+
+        foreach ($data as $object) {
+            $arr = (array) $object;
+            $PV[] = $arr['PVi'];
+        }
+
+        // ---------------------------------------------------
+        // - get the Earned Value (EV) data.
+        // ---------------------------------------------------
+        $EV = array();
+        $data = \DB::select("CALL getEmployeeEV($start_date, $end_date)");
+
+        foreach ($data as $object) {
+            $arr = (array) $object;
+            $EV[] = $arr['EVi'];
+        }
+
+        // ---------------------------------------------------
+        // - create the response 
+        // ---------------------------------------------------
+        $status = array($labels, $PV, $EV);
+
+        // ---------------------------------------------------
+        \Log::debug('metrics : $status = ' . print_r($status, true));
+        // ---------------------------------------------------
+        // ---------------------------------------------------
+        // - the response
+        // ---------------------------------------------------
+
+        return response()->json(
+                        [
+                    'data' => $status,
+                    'message' => 'Succesfull request'
+                        ], $this->HTTP_OK);
+    }
+
+    /**
+     * 
+     * @param type $project_id
+     */
+    public function getProjectStatus($project_id) {
+
+        // ---------------------------------------------------
+        // - get the diagram's labels
+        // ---------------------------------------------------
+        $labels = array();
+        $data = \DB::select("CALL getLabels(" . $project_id . ")");
+
+        foreach ($data as $object) {
+            $arr = (array) $object;
+            $labels[] = $arr['label'];
+        }
+
+        // ---------------------------------------------------
+        // number of hours planned against time        
+        // ---------------------------------------------------
+        $HP = array();
+        $data = \DB::select("CALL getHP(" . $project_id . ")");
+
+        foreach ($data as $object) {
+            $arr = (array) $object;
+            $HP[] = $arr['HPi'];
+        }
+
+        // ---------------------------------------------------
+        // number of hours consumed against time
+        // ---------------------------------------------------
+        $HC = array();
+        $data = \DB::select("CALL getHC(" . $project_id . ")");
+
+        foreach ($data as $object) {
+            $arr = (array) $object;
+            $HC[] = $arr['HCi'];
+        }
+
+        // ---------------------------------------------------
+        // number of products planned
+        // ---------------------------------------------------
+        $PP = array();
+        $data = \DB::select("CALL getPP(" . $project_id . ")");
+
+        foreach ($data as $object) {
+            $arr = (array) $object;
+            $PP[] = $arr['PPi'];
+        }
+
+        // ---------------------------------------------------
+        // number of products completed
+        // ---------------------------------------------------
+        $PC = array();
+        $data = \DB::select("CALL getPC(" . $project_id . ")");
+
+        foreach ($data as $object) {
+            $arr = (array) $object;
+            $PC[] = $arr['PCi'];
+        }
+
+        // ---------------------------------------------------
+        // - create the response 
+        // ---------------------------------------------------
+        $status = array($labels, $HP, $HC, $PP, $PC);
+
+        // ---------------------------------------------------
+        // \Log::debug('metrics : $status = ' . print_r($status, true));
+        // ---------------------------------------------------
+        // ---------------------------------------------------
+        // - the response
+        // ---------------------------------------------------
+
+        return response()->json(
+                        [
+                    'data' => $status,
+                    'message' => 'Succesfull request'
+                        ], $this->HTTP_OK);
+    }
+
+    /**
+     * 
+     * @param type $project_id
+     * @return type
+     */
+    public function getProjectsMetrics($project_id) {
 
         // ---------------------------------------------------
         // - get the diagram's labels
@@ -119,14 +276,16 @@ class MetricsController extends Controller {
         // - get today's indicators.
         // ---------------------------------------------------
 
-        $data = \DB::select("CALL getSPI(" . $project_id . ")");
+        $data = \DB::select("CALL getIndicators(" . $project_id . ")");
 
         $indicators = array();
-        $arr = (array) $data[0];
-        $indicators['PVi'] = $arr['PVi'];
-        $indicators['EVi'] = $arr['EVi'];
-        $indicators['CPIi'] = $arr['CPIi'];
-        $indicators['SPIi'] = $arr['SPIi'];
+        if (sizeof($data) > 0) {
+            $arr = (array) $data[0];
+            $indicators['PVi'] = $arr['PVi'];
+            $indicators['EVi'] = $arr['EVi'];
+            $indicators['CPIi'] = $arr['CPIi'];
+            $indicators['SPIi'] = $arr['SPIi'];
+        }
 
         // ---------------------------------------------------
         // - create the response 

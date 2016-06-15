@@ -592,7 +592,7 @@ app.controller(
                     var index = 0;
 
                     // --------------------------------------------------------
-                    $log.debug(CONTROLLER_NAME + " : tasks = " + JSON.stringify(tasks));
+                    // $log.debug(CONTROLLER_NAME + " : tasks = " + JSON.stringify(tasks));
                     // --------------------------------------------------------
 
                     for (index = 0; index < tasks.length; index++) {

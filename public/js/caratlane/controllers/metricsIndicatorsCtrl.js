@@ -3,7 +3,7 @@
  * controller for User Profile Example
  */
 app.controller(
-        'metricsCtrl',
+        'metricsIndicatorsCtrl',
         [
             '$log',
             '$scope',
@@ -24,7 +24,7 @@ app.controller(
                     usSpinnerService
                     ) {
 
-                var CONTROLLER_NAME = 'metricsCtrl';
+                var CONTROLLER_NAME = 'metricsIndicatorsCtrl';
 
                 // ==================================================
                 // - initialization
@@ -42,10 +42,8 @@ app.controller(
 
                 $scope.hourlyCost = '0.00';
 
-//                $scope.indicators.PV = '0.00';
-//                $scope.indicators.EV = '0.00';
-//                $scope.indicators.CPI = '0.00';
-//                $scope.indicators.SPI = '0.00';
+                // today's date yyyy-mm-dd
+                $scope.today = (new Date()).toISOString().slice(0, 10);
 
                 $scope.indicators = {
                     'PV': '0.00',
@@ -168,8 +166,10 @@ app.controller(
                     var project = getFilterProject();
 
                     // --------------------------------------------------------
-                    $log.debug(CONTROLLER_NAME + " : project = " + JSON.stringify(project));
+                    // $log.debug(CONTROLLER_NAME + " : project = " + JSON.stringify(project));
+                    // $log.debug(CONTROLLER_NAME + " : change project  .... ");
                     // --------------------------------------------------------
+
 
                     if (project !== null && project !== undefined)
                     {
@@ -186,7 +186,7 @@ app.controller(
                                 function (response) {
 
                                     // --------------------------------------------------------
-                                    // $log.debug(CONTROLLER_NAME + " : response = " + JSON.stringify(response));
+                                    $log.debug(CONTROLLER_NAME + " : response = " + JSON.stringify(response));
                                     // --------------------------------------------------------
 
                                     var labels = response.labels;
@@ -195,60 +195,68 @@ app.controller(
                                     var CPI_data = response.CPI;
                                     var SPI_data = response.SPI;
 
-                                    $scope.indicators.PV = response.indicators.PV;
-                                    $scope.indicators.EV = response.indicators.EV;
-                                    $scope.indicators.CPI = response.indicators.CPI;
-                                    $scope.indicators.SPI = response.indicators.SPI;
+                                    if (response.indicators.length !== 0) {
+                                        $scope.indicators.PV = response.indicators.PVi;
+                                        $scope.indicators.EV = response.indicators.EVi;
+                                        $scope.indicators.CPI = response.indicators.CPIi;
+                                        $scope.indicators.SPI = response.indicators.SPIi;
+                                    }
 
-                                    $scope.PV_data_set = {
-                                        labels: labels,
-                                        datasets: [
-                                            {
-                                                label: 'Planned Value (PV)',
-                                                fillColor: 'rgba(220,220,220,0.5)',
-                                                strokeColor: 'rgba(220,220,220,0.8)',
-                                                highlightFill: 'rgba(220,220,220,0.75)',
-                                                highlightStroke: 'rgba(220,220,220,1)',
-                                                data: PV_data
-                                            },
-                                            {
-                                                label: 'Earned Value (EV)',
-                                                fillColor: 'rgba(151,187,205,0.5)',
-                                                strokeColor: 'rgba(151,187,205,0.8)',
-                                                highlightFill: 'rgba(151,187,205,0.75)',
-                                                highlightStroke: 'rgba(151,187,205,1)',
-                                                data: EV_data
-                                            }
-                                        ]
-                                    };
+                                    if (PV_data.length !== 0 && labels.length !== 0) {
+                                        $scope.PV_data_set = {
+                                            labels: labels,
+                                            datasets: [
+                                                {
+                                                    label: 'Planned Value (PV)',
+                                                    fillColor: 'rgba(220,220,220,0.5)',
+                                                    strokeColor: 'rgba(220,220,220,0.8)',
+                                                    highlightFill: 'rgba(220,220,220,0.75)',
+                                                    highlightStroke: 'rgba(220,220,220,1)',
+                                                    data: PV_data
+                                                },
+                                                {
+                                                    label: 'Earned Value (EV)',
+                                                    fillColor: 'rgba(151,187,205,0.5)',
+                                                    strokeColor: 'rgba(151,187,205,0.8)',
+                                                    highlightFill: 'rgba(151,187,205,0.75)',
+                                                    highlightStroke: 'rgba(151,187,205,1)',
+                                                    data: EV_data
+                                                }
+                                            ]
+                                        };
+                                    }
 
-                                    $scope.CPI_data_set = {
-                                        labels: labels,
-                                        datasets: [
-                                            {
-                                                label: 'Cost Performance Index (CPI)',
-                                                fillColor: 'rgba(220,220,220,0.5)',
-                                                strokeColor: 'rgba(220,220,220,0.8)',
-                                                highlightFill: 'rgba(220,220,220,0.75)',
-                                                highlightStroke: 'rgba(220,220,220,1)',
-                                                data: CPI_data
-                                            }
-                                        ]
-                                    };
+                                    if (CPI_data.length !== 0 && labels.length !== 0) {
+                                        $scope.CPI_data_set = {
+                                            labels: labels,
+                                            datasets: [
+                                                {
+                                                    label: 'Cost Performance Index (CPI)',
+                                                    fillColor: 'rgba(220,220,220,0.5)',
+                                                    strokeColor: 'rgba(220,220,220,0.8)',
+                                                    highlightFill: 'rgba(220,220,220,0.75)',
+                                                    highlightStroke: 'rgba(220,220,220,1)',
+                                                    data: CPI_data
+                                                }
+                                            ]
+                                        };
+                                    }
 
-                                    $scope.SPI_data_set = {
-                                        labels: labels,
-                                        datasets: [
-                                            {
-                                                label: 'Schedule Performance Index (SPI)',
-                                                fillColor: 'rgba(220,220,220,0.5)',
-                                                strokeColor: 'rgba(220,220,220,0.8)',
-                                                highlightFill: 'rgba(220,220,220,0.75)',
-                                                highlightStroke: 'rgba(220,220,220,1)',
-                                                data: SPI_data
-                                            }
-                                        ]
-                                    };
+                                    if (SPI_data.length !== 0 && labels.length !== 0) {
+                                        $scope.SPI_data_set = {
+                                            labels: labels,
+                                            datasets: [
+                                                {
+                                                    label: 'Schedule Performance Index (SPI)',
+                                                    fillColor: 'rgba(220,220,220,0.5)',
+                                                    strokeColor: 'rgba(220,220,220,0.8)',
+                                                    highlightFill: 'rgba(220,220,220,0.75)',
+                                                    highlightStroke: 'rgba(220,220,220,1)',
+                                                    data: SPI_data
+                                                }
+                                            ]
+                                        };
+                                    }
 
                                     $scope.stopSpin();
                                 },
@@ -285,45 +293,6 @@ app.controller(
                     var num = Number(newHourlyCost);
                     $scope.hourlyCost = (num).toFixed(TWO_DECIMALS);
                 }
-
-
-                // ==================================================
-                // - refresh graphics
-                // ==================================================
-                $scope.refresh = function () {
-
-                    // --------------------------------------------------------
-                    $log.debug(CONTROLLER_NAME + " : refresh ..... ");
-                    // --------------------------------------------------------
-
-//                    var allocatePromise = taskAllocationSrvc.reset();
-//                    allocatePromise.then(
-//                            function (response) {
-//
-//                                // --------------------------------------------------------
-//                                // $log.debug(CONTROLLER_NAME + " : xxxxxxx = " + JSON.stringify(xxxxxxx));
-//                                $log.debug(CONTROLLER_NAME + " : reset done ! ");
-//                                // --------------------------------------------------------
-//
-//
-//                            },
-//                            function (response) {
-//
-//                                // --------------------------------------------------------
-//                                // $log.debug(CONTROLLER_NAME + " : error response = " + JSON.stringify(response));
-//                                // --------------------------------------------------------
-//
-//                                // ==================================================
-//                                // - refresh failed
-//                                // ==================================================
-//
-//                                var status = response.status;
-//                                var message = response.statusText;
-//                                modalSrvc.showErrorMessageModal3(CONTROLLER_NAME, status, message);
-//
-//                            }
-//                    );
-                };
 
             }]);
 
